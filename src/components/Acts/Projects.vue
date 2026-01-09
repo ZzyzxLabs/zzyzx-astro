@@ -106,6 +106,29 @@ const card4Transform = computed(() => {
   const p = getRangeProgress(dampedProgress.value, start, animDuration)
   return { transform: `translate3d(-${p * w}px, 0, 0)` }
 })
+
+const scrollToVH = (targetVH) => {
+  if (!trackRef.value || typeof window === 'undefined') return
+  
+  const vh = window.innerHeight
+  const scrollZonePx = (totalScroll / 100) * vh - vh
+  const targetP = Math.min(targetVH / totalScroll, 1)
+  const targetScrolled = targetP * scrollZonePx
+  const rect = trackRef.value.getBoundingClientRect()
+  const currentAbs = window.scrollY
+  const trackTopAbs = currentAbs + rect.top
+  
+  window.scrollTo({
+    top: trackTopAbs + targetScrolled,
+    behavior: 'smooth'
+  })
+}
+
+const scrollToCard1 = () => scrollToVH(0)
+const scrollToCard2 = () => scrollToVH(bufferDuration + animDuration)
+const scrollToCard3 = () => scrollToVH(bufferDuration + animDuration + bufferDuration + animDuration)
+const scrollToCard4 = () => scrollToVH(totalScroll)
+
 </script>
 
 <template>
@@ -134,7 +157,7 @@ const card4Transform = computed(() => {
             class="absolute top-0 left-full w-screen h-full flex will-change-transform"
             :style="card2Transform"
           >
-            <SeaWallet02 />
+            <SeaWallet02 @next="scrollToCard3" @prev="scrollToCard1" />
           </div>
 
           <!-- 第三張卡片: Sea Wallet 副本 (從左往右) -->
@@ -142,7 +165,7 @@ const card4Transform = computed(() => {
             class="absolute top-0 -left-full w-screen h-full flex will-change-transform"
             :style="card3Transform"
           >
-            <SeaWallet03 />
+            <SeaWallet03 @next="scrollToCard4" @prev="scrollToCard2" />
           </div>
 
           <!-- 第四張卡片: Sea Wallet 副本 (從右往左) -->
@@ -150,7 +173,7 @@ const card4Transform = computed(() => {
             class="absolute top-0 left-full w-screen h-full flex will-change-transform"
             :style="card4Transform"
           >
-            <SeaWallet04 />
+            <SeaWallet04 @prev="scrollToCard3" />
           </div>
 
         </div>
