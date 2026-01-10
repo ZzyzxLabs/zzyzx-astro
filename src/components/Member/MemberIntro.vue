@@ -9,8 +9,9 @@ const mouseTrack = (event: MouseEvent) => {
 </script>
 
 <template>
-  <div class="relative w-full h-screen flex items-center justify-center bg-black/50" @mousemove="mouseTrack">
+  <div class="relative w-full h-[200vh] flex justify-center bg-black/50" @mousemove="mouseTrack">
     <!-- 做個框框 -->
+    <div class="relative w-full h-screen flex items-center justify-center ">
     <div
       class="text-white absolute w-11/12 h-5/6 text-7xl flex flex-col justify-between pointer-events-none transition-transform duration-100 ease-out"
       style="transform: translate(calc(var(--mouse-x) * -0.03), calc(var(--mouse-y) * -0.03));">
@@ -34,5 +35,6 @@ const mouseTrack = (event: MouseEvent) => {
       <h2 class="text-pink-500/50 font-bold text-8xl"> Members</h2>
       <p class="text-pink-500/50 text-3xl"> Meets the most ambitious minds.</p>
     </div>
+  </div>
   </div>
 </template>
