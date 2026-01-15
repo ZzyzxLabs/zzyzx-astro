@@ -77,7 +77,7 @@ const card1Transform = computed(() => {
 })
 
 const card2Transform = computed(() => {
-  const w = typeof window !== 'undefined' ? window.innerWidth : 0
+  const w = typeof window !== 'undefined' ? document.documentElement.clientWidth : 0
   
   // 第2張
   // Start: 40 (buf1) 
@@ -88,7 +88,7 @@ const card2Transform = computed(() => {
 })
 
 const card3Transform = computed(() => {
-  const w = typeof window !== 'undefined' ? window.innerWidth : 0
+  const w = typeof window !== 'undefined' ? document.documentElement.clientWidth : 0
   
   // 第3張
   // Start: 40 + 150 (anim2) + 40 (buf2) = 230
@@ -98,7 +98,7 @@ const card3Transform = computed(() => {
 })
 
 const card4Transform = computed(() => {
-  const w = typeof window !== 'undefined' ? window.innerWidth : 0
+  const w = typeof window !== 'undefined' ? document.documentElement.clientWidth : 0
   
   // 第4張
   // Start: 230 + 150 (anim3) + 40 (buf3) = 420
@@ -143,18 +143,18 @@ const scrollToCard4 = () => scrollToVH(totalScroll)
         sticky top-0: 當軌道頂部碰到視窗頂部時，這個 div 會黏住不動，
         直到軌道底部到達視窗底部才會被推走。
       -->
-      <div class="sticky top-0 h-screen w-screen overflow-hidden">
+      <div class="sticky top-0 h-screen w-full overflow-hidden">
         
         <!-- 卡片容器 - 每張卡片獨立定位 -->
         <div class="relative w-full h-full">
           <div 
-            class="absolute top-0 left-0 w-screen h-full will-change-transform"
+            class="absolute top-0 left-0 w-full h-full will-change-transform"
             :style="card1Transform"
           >
             <ActsIntro />
           </div>
           <div 
-            class="absolute top-0 left-full w-screen h-full flex will-change-transform"
+            class="absolute top-0 left-full w-full h-full flex will-change-transform"
             :style="card2Transform"
           >
             <SeaWallet02 @next="scrollToCard3" @prev="scrollToCard1" />
@@ -162,7 +162,7 @@ const scrollToCard4 = () => scrollToVH(totalScroll)
 
           <!-- 第三張卡片: Sea Wallet 副本 (從左往右) -->
           <div 
-            class="absolute top-0 -left-full w-screen h-full flex will-change-transform"
+            class="absolute top-0 -left-full w-full h-full flex will-change-transform"
             :style="card3Transform"
           >
             <SeaWallet03 @next="scrollToCard4" @prev="scrollToCard2" />
@@ -170,7 +170,7 @@ const scrollToCard4 = () => scrollToVH(totalScroll)
 
           <!-- 第四張卡片: Sea Wallet 副本 (從右往左) -->
           <div 
-            class="absolute top-0 left-full w-screen h-full flex will-change-transform"
+            class="absolute top-0 left-full w-full h-full flex will-change-transform"
             :style="card4Transform"
           >
             <SeaWallet04 @prev="scrollToCard3" />

@@ -37,7 +37,7 @@ import MemberRoulette from './MemberRoulette.vue';
         <p class="text-pink-500/50 text-3xl"> Meets the most ambitious minds.</p>
       </div>
     </div>
-    <div class="h-screen w-screen flex items-center justify-center">
+    <div class="h-screen w-full flex items-center justify-center">
       <MemberRoulette />
     </div>
   </div>

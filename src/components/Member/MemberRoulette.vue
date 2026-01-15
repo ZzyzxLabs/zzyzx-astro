@@ -69,13 +69,13 @@ const toggleCard = (index) => {
 <div class="w-5/6 h-1/2 p-4 rounded-xl gap-x-8 bg-slate-400 items-center justify-center overflow-x-auto no-scrollbar flex whitespace-nowrap">
 <div class="group w-11/12 rounded-2xl p-4 gap-x-8 bg-slate-400 items-center overflow-x-auto no-scrollbar flex whitespace-nowrap">
     <div 
-        class="group/card relative rounded-md bg-gray-700 p-4 h-5/6 shrink-0 transition-all duration-500 ease-in-out cursor-pointer overflow-hidden" 
-        :class="activeCard === index ? 'w-[40rem]' : 'w-48'"
+        class="group/card relative rounded-md bg-gray-700 p-4 h-5/6 shrink-0 cursor-pointer overflow-hidden" 
+        :class="activeCard === index ? 'w-160' : 'w-48'"
         @click="toggleCard(index)"
         v-for="(person, index) in members" 
         :key="index"
     >
-        <div class="absolute inset-0 bg-black/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-hover/card:!opacity-0 pointer-events-none rounded-md z-10"></div>
+        <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 group-hover/card:opacity-0! pointer-events-none rounded-md z-10"></div>
         
         <div class="flex gap-6 h-full w-max">
             <div class="w-40 flex flex-col shrink-0">
@@ -85,7 +85,7 @@ const toggleCard = (index) => {
             </div>
             
             <div 
-                class="w-96 whitespace-normal flex flex-col justify-center transition-opacity duration-500 delay-200"
+                class="w-96 whitespace-normal flex flex-col justify-center"
                 :class="activeCard === index ? 'opacity-100' : 'opacity-0'"
             >
                 <div class="h-2/3 flex flex-col">

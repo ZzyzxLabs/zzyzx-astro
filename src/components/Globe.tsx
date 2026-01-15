@@ -42,7 +42,7 @@ function Globg(){
 
 export default function Globe(props: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div {...props} style={{ width: '100vw', height: '100vh', position: 'fixed', top: 0, left: 0, ...props.style }}>
+    <div {...props} style={{ width: '100%', height: '100vh', position: 'fixed', top: 0, left: 0, ...props.style }}>
       <Canvas>
         
         <PerspectiveCamera makeDefault position={[0, 0, 5]} />
