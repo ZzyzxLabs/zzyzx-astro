@@ -1,1 +1,17 @@
 @import "tailwindcss";
+/*
+Source - https://stackoverflow.com/a
+Posted by Steve O
+Retrieved 2026-01-10, License - CC BY-SA 4.0
+*/
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
