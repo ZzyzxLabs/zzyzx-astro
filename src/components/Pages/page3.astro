@@ -1,6 +1,10 @@
 ---
 import MemberIntro from "../Member/MemberIntro.vue";
+import MemberCards from "../Member/MemberCards";
 ---
-<div class="w-screen h-[200vh] flex justify-center">
-<MemberIntro client:load/>
+<div class="w-full bg-black">
+    <MemberIntro client:load />
+    <section class="min-h-screen flex items-center justify-center py-20 relative z-10 bg-black">
+        <MemberCards client:visible />
+    </section>
 </div>
