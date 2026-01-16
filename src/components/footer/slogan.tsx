@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-export default function Sogan() {
+export default function Slogan() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const mouseRef = useRef({ x: 0, y: 0, active: false });

@@ -1,4 +1,4 @@
-import Sogan from "./slogannn";
+import Slogan from "./slogan";
 
 export default function Footer() {
   return (
@@ -13,7 +13,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="w-1/2 items-center justify-center flex ">
-              <Sogan />
+              <Slogan />
       </div>
     </footer>
   );
