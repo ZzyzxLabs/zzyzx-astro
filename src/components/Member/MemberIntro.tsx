@@ -156,11 +156,11 @@ export default function MembersSection() {
           </div>
 
           {/* Bottom row */}
-          <div className="w-full flex items-end justify-between">
+          <div className="w-full flex items-end relative">
             <span className="absolute bottom-0 left-1/2 -translate-x-1/2 text-2xl animate-bounce">
               V V V
             </span>
-            <span className="text-right">」</span>
+            <span className="ml-auto text-right">」</span>
           </div>
         </div>
 
