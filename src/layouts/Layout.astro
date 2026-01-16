@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import Footer from "../components/footer/footer";
 ---
 
 <html lang="en">
@@ -12,6 +13,7 @@ import "../styles/global.css";
 	</head>
 	<body>
 		<slot />
+		<Footer client:load />
 	</body>
 </html>
 
