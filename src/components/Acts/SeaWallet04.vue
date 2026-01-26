@@ -10,7 +10,7 @@ const emit = defineEmits(['prev'])
           class="absolute top-4 left-0 w-full text-2xl p-12 text-cyan-500/50 cursor-pointer hover:text-cyan-400 transition-colors z-20"
           @click="emit('prev')"
         >
-          >>> Prev: SeaWallet
+          <<< Prev: Nereus
         </div>
         <div class="z-10">
           <h2 class="text-4xl font-bold text-white tracking-wider">
@@ -30,7 +30,7 @@ const emit = defineEmits(['prev'])
     <!-- 圖片區 (2/3) -->
     <div class="w-2/3 h-full overflow-hidden relative bg-slate-950">
         <img 
-          src="/loadingscreen" 
+          src="/bermuBlackG.png" 
           class="w-full h-full object-cover opacity-90 hover:scale-105 transition duration-700 ease-out" 
           alt="App Preview"
         />
