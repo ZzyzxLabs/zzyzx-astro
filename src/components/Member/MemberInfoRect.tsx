@@ -17,7 +17,7 @@ export default function MemberInfoRect({
 }: MemberInfoRectProps) {
   return (
     <div className="relative h-full w-full">
-      <div className={`absolute inset-0 bg-gradient-to-br ${accentClassName} opacity-60`} />
+      <div className={`absolute inset-0 bg-linear-to-br ${accentClassName} opacity-60`} />
       <div className="absolute inset-0 bg-black/55" />
 
       <div className="relative h-full w-full p-8 flex flex-col">
@@ -28,7 +28,7 @@ export default function MemberInfoRect({
         </div>
 
         <div className="flex-1 min-h-0">
-          <div className="h-full overflow-auto pr-2">
+          <div className="h-full overflow-auto pr-2 no-scrollbar">
             {children}
           </div>
         </div>
