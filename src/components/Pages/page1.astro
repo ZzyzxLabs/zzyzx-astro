@@ -1,19 +1,30 @@
 ---
-
+import Award from "../award/award.vue";
+import Service from "../Service/service.vue";
 ---
 
 <div class="relative h-[200vh] w-full">
     <div
-        class="h-screen overflow-hidden flex flex-col items-center text-slate-200 justify-center sticky top-0"
+        class="h-screen overflow-hidden flex flex-col items-center text-slate-200 justify-center sticky top-0 relative"
     >
-        <div class="relative flex items-center justify-center mb-4">
-            <h1 class="text-8xl font-bold relative z-10 text-glow">Zzyzx Labs</h1>
+        <div class="absolute left-0 top-0 w-1/4 h-full z-20">
+             <Service client:load />
         </div>
-        <p
-            class="text-xl md:text-2xl font-mono border-r-2 border-white overflow-hidden whitespace-nowrap animate-typewriter w-0 uppercase tracking-widest"
-        >
-            One of the lastest frontiers in technology
-        </p>
+
+        <div class="flex flex-col items-center justify-center z-10">
+            <div class="relative flex items-center justify-center mb-4">
+                <h1 class="text-8xl font-bold relative z-10 text-glow">Zzyzx Labs</h1>
+            </div>
+            <p
+                class="text-xl md:text-2xl font-mono border-r-2 border-white overflow-hidden whitespace-nowrap animate-typewriter w-0 uppercase tracking-widest"
+            >
+                One of the lastest frontiers in technology
+            </p>
+        </div>
+        
+        <div class="absolute right-0 top-0 w-1/4 h-full z-20">
+             <Award client:load />
+        </div>
     </div>
 
     <style>
