@@ -4,20 +4,35 @@
 
 <div class="relative h-[200vh] w-full">
     <div
-        class="h-screen overflow-hidden flex flex-col items-center justify-center sticky top-0"
+        class="h-screen overflow-hidden flex flex-col items-center text-slate-200 justify-center sticky top-0"
     >
-        <h1 class="text-8xl font-bold mb-4">Zzyzx Lab</h1>
+        <div class="relative flex items-center justify-center mb-4">
+            <h1 class="text-8xl font-bold relative z-10 text-glow">Zzyzx Labs</h1>
+        </div>
         <p
-            class="text-2xl font-mono border-r-2 border-white overflow-hidden whitespace-nowrap animate-typewriter w-0"
+            class="text-xl md:text-2xl font-mono border-r-2 border-white overflow-hidden whitespace-nowrap animate-typewriter w-0 uppercase tracking-widest"
         >
-            One of the lastest frontiers in technology.
+            One of the lastest frontiers in technology
         </p>
     </div>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+
+        .text-glow {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            text-shadow:
+                0 0 5px #fff,
+                /* 0 0 10px #fff, */
+                /* 0 0 20px #0ff, */
+                0 0 40px #0ff,
+                0 0 80px #0ff;
+        }
+
         .animate-typewriter {
             animation:
-                typing 3.8s steps(41) forwards,
+                typing 3.8s steps(43) forwards,
                 blink-caret 0.75s step-end infinite;
         }
 
@@ -26,7 +41,7 @@
                 width: 0;
             }
             to {
-                width: 41ch;
+                width: 52ch;
             }
         }
 

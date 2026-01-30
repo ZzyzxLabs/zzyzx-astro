@@ -68,7 +68,7 @@ const members: Member[] = [
     name: "KC",
     role: "Backend Engineer",
     description: "Ensuring the stability and performance of our infrastructure at scale.",
-    image: "/member/kc.jpg",
+    image: "/member/KC.png",
     color: "from-emerald-500 to-lime-600",
     infoAccent: "from-emerald-500/35 to-lime-600/20",
     info: (

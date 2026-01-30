@@ -36,6 +36,14 @@ function CameraRig() {
 function Globg(){
   const { scene } = useThree()
   const bg = useLoader(TextureLoader, '/knog.png')
+  bg.colorSpace = THREE.SRGBColorSpace; // Optional: for correct color rendering
+  // This makes the texture fill the background while maintaining aspect ratio or covering based on your specific needs, 
+  // but scene.background typically takes the texture as is. 
+  // If "FULL size" means mapping the texture to the environment (equirectangular) or just fixing encoding issues:
+  // For a static 2D background covering the canvas, scene.background with a Texture repeats or stretches depending on mapping.
+  // However, often users want:
+  // scene.background = bg; 
+  // To ensure it's not distorted, sometimes encoding helps.
   scene.background = bg
   return null
 }
