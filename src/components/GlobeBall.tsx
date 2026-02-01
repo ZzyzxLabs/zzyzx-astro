@@ -4,7 +4,7 @@ import { useTexture } from '@react-three/drei';
 import type { Mesh } from 'three';
 
 export default function GlobeBall() {
-  const texture = useTexture('/2k_mars.jpg');
+  const texture = useTexture('/8k_mars.jpg');
   const meshRef = useRef<Mesh>(null!);
 
   useFrame((state, delta) => {

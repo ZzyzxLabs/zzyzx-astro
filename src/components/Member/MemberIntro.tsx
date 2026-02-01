@@ -169,7 +169,7 @@ export default function MembersSection() {
           className="flex flex-col z-10 gap-y-8 transition-opacity duration-300 items-center justify-center relative"
           style={{ opacity: centerOpacity, ...textStyle }}
         >
-          <h2 className="text-white font-bold text-8xl text-center relative z-20 mix-blend-difference">
+          <h2 className="text-white font-bold text-8xl text-center relative z-20">
             Members
           </h2>
           <p className="text-white text-3xl text-center relative z-20">
@@ -178,7 +178,7 @@ export default function MembersSection() {
 
           {/* Glitch/layered effects */}
           <h2
-            className="text-cyan-400/30 font-bold text-8xl text-center absolute top-0 left-0 w-full z-10 pointer-events-none select-none blur-[1px]"
+            className="text-cyan-400/50 font-bold text-8xl text-center absolute top-0 left-0 w-full -z-10 pointer-events-none select-none blur-[1px]"
             style={{
               transform: `translate(${mouseX * -0.02}%, ${mouseY * -0.02}%)`,
             }}
@@ -187,7 +187,7 @@ export default function MembersSection() {
           </h2>
 
           <h2
-            className="text-pink-500/30 font-bold text-8xl text-center absolute top-0 left-0 w-full z-10 pointer-events-none select-none blur-[1px]"
+            className="text-pink-500/50 font-bold text-8xl text-center absolute top-0 left-0 w-full -z-10 pointer-events-none select-none blur-[1px]"
             style={{
               transform: `translate(${mouseX * 0.02}%, ${mouseY * 0.02}%)`,
             }}

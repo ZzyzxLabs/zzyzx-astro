@@ -35,7 +35,7 @@ const mouseTrack = (event: MouseEvent) => {
       style="transform: translate(calc(var(--mouse-x) * 0.01), calc(var(--mouse-y) * 0.01));">
       <h2 class="text-pink-500/50 font-bold text-8xl"> Acts</h2>
       <p class="text-pink-500/50 text-3xl"> To Amplify the last of the planet, </p>
-      <p class="text-pink-500-400/50 text-3xl">Zzyzx Labs makes the gears and the knowledge available to all.</p>
+      <p class="text-pink-500/50 text-3xl">Zzyzx Labs makes the gears and the knowledge available to all.</p>
     </div>
   </div>
 </template>
