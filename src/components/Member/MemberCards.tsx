@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import MemberInfoRect from './MemberInfoRect';
+import React, { useEffect, useRef, useState } from "react";
+import MemberInfoRect from "./MemberInfoRect";
 
 interface Member {
   name: string;
@@ -9,9 +9,11 @@ interface Member {
   color: string;
   infoAccent?: string;
   info?: React.ReactNode;
+  /** When set, the card links to /{profileSlug} */
+  profileSlug?: string;
 }
 
-const ZOU_SKILLS = ['Product Management', 'Smart Contract', 'Research', 'BD'];
+const ZOU_SKILLS = ["Product Management", "Smart Contract", "Research", "BD"];
 
 type Meteor = {
   x: number;
@@ -35,10 +37,10 @@ function ZouFlightGame() {
   const scoreRef = useRef(0);
   const livesRef = useRef(3);
   const hitFlashRef = useRef(0);
-  const [status, setStatus] = useState<'playing' | 'over'>('playing');
+  const [status, setStatus] = useState<"playing" | "over">("playing");
 
   useEffect(() => {
-    if (status !== 'playing') {
+    if (status !== "playing") {
       if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
@@ -52,7 +54,7 @@ function ZouFlightGame() {
       return;
     }
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) {
       return;
     }
@@ -91,8 +93,8 @@ function ZouFlightGame() {
       ctx.lineTo(-3, 6);
       ctx.lineTo(-12, 8);
       ctx.closePath();
-      ctx.fillStyle = '#7dd3fc';
-      ctx.strokeStyle = '#0ea5e9';
+      ctx.fillStyle = "#7dd3fc";
+      ctx.strokeStyle = "#0ea5e9";
       ctx.lineWidth = 2;
       ctx.fill();
       ctx.stroke();
@@ -103,21 +105,28 @@ function ZouFlightGame() {
       ctx.save();
       ctx.translate(meteor.x, meteor.y);
       ctx.rotate(meteor.rotation);
-      const gradient = ctx.createRadialGradient(0, 0, meteor.radius * 0.2, 0, 0, meteor.radius);
-      gradient.addColorStop(0, '#fde047');
-      gradient.addColorStop(0.6, '#fb923c');
-      gradient.addColorStop(1, '#b45309');
+      const gradient = ctx.createRadialGradient(
+        0,
+        0,
+        meteor.radius * 0.2,
+        0,
+        0,
+        meteor.radius
+      );
+      gradient.addColorStop(0, "#fde047");
+      gradient.addColorStop(0.6, "#fb923c");
+      gradient.addColorStop(1, "#b45309");
       ctx.fillStyle = gradient;
       ctx.beginPath();
       ctx.arc(0, 0, meteor.radius, 0, Math.PI * 2);
       ctx.fill();
-      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+      ctx.strokeStyle = "rgba(255,255,255,0.35)";
       ctx.lineWidth = 1;
       ctx.stroke();
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-      ctx.font = '11px ui-sans-serif, system-ui, -apple-system';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
+      ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+      ctx.font = "11px ui-sans-serif, system-ui, -apple-system";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
       ctx.fillText(meteor.label, 0, 1);
       ctx.restore();
     };
@@ -171,12 +180,12 @@ function ZouFlightGame() {
 
       ctx.clearRect(0, 0, rect.width, rect.height);
       const bg = ctx.createLinearGradient(0, 0, 0, rect.height);
-      bg.addColorStop(0, '#0b1220');
-      bg.addColorStop(1, '#020617');
+      bg.addColorStop(0, "#0b1220");
+      bg.addColorStop(1, "#020617");
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, rect.width, rect.height);
 
-      ctx.fillStyle = 'rgba(148, 163, 184, 0.15)';
+      ctx.fillStyle = "rgba(148, 163, 184, 0.15)";
       for (let i = 0; i < 14; i += 1) {
         const x = (i * 73 + time * 0.02) % rect.width;
         const y = (i * 41 + time * 0.04) % rect.height;
@@ -186,8 +195,8 @@ function ZouFlightGame() {
       meteorsRef.current.forEach(drawMeteor);
       drawPlane(plane.x, plane.y);
 
-      ctx.fillStyle = 'rgba(226, 232, 240, 0.75)';
-      ctx.font = '12px ui-sans-serif, system-ui, -apple-system';
+      ctx.fillStyle = "rgba(226, 232, 240, 0.75)";
+      ctx.font = "12px ui-sans-serif, system-ui, -apple-system";
       ctx.fillText(`Score ${Math.floor(scoreRef.current)}`, 12, 20);
       ctx.fillText(`Lives ${livesRef.current}`, 12, 38);
 
@@ -198,7 +207,7 @@ function ZouFlightGame() {
       }
 
       if (livesRef.current <= 0) {
-        setStatus('over');
+        setStatus("over");
         return;
       }
 
@@ -217,7 +226,7 @@ function ZouFlightGame() {
   }, [status]);
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (status !== 'playing') {
+    if (status !== "playing") {
       return;
     }
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -229,7 +238,7 @@ function ZouFlightGame() {
   };
 
   const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (status !== 'playing') {
+    if (status !== "playing") {
       return;
     }
     const rect = event.currentTarget.getBoundingClientRect();
@@ -244,9 +253,12 @@ function ZouFlightGame() {
       ref={containerRef}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
-      className="relative h-full w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40 touch-none"
+      className='relative h-full w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40 touch-none'
     >
-      <canvas ref={canvasRef} className={status === 'playing' ? 'block' : 'hidden'} />
+      <canvas
+        ref={canvasRef}
+        className={status === "playing" ? "block" : "hidden"}
+      />
     </div>
   );
 }
@@ -261,37 +273,46 @@ function ZouInfo() {
   };
 
   return (
-    <div className="flex h-full flex-col gap-4">
+    <div className='flex h-full flex-col gap-4'>
       <div>
-        <div className="text-sm uppercase tracking-widest text-white/60">Core Capabilities</div>
-        <div className="mt-2 flex flex-wrap gap-2">
+        <div className='text-sm uppercase tracking-widest text-white/60'>
+          Core Capabilities
+        </div>
+        <div className='mt-2 flex flex-wrap gap-2'>
           {ZOU_SKILLS.map((t) => (
-            <span key={t} className="rounded-full bg-white/10 px-3 py-1 text-sm text-white/85">
+            <span
+              key={t}
+              className='rounded-full bg-white/10 px-3 py-1 text-sm text-white/85'
+            >
               {t}
             </span>
           ))}
         </div>
       </div>
       <div>
-        <div className="text-sm uppercase tracking-widest text-white/60">Focus</div>
-        <div className="mt-2 text-white/80">Owns strategy, product direction, and business alignment.</div>
+        <div className='text-sm uppercase tracking-widest text-white/60'>
+          Focus
+        </div>
+        <div className='mt-2 text-white/80'>
+          Owns strategy, product direction, and business alignment.
+        </div>
       </div>
       {isPlaying && (
-        <div className="h-[220px]">
+        <div className='h-[220px]'>
           <ZouFlightGame key={gameSeed} />
         </div>
       )}
-      <div className="mt-auto flex flex-wrap gap-2">
+      <div className='mt-auto flex flex-wrap gap-2'>
         <button
-          type="button"
+          type='button'
           onClick={handlePlay}
-          className="rounded-full border border-white/30 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-widest text-white hover:bg-white/20"
+          className='rounded-full border border-white/30 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-widest text-white hover:bg-white/20'
         >
           Play
         </button>
         <a
-          href="/members/zou"
-          className="rounded-full border border-white/15 px-5 py-2 text-xs font-semibold uppercase tracking-widest text-white/80 hover:border-white/40 hover:text-white"
+          href='/members/zou'
+          className='rounded-full border border-white/15 px-5 py-2 text-xs font-semibold uppercase tracking-widest text-white/80 hover:border-white/40 hover:text-white'
         >
           Profile
         </a>
@@ -304,25 +325,39 @@ const members: Member[] = [
   {
     name: "Frederic",
     role: "Lead Architect",
-    description: "Visionary behind the core systems, pushing the boundaries of what's possible.",
-    image: "/member/frederic.jpg",
+    description:
+      "Visionary behind the core systems, pushing the boundaries of what's possible.",
+    image: "/member/frederic-nft.jpg",
     color: "from-red-500 to-orange-600",
     infoAccent: "from-red-500/40 to-orange-600/20",
+    profileSlug: "frederic",
     info: (
-      <div className="space-y-4">
+      <div className='space-y-4'>
         <div>
-          <div className="text-sm uppercase tracking-widest text-white/60">Focus</div>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {['System design', 'Architecture', 'APIs', 'Scalability'].map((t) => (
-              <span key={t} className="rounded-full bg-white/10 px-3 py-1 text-sm text-white/85">
-                {t}
-              </span>
-            ))}
+          <div className='text-sm uppercase tracking-widest text-white/60'>
+            Focus
+          </div>
+          <div className='mt-2 flex flex-wrap gap-2'>
+            {["System design", "Architecture", "APIs", "Scalability"].map(
+              (t) => (
+                <span
+                  key={t}
+                  className='rounded-full bg-white/10 px-3 py-1 text-sm text-white/85'
+                >
+                  {t}
+                </span>
+              )
+            )}
           </div>
         </div>
         <div>
-          <div className="text-sm uppercase tracking-widest text-white/60">Currently</div>
-          <div className="mt-2 text-white/80">Refining the core platform and defining long-term technical direction.</div>
+          <div className='text-sm uppercase tracking-widest text-white/60'>
+            Currently
+          </div>
+          <div className='mt-2 text-white/80'>
+            Refining the core platform and defining long-term technical
+            direction.
+          </div>
         </div>
       </div>
     ),
@@ -330,34 +365,40 @@ const members: Member[] = [
   {
     name: "Zou",
     role: "CSO",
-    description: "Leads team direction and strategy, aligning product vision with market opportunities.",
-    image: "/member/zou.png", 
+    description:
+      "Leads team direction and strategy, aligning product vision with market opportunities.",
+    image: "/member/zou.png",
     color: "from-blue-500 to-cyan-600",
     infoAccent: "from-blue-500/35 to-cyan-600/20",
-    info: (
-      <ZouInfo />
-    ),
+    info: <ZouInfo />,
   },
   {
     name: "KC",
     role: "Backend Engineer",
-    description: "Ensuring the stability and performance of our infrastructure at scale.",
+    description:
+      "Ensuring the stability and performance of our infrastructure at scale.",
     image: "/member/KC.png",
     color: "from-emerald-500 to-lime-600",
     infoAccent: "from-emerald-500/35 to-lime-600/20",
     info: (
-      <div className="space-y-4">
+      <div className='space-y-4'>
         <div>
-          <div className="text-sm uppercase tracking-widest text-white/60">Strengths</div>
-          <ul className="mt-2 space-y-2 text-white/80">
+          <div className='text-sm uppercase tracking-widest text-white/60'>
+            Strengths
+          </div>
+          <ul className='mt-2 space-y-2 text-white/80'>
             <li>• Performance tuning & observability</li>
             <li>• Stable deployments and guardrails</li>
             <li>• Data pipelines and services</li>
           </ul>
         </div>
         <div>
-          <div className="text-sm uppercase tracking-widest text-white/60">Notes</div>
-          <div className="mt-2 text-white/80">Keeps systems calm under pressure.</div>
+          <div className='text-sm uppercase tracking-widest text-white/60'>
+            Notes
+          </div>
+          <div className='mt-2 text-white/80'>
+            Keeps systems calm under pressure.
+          </div>
         </div>
       </div>
     ),
@@ -365,21 +406,31 @@ const members: Member[] = [
   {
     name: "Lun",
     role: "Creative Director",
-    description: "Bringing artistic flair and consistent design language to every project.",
+    description:
+      "Bringing artistic flair and consistent design language to every project.",
     image: "/member/lun.png",
     color: "from-purple-500 to-pink-600",
     infoAccent: "from-purple-500/35 to-pink-600/20",
     info: (
-      <div className="space-y-4">
+      <div className='space-y-4'>
         <div>
-          <div className="text-sm uppercase tracking-widest text-white/60">Design</div>
-          <div className="mt-2 text-white/80">Owns visual language, mood, and cohesion across the whole product.</div>
+          <div className='text-sm uppercase tracking-widest text-white/60'>
+            Design
+          </div>
+          <div className='mt-2 text-white/80'>
+            Owns visual language, mood, and cohesion across the whole product.
+          </div>
         </div>
         <div>
-          <div className="text-sm uppercase tracking-widest text-white/60">Delivers</div>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {['Brand', 'Typography', 'Layout', 'Art direction'].map((t) => (
-              <span key={t} className="rounded-full bg-white/10 px-3 py-1 text-sm text-white/85">
+          <div className='text-sm uppercase tracking-widest text-white/60'>
+            Delivers
+          </div>
+          <div className='mt-2 flex flex-wrap gap-2'>
+            {["Brand", "Typography", "Layout", "Art direction"].map((t) => (
+              <span
+                key={t}
+                className='rounded-full bg-white/10 px-3 py-1 text-sm text-white/85'
+              >
                 {t}
               </span>
             ))}
@@ -391,95 +442,123 @@ const members: Member[] = [
   {
     name: "Malingshu",
     role: "AI Specialist",
-    description: "Integrating cutting-edge AI solutions to smarten up our workflows.",
+    description:
+      "Integrating cutting-edge AI solutions to smarten up our workflows.",
     image: "/member/malingshu.jpg",
     color: "from-yellow-500 to-amber-600",
     infoAccent: "from-yellow-500/35 to-amber-600/20",
     info: (
-      <div className="space-y-4">
+      <div className='space-y-4'>
         <div>
-          <div className="text-sm uppercase tracking-widest text-white/60">Areas</div>
-          <div className="mt-2 grid grid-cols-2 gap-2">
-            {['LLM apps', 'Agents', 'RAG', 'Automation'].map((t) => (
-              <div key={t} className="rounded-2xl bg-white/10 px-4 py-3 text-white/85">
+          <div className='text-sm uppercase tracking-widest text-white/60'>
+            Areas
+          </div>
+          <div className='mt-2 grid grid-cols-2 gap-2'>
+            {["LLM apps", "Agents", "RAG", "Automation"].map((t) => (
+              <div
+                key={t}
+                className='rounded-2xl bg-white/10 px-4 py-3 text-white/85'
+              >
                 {t}
               </div>
             ))}
           </div>
         </div>
         <div>
-          <div className="text-sm uppercase tracking-widest text-white/60">Goal</div>
-          <div className="mt-2 text-white/80">Make workflows smarter without making them fragile.</div>
+          <div className='text-sm uppercase tracking-widest text-white/60'>
+            Goal
+          </div>
+          <div className='mt-2 text-white/80'>
+            Make workflows smarter without making them fragile.
+          </div>
         </div>
       </div>
     ),
-  }
+  },
 ];
 
 export default function MemberCards() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   return (
-    <div className="flex w-full h-[600px] gap-4 px-10 py-20 items-center justify-center bg-black overflow-hidden">
-      {members.map((member, index) => (
-        <div
-          key={member.name}
-          className={`
-            relative flex h-full rounded-3xl overflow-hidden cursor-pointer transition-all duration-700 ease-out
-            ${activeIndex === index ? 'flex-[10]' : 'flex-[1]'}
-            ${activeIndex !== null && activeIndex !== index ? 'opacity-50' : 'opacity-100'}
+    <div className='flex w-full h-[600px] gap-4 px-10 py-20 items-center justify-center bg-black overflow-hidden'>
+      {members.map((member, index) => {
+        const Wrapper = member.profileSlug ? "a" : "div";
+        const wrapperProps = member.profileSlug
+          ? { href: `/${member.profileSlug}` }
+          : {};
+        return (
+          <Wrapper
+            key={member.name}
+            {...wrapperProps}
+            className={`
+            relative flex h-full rounded-3xl overflow-hidden cursor-pointer transition-all duration-700 ease-out no-underline text-inherit
+            ${activeIndex === index ? "flex-[10]" : "flex-[1]"}
+            ${
+              activeIndex !== null && activeIndex !== index
+                ? "opacity-50"
+                : "opacity-100"
+            }
           `}
-          onMouseEnter={() => setActiveIndex(index)}
-          onMouseLeave={() => setActiveIndex(null)}
-        >
-          <div className="relative h-full w-full flex">
+            onMouseEnter={() => setActiveIndex(index)}
+            onMouseLeave={() => setActiveIndex(null)}
+          >
+          <div className='relative h-full w-full flex'>
             {/* Left: Image */}
             <div
               className={`relative h-full transition-[width] duration-700 ease-out ${
-                activeIndex === index ? 'w-[55%]' : 'w-full'
+                activeIndex === index ? "w-[55%]" : "w-full"
               }`}
             >
-              <div className={`absolute inset-0 bg-gradient-to-br ${member.color} opacity-50`} />
+              <div
+                className={`absolute inset-0 bg-gradient-to-br ${member.color} opacity-50`}
+              />
 
               <img
                 src={member.image}
                 alt={member.name}
-                className="absolute inset-0 w-full h-full object-cover"
+                className='absolute inset-0 w-full h-full object-cover'
                 onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
+                  (e.target as HTMLImageElement).style.display = "none";
                 }}
               />
 
               <div
                 className={`absolute inset-0 transition-opacity duration-500 ${
-                  activeIndex === index ? 'bg-black/30' : 'bg-black/10'
+                  activeIndex === index ? "bg-black/30" : "bg-black/10"
                 }`}
               />
 
               {/* Collapsed label */}
               <div
                 className={`absolute inset-x-6 bottom-6 transition-opacity duration-500 ${
-                  activeIndex === index ? 'opacity-0' : 'opacity-100'
+                  activeIndex === index ? "opacity-0" : "opacity-100"
                 }`}
               >
-                <div className="text-2xl font-bold text-white drop-shadow">{member.name}</div>
-                <div className="text-sm text-white/80 mt-1">{member.role}</div>
+                <div className='text-2xl font-bold text-white drop-shadow'>
+                  {member.name}
+                </div>
+                <div className='text-sm text-white/80 mt-1'>{member.role}</div>
               </div>
             </div>
 
             {/* Right: Info rectangle (only visible on hover) */}
             <div
               className={`relative h-full flex-none overflow-hidden transition-all duration-700 ease-out ${
-                activeIndex === index ? 'basis-[45%] opacity-100 translate-x-0' : 'basis-0 opacity-0 translate-x-8'
+                activeIndex === index
+                  ? "basis-[45%] opacity-100 translate-x-0"
+                  : "basis-0 opacity-0 translate-x-8"
               }`}
             >
-              <div className="h-full w-full">
-                <div className="h-full rounded-none">
+              <div className='h-full w-full'>
+                <div className='h-full rounded-none'>
                   <MemberInfoRect
                     name={member.name}
                     role={member.role}
                     description={member.description}
-                    accentClassName={member.infoAccent ?? 'from-zinc-800 to-zinc-950'}
+                    accentClassName={
+                      member.infoAccent ?? "from-zinc-800 to-zinc-950"
+                    }
                   >
                     {member.info}
                   </MemberInfoRect>
@@ -487,8 +566,9 @@ export default function MemberCards() {
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        </Wrapper>
+        );
+      })}
     </div>
   );
 }
