@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import Footer from "../components/footer/footer";
+import Navbar from "../components/Navbar.astro";
 import "@fontsource/inter";
 import "@fontsource/space-grotesk";
 
@@ -34,8 +35,12 @@ const {
 		<meta property="og:image" content="/og-image.jpg" />
 	</head>
 	<body>
+		<Navbar />
 		<slot />
 		<Footer client:load />
+		<script>
+			import "../scripts/scroll-animations";
+		</script>
 	</body>
 </html>
 

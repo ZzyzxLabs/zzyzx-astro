@@ -72,3 +72,32 @@ h1, h2, h3, h4, h5, h6 {
                0 0 20px rgba(var(--color-primary), 0.3),
                0 0 40px rgba(var(--color-primary), 0.1);
 }
+
+/* --- New: Section Spacing --- */
+section {
+  position: relative;
+}
+
+/* --- New: Glassmorphism Utility --- */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* --- New: Smooth Link Transition --- */
+a {
+  transition: color 0.2s ease;
+}
+
+/* --- New: Selection Colors --- */
+::selection {
+  background: rgba(var(--color-primary), 0.3);
+  color: #fff;
+}
+
+::-moz-selection {
+  background: rgba(var(--color-primary), 0.3);
+  color: #fff;
+}

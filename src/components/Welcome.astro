@@ -1,9 +1,10 @@
 ---
-// import Globe1 from "./globe.vue";
 import Globe from "./Globe";
 import Page1 from "./Pages/page1.astro";
 import Page2 from "./Pages/page2.astro";
 import Page3 from "./Pages/page3.astro";
+import About from "./About.astro";
+import Marquee from "./Marquee.astro";
 ---
 
 <div class="">
@@ -11,11 +12,15 @@ import Page3 from "./Pages/page3.astro";
   <div class="min-h-screen items-center justify-center flex">
     <Page1 />
   </div>
-  <div class="min-h-screen">
-    <Page2/>
+  <Marquee direction="left" speed={25} />
+  <div id="projects" class="min-h-screen">
+    <Page2 />
   </div>
-  <div class="min-h-screen">
-    <Page3/>
+  <Marquee direction="right" speed={35} />
+  <About />
+  <Marquee direction="left" speed={30} />
+  <div id="members" class="min-h-screen">
+    <Page3 />
   </div>
   <!-- <Globe1 client:load className="-z-10" /> -->
 </div>

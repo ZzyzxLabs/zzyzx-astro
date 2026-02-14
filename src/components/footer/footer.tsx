@@ -13,7 +13,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="w-1/2 items-center justify-center flex ">
-              <Slogan />
+        <Slogan />
       </div>
     </footer>
   );
@@ -64,7 +64,7 @@ const contactData: ContactNode[] = [
 
 const ContactNodeRenderer = ({ node }: { node: ContactNode }) => {
   const hasContent = node.icon && node.label;
-  
+
   return (
     <div className="relative">
       {/* Horizontal Connector from parent trunk */}
@@ -76,9 +76,8 @@ const ContactNodeRenderer = ({ node }: { node: ContactNode }) => {
           href={node.url}
           target={node.highlight ? undefined : "_blank"}
           rel={node.highlight ? undefined : "noreferrer"}
-          className={`group flex items-center gap-3 opacity-80 hover:opacity-100 transition-opacity ${
-            node.highlight ? "pr-2 rounded-r-full" : ""
-          }`}
+          className={`group flex items-center gap-3 opacity-80 hover:opacity-100 transition-opacity ${node.highlight ? "pr-2 rounded-r-full" : ""
+            }`}
         >
           {node.highlight ? (
             <div className="bg-white rounded-full p-1.5 w-8 h-8 flex items-center justify-center relative z-20">
@@ -96,23 +95,23 @@ const ContactNodeRenderer = ({ node }: { node: ContactNode }) => {
         </a>
       ) : (
         // Empty structural node - acts as an anchor for the split vertical line
-        <div className="h-0 w-0" /> 
+        <div className="h-0 w-0" />
       )}
 
       {/* Children Tree */}
       {node.children && node.children.length > 0 && (
-        <div 
+        <div
           className={`relative flex flex-col gap-6 pt-4 
             ${hasContent ? "ml-4 pl-6 border-l-2 border-white/20" : "pl-6"}
           `}
         >
-          
+
           {/* 
             If structural node (no content), draw a secondary trunk for children 
             that connects the incoming horizontal line to the children.
           */}
           {!hasContent && (
-             <div className="absolute left-0 top-4 bottom-4 border-l-2 border-white/20" />
+            <div className="absolute left-0 top-4 bottom-4 border-l-2 border-white/20" />
           )}
 
           {node.children.map((child, index) => (

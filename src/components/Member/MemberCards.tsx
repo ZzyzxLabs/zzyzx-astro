@@ -311,7 +311,7 @@ function ZouInfo() {
           Play
         </button>
         <a
-          href='/members/zou'
+          href='/zou'
           className='rounded-full border border-white/15 px-5 py-2 text-xs font-semibold uppercase tracking-widest text-white/80 hover:border-white/40 hover:text-white'
         >
           Profile
@@ -370,6 +370,7 @@ const members: Member[] = [
     image: "/member/zou.png",
     color: "from-blue-500 to-cyan-600",
     infoAccent: "from-blue-500/35 to-cyan-600/20",
+    profileSlug: "zou",
     info: <ZouInfo />,
   },
   {
@@ -494,79 +495,74 @@ export default function MemberCards() {
             className={`
             relative flex h-full rounded-3xl overflow-hidden cursor-pointer transition-all duration-700 ease-out no-underline text-inherit
             ${activeIndex === index ? "flex-[10]" : "flex-[1]"}
-            ${
-              activeIndex !== null && activeIndex !== index
+            ${activeIndex !== null && activeIndex !== index
                 ? "opacity-50"
                 : "opacity-100"
-            }
+              }
           `}
             onMouseEnter={() => setActiveIndex(index)}
             onMouseLeave={() => setActiveIndex(null)}
           >
-          <div className='relative h-full w-full flex'>
-            {/* Left: Image */}
-            <div
-              className={`relative h-full transition-[width] duration-700 ease-out ${
-                activeIndex === index ? "w-[55%]" : "w-full"
-              }`}
-            >
+            <div className='relative h-full w-full flex'>
+              {/* Left: Image */}
               <div
-                className={`absolute inset-0 bg-gradient-to-br ${member.color} opacity-50`}
-              />
-
-              <img
-                src={member.image}
-                alt={member.name}
-                className='absolute inset-0 w-full h-full object-cover'
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = "none";
-                }}
-              />
-
-              <div
-                className={`absolute inset-0 transition-opacity duration-500 ${
-                  activeIndex === index ? "bg-black/30" : "bg-black/10"
-                }`}
-              />
-
-              {/* Collapsed label */}
-              <div
-                className={`absolute inset-x-6 bottom-6 transition-opacity duration-500 ${
-                  activeIndex === index ? "opacity-0" : "opacity-100"
-                }`}
+                className={`relative h-full transition-[width] duration-700 ease-out ${activeIndex === index ? "w-[55%]" : "w-full"
+                  }`}
               >
-                <div className='text-2xl font-bold text-white drop-shadow'>
-                  {member.name}
-                </div>
-                <div className='text-sm text-white/80 mt-1'>{member.role}</div>
-              </div>
-            </div>
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${member.color} opacity-50`}
+                />
 
-            {/* Right: Info rectangle (only visible on hover) */}
-            <div
-              className={`relative h-full flex-none overflow-hidden transition-all duration-700 ease-out ${
-                activeIndex === index
-                  ? "basis-[45%] opacity-100 translate-x-0"
-                  : "basis-0 opacity-0 translate-x-8"
-              }`}
-            >
-              <div className='h-full w-full'>
-                <div className='h-full rounded-none'>
-                  <MemberInfoRect
-                    name={member.name}
-                    role={member.role}
-                    description={member.description}
-                    accentClassName={
-                      member.infoAccent ?? "from-zinc-800 to-zinc-950"
-                    }
-                  >
-                    {member.info}
-                  </MemberInfoRect>
+                <img
+                  src={member.image}
+                  alt={member.name}
+                  className='absolute inset-0 w-full h-full object-cover'
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = "none";
+                  }}
+                />
+
+                <div
+                  className={`absolute inset-0 transition-opacity duration-500 ${activeIndex === index ? "bg-black/30" : "bg-black/10"
+                    }`}
+                />
+
+                {/* Collapsed label */}
+                <div
+                  className={`absolute inset-x-6 bottom-6 transition-opacity duration-500 ${activeIndex === index ? "opacity-0" : "opacity-100"
+                    }`}
+                >
+                  <div className='text-2xl font-bold text-white drop-shadow'>
+                    {member.name}
+                  </div>
+                  <div className='text-sm text-white/80 mt-1'>{member.role}</div>
+                </div>
+              </div>
+
+              {/* Right: Info rectangle (only visible on hover) */}
+              <div
+                className={`relative h-full flex-none overflow-hidden transition-all duration-700 ease-out ${activeIndex === index
+                    ? "basis-[45%] opacity-100 translate-x-0"
+                    : "basis-0 opacity-0 translate-x-8"
+                  }`}
+              >
+                <div className='h-full w-full'>
+                  <div className='h-full rounded-none'>
+                    <MemberInfoRect
+                      name={member.name}
+                      role={member.role}
+                      description={member.description}
+                      accentClassName={
+                        member.infoAccent ?? "from-zinc-800 to-zinc-950"
+                      }
+                    >
+                      {member.info}
+                    </MemberInfoRect>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </Wrapper>
+          </Wrapper>
         );
       })}
     </div>
