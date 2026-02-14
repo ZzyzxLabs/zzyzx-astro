@@ -1,0 +1,45 @@
+---
+/**
+ * SuperCarHero — Full-screen looping video background hero.
+ * Plays all 3 SuperCar clips sequentially, looping back to the first.
+ */
+---
+
+<div id="supercar-hero" class="fixed inset-0 -z-10 overflow-hidden">
+    <!-- Video Background -->
+    <video
+        id="supercar-video"
+        autoplay
+        muted
+        playsinline
+        class="absolute inset-0 w-full h-full object-cover"
+        src="/SuperCar/1.mp4"></video>
+
+    <!-- Overlay gradient for readability -->
+    <div
+        class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70"
+    >
+    </div>
+
+    <!-- Bottom fade into the page -->
+    <div
+        class="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-bg-base to-transparent"
+    >
+    </div>
+</div>
+
+<script>
+    const videos = ["/SuperCar/1.mp4", "/SuperCar/2.mp4", "/SuperCar/3.mp4"];
+    let currentIndex = 0;
+    const videoEl = document.getElementById(
+        "supercar-video",
+    ) as HTMLVideoElement;
+
+    if (videoEl) {
+        videoEl.addEventListener("ended", () => {
+            currentIndex = (currentIndex + 1) % videos.length;
+            videoEl.src = videos[currentIndex];
+            videoEl.play();
+        });
+    }
+</script>
