@@ -375,9 +375,9 @@ const members: Member[] = [
   },
   {
     name: "KC",
-    role: "Backend Engineer",
+    role: "CGO",
     description:
-      "Ensuring the stability and performance of our infrastructure at scale.",
+      "Driving marketing strategy and business development for growth.",
     image: "/member/KC.png",
     color: "from-emerald-500 to-lime-600",
     infoAccent: "from-emerald-500/35 to-lime-600/20",
@@ -388,9 +388,8 @@ const members: Member[] = [
             Strengths
           </div>
           <ul className='mt-2 space-y-2 text-white/80'>
-            <li>• Performance tuning & observability</li>
-            <li>• Stable deployments and guardrails</li>
-            <li>• Data pipelines and services</li>
+            <li>• Marketing</li>
+            <li>• Business Develop</li>
           </ul>
         </div>
         <div>
@@ -398,7 +397,7 @@ const members: Member[] = [
             Notes
           </div>
           <div className='mt-2 text-white/80'>
-            Keeps systems calm under pressure.
+            Connects product value to market opportunities.
           </div>
         </div>
       </div>
@@ -406,9 +405,9 @@ const members: Member[] = [
   },
   {
     name: "Lun",
-    role: "Creative Director",
+    role: "Co-CTO",
     description:
-      "Bringing artistic flair and consistent design language to every project.",
+      "Leading frontend and cyber security efforts across the stack.",
     image: "/member/lun.png",
     color: "from-purple-500 to-pink-600",
     infoAccent: "from-purple-500/35 to-pink-600/20",
@@ -416,18 +415,18 @@ const members: Member[] = [
       <div className='space-y-4'>
         <div>
           <div className='text-sm uppercase tracking-widest text-white/60'>
-            Design
+            Focus
           </div>
           <div className='mt-2 text-white/80'>
-            Owns visual language, mood, and cohesion across the whole product.
+            Builds reliable user experiences and keeps systems secure.
           </div>
         </div>
         <div>
           <div className='text-sm uppercase tracking-widest text-white/60'>
-            Delivers
+            Strengths
           </div>
           <div className='mt-2 flex flex-wrap gap-2'>
-            {["Brand", "Typography", "Layout", "Art direction"].map((t) => (
+            {["Frontend", "Cyber Security"].map((t) => (
               <span
                 key={t}
                 className='rounded-full bg-white/10 px-3 py-1 text-sm text-white/85'
@@ -442,9 +441,9 @@ const members: Member[] = [
   },
   {
     name: "Malingshu",
-    role: "AI Specialist",
+    role: "Co-CTO",
     description:
-      "Integrating cutting-edge AI solutions to smarten up our workflows.",
+      "Leading cryptography and blockchain architecture for secure products.",
     image: "/member/malingshu.jpg",
     color: "from-yellow-500 to-amber-600",
     infoAccent: "from-yellow-500/35 to-amber-600/20",
@@ -452,10 +451,10 @@ const members: Member[] = [
       <div className='space-y-4'>
         <div>
           <div className='text-sm uppercase tracking-widest text-white/60'>
-            Areas
+            Strengths
           </div>
           <div className='mt-2 grid grid-cols-2 gap-2'>
-            {["LLM apps", "Agents", "RAG", "Automation"].map((t) => (
+            {["Cryptography", "Blockchain"].map((t) => (
               <div
                 key={t}
                 className='rounded-2xl bg-white/10 px-4 py-3 text-white/85'
@@ -470,7 +469,7 @@ const members: Member[] = [
             Goal
           </div>
           <div className='mt-2 text-white/80'>
-            Make workflows smarter without making them fragile.
+            Build secure foundations that scale with the product.
           </div>
         </div>
       </div>
