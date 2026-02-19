@@ -1,0 +1,189 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout 
+  title="Lun | CTO @ Zzyzx Labs" 
+  description="A motivated dev who wants to push Information Literacy in certain area and field. Web Front End, Web3, Open Source and Cyber Security."
+>
+  <div class="min-h-screen bg-black text-white">
+    <div class="relative overflow-hidden">
+      <!-- Background elements -->
+      <div class="pointer-events-none absolute -top-24 right-[-20%] h-72 w-72 rounded-full bg-orange-500/15 blur-3xl"></div>
+      <div class="pointer-events-none absolute -bottom-24 left-[-10%] h-80 w-80 rounded-full bg-sky-500/10 blur-3xl"></div>
+
+      <div class="max-w-6xl mx-auto px-6 py-12 md:py-20 relative">
+        <!-- Back button -->
+        <a
+          href="/"
+          class="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm uppercase tracking-widest mb-10 transition-colors animate-fade-in"
+        >
+          ← Back to Team
+        </a>
+
+        <div class="space-y-12">
+          <!-- Header -->
+          <section class="rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8 backdrop-blur animate-slide-up">
+            <div class="grid gap-6 md:grid-cols-[240px_minmax(0,1fr)] md:items-center">
+              <div class="relative aspect-3/4 rounded-2xl overflow-hidden">
+                <div class="absolute inset-0 bg-linear-to-br from-indigo-500 to-purple-600 opacity-50"></div>
+                <img
+                  src="/member/lun.png"
+                  alt="Lun"
+                  class="absolute inset-0 w-full h-full object-cover"
+                />
+                <div class="absolute inset-0 bg-black/20"></div>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <h1 class="text-3xl md:text-4xl font-bold text-white">Lun</h1>
+                  <p class="text-lg text-white/80 mt-1">Front End, CyberSec, Web3, Open Source </p>
+                  <p class="text-sm text-white/60 mt-2">Taipei, Taiwan</p>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                  <a 
+                    href="mailto:w0979563238@gmail.com"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm transition-colors"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
+                      <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
+                    </svg>
+                    Email
+                  </a>
+                  <a 
+                    href="https://github.com/creaper9487"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm transition-colors"
+                  >
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    GitHub
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- About Me -->
+          <section class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur animate-fade-in">
+            <h2 class="text-2xl font-bold text-white/90 mb-4">About Me</h2>
+            <div class="text-base text-white/75 leading-relaxed space-y-4">
+                  <p>Tech Lead at Zzyzx Labs, focused on front-end development, abstracting complex 
+                    crypto concepts for general audiences, and optimizing data gathering efficiency across 
+                    various fields. In charge of making the ideas worth sharing be accessible.</p>
+            </div>
+          </section>
+
+
+          <!-- Core Capabilities -->
+          <section class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur animate-fade-in">
+            <h2 class="text-2xl font-bold text-white/90 mb-6">
+              Core Capabilities
+            </h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {
+                [
+                  "dApp Design",
+                  "Security",
+                  "Education",
+                ].map((skill) => (
+                  <div class="rounded-2xl bg-white/10 px-4 py-3 text-center text-white/85 text-sm font-medium">
+                    {skill}
+                  </div>
+                ))
+              }
+            </div>
+          </section>
+
+          <!-- Experience -->
+          <section class="animate-fade-in">
+            <h2 class="text-2xl font-bold text-white/90 mb-6">Experience</h2>
+            <div class="space-y-4">
+              <!-- Zzyzx Labs -->
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-4">
+                  <div>
+                    <h3 class="text-lg font-semibold text-white">CTO</h3>
+                    <p class="text-white/80">Zzyzx Labs · Self-employed</p>
+                  </div>
+                  <div class="text-white/60 text-sm md:text-right">
+                    <div>Jan 2025 – Present</div>
+                    <div>Remote</div>
+                  </div>
+                </div>
+                <ul>
+                    <li>
+                        Create reliable dApp production
+                    </li>
+                    <li>
+                        Optimization toward performance, accessibility and user experience
+                    </li>
+                </ul>
+              </div>
+
+
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-4">
+                  <div>
+                    <h3 class="text-lg font-semibold text-white">Hackathons</h3>
+                    <p class="text-white/80">Various Pioneers</p>
+                  </div>
+                  <div class="text-white/60 text-sm md:text-right">
+                    <div> Non-Stop </div>
+                    <div>Varies</div>
+                  </div>
+                </div>
+                <ul>
+                    <li>
+                        Layout project plans and tech stacks
+                    </li>
+                    <li>
+                        Lead teams in rapid prototyping and development
+                    </li>
+                </ul>
+              </div>
+            </div>
+          </section>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.8s ease-out forwards;
+      opacity: 0;
+    }
+
+    .animate-slide-up {
+      animation: slideUp 0.8s ease-out forwards;
+      opacity: 0;
+    }
+  </style>
+</Layout>

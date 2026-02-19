@@ -298,7 +298,7 @@ function ZouInfo() {
         </div>
       </div>
       {isPlaying && (
-        <div className='h-[220px]'>
+        <div className='h-55'>
           <ZouFlightGame key={gameSeed} />
         </div>
       )}
@@ -407,10 +407,11 @@ const members: Member[] = [
     name: "Lun",
     role: "Co-CTO",
     description:
-      "Leading frontend and cyber security efforts across the stack.",
+      "Web Front End, Web3, Open Source and Cyber Security.",
     image: "/member/lun.png",
     color: "from-purple-500 to-pink-600",
     infoAccent: "from-purple-500/35 to-pink-600/20",
+    profileSlug: "Lun",
     info: (
       <div className='space-y-4'>
         <div>
@@ -418,7 +419,7 @@ const members: Member[] = [
             Focus
           </div>
           <div className='mt-2 text-white/80'>
-            Builds reliable user experiences and keeps systems secure.
+            Pushing Information Literacy. Writes dynamic front end and creates dApps on Sui.
           </div>
         </div>
         <div>
@@ -426,7 +427,7 @@ const members: Member[] = [
             Strengths
           </div>
           <div className='mt-2 flex flex-wrap gap-2'>
-            {["Frontend", "Cyber Security"].map((t) => (
+            {["Web Front End", "Web3", "Open Source", "Cyber Security"].map((t) => (
               <span
                 key={t}
                 className='rounded-full bg-white/10 px-3 py-1 text-sm text-white/85'
@@ -481,7 +482,7 @@ export default function MemberCards() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   return (
-    <div className='flex w-full h-[600px] gap-4 px-10 py-20 items-center justify-center bg-black overflow-hidden'>
+    <div className='flex w-full h-150 gap-4 px-10 py-20 items-center justify-center bg-black overflow-hidden'>
       {members.map((member, index) => {
         const Wrapper = member.profileSlug ? "a" : "div";
         const wrapperProps = member.profileSlug
@@ -493,7 +494,7 @@ export default function MemberCards() {
             {...wrapperProps}
             className={`
             relative flex h-full rounded-3xl overflow-hidden cursor-pointer transition-all duration-700 ease-out no-underline text-inherit
-            ${activeIndex === index ? "flex-[10]" : "flex-[1]"}
+            ${activeIndex === index ? "flex-10" : "flex-1"}
             ${activeIndex !== null && activeIndex !== index
                 ? "opacity-50"
                 : "opacity-100"
@@ -509,7 +510,7 @@ export default function MemberCards() {
                   }`}
               >
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${member.color} opacity-50`}
+                  className={`absolute inset-0 bg-linear-to-br ${member.color} opacity-50`}
                 />
 
                 <img
