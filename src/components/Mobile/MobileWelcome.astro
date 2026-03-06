@@ -1,0 +1,29 @@
+---
+import SuperCarHero from "../SuperCarHero.astro";
+import Page1 from "../Pages/page1.astro";
+import About from "../About.astro";
+import MobileProjects from "./MobileProjects.astro";
+import MobileMembers from "./MobileMembers.astro";
+---
+
+<!-- Fixed background video -->
+<SuperCarHero />
+
+<!-- Main content (scrollable) -->
+<div class="relative w-full overflow-x-hidden">
+  
+  <!-- Hero / Intro Section: Transparent background to show video -->
+  <div class="relative z-10 w-full min-h-screen flex items-center justify-center">
+      <Page1 />
+  </div>
+
+  <!-- Content Sections: Black background to cover video as we scroll -->
+  <div class="relative z-20 bg-black">
+      <MobileProjects />
+      <div id="about">
+        <About/>
+      </div>
+      <MobileMembers />
+  </div>
+
+</div>

@@ -2,8 +2,8 @@ import Slogan from "./slogan";
 
 export default function Footer() {
   return (
-    <footer className="w-full h-fit bg-black/50 flex backdrop-blur-md border-t-2 border-white/10">
-      <div className="w-1/2 flex flex-row justify-center items-center gap-4">
+    <footer className="w-full h-fit bg-black/50 flex flex-col md:flex-row backdrop-blur-md border-t-2 border-white/10">
+      <div className="w-full md:w-1/2 flex flex-row justify-center items-center gap-4 py-10 md:py-0 border-b border-white/10 md:border-b-0">
         <h3 className="text-3xl font-bold text-white tracking-widest uppercase -rotate-90 text-nowrap">Contact</h3>
         {/* Main Trunk Container */}
         <div className="flex flex-col items-start gap-6 border-l-2 border-white/20 pl-6 py-4">
@@ -12,7 +12,7 @@ export default function Footer() {
           ))}
         </div>
       </div>
-      <div className="w-1/2 items-center justify-center flex ">
+      <div className="w-full md:w-1/2 items-center justify-center flex overflow-hidden">
         <Slogan />
       </div>
     </footer>

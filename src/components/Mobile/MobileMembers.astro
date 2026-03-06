@@ -1,0 +1,69 @@
+---
+const members = [
+  {
+    name: "Frederic",
+    role: "Lead Architect",
+    image: "/member/frederic-nft.jpg",
+    skills: ["System design", "Architecture", "APIs", "Scalability"],
+    description: "Visionary behind the core systems, pushing the boundaries of what's possible."
+  },
+  {
+    name: "Zou",
+    role: "CSO",
+    image: "/member/zou.png",
+    skills: ["Product Management", "Smart Contract", "Research", "BD"],
+    description: "Leads team direction and strategy, aligning product vision with market opportunities."
+  },
+  {
+    name: "KC",
+    role: "CGO",
+    image: "/member/KC.png",
+    skills: ["Marketing", "Business Develop"],
+    description: "Driving marketing strategy and business development for growth."
+  },
+  {
+    name: "Lun",
+    role: "Co-CTO",
+    image: "/member/lun.png",
+    skills: ["Web Front End", "Web3", "Cyber Security"],
+    description: "Web Front End, Web3, Open Source and Cyber Security. Pushing Information Literacy."
+  },
+  {
+    name: "Malingshu",
+    role: "Co-CTO",
+    image: "/member/malingshu.jpg",
+    skills: ["Cryptography", "Blockchain"],
+    description: "Leading cryptography and blockchain architecture for secure products."
+  }
+];
+---
+
+<section id="members" class="py-20 px-6">
+  <div class="text-center mb-12">
+    <h2 class="text-4xl font-bold text-white mb-4">MEMBERS</h2>
+    <p class="text-gray-400">Our team driving the vision forward.</p>
+  </div>
+
+  <div class="space-y-8">
+    {members.map(member => (
+      <div class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
+        <div class="h-80 w-full relative">
+           <img src={member.image} alt={member.name} class="w-full h-full object-cover" />
+           <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+           <div class="absolute bottom-6 left-6 text-white">
+              <h3 class="text-3xl font-bold">{member.name}</h3>
+              <p class="text-primary font-medium">{member.role}</p>
+           </div>
+        </div>
+        <div class="p-6 space-y-4">
+           <p class="text-gray-300 leading-relaxed">{member.description}</p>
+           <div class="flex flex-wrap gap-2">
+             {member.skills.map(skill => (
+               <span class="px-3 py-1 bg-white/10 rounded-full text-xs text-white/70 uppercase tracking-widest">{skill}</span>
+             ))}
+           </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
