@@ -5,65 +5,105 @@ const members = [
     role: "Lead Architect",
     image: "/member/frederic-nft.jpg",
     skills: ["System design", "Architecture", "APIs", "Scalability"],
-    description: "Visionary behind the core systems, pushing the boundaries of what's possible."
+    description: "Visionary behind the core systems, pushing the boundaries of what's possible.",
+    profileSlug: "frederic",
   },
   {
     name: "Zou",
     role: "CSO",
     image: "/member/zou.png",
     skills: ["Product Management", "Smart Contract", "Research", "BD"],
-    description: "Leads team direction and strategy, aligning product vision with market opportunities."
+    description: "Leads team direction and strategy, aligning product vision with market opportunities.",
+    profileSlug: "zou",
   },
   {
     name: "KC",
     role: "CGO",
     image: "/member/KC.png",
     skills: ["Marketing", "Business Develop"],
-    description: "Driving marketing strategy and business development for growth."
+    description: "Driving marketing strategy and business development for growth.",
   },
   {
     name: "Lun",
     role: "Co-CTO",
     image: "/member/lun.png",
     skills: ["Web Front End", "Web3", "Cyber Security"],
-    description: "Web Front End, Web3, Open Source and Cyber Security. Pushing Information Literacy."
+    description: "Web Front End, Web3, Open Source and Cyber Security. Pushing Information Literacy.",
+    profileSlug: "Lun",
   },
   {
     name: "Malingshu",
     role: "Co-CTO",
     image: "/member/malingshu.jpg",
     skills: ["Cryptography", "Blockchain"],
-    description: "Leading cryptography and blockchain architecture for secure products."
-  }
+    description: "Leading cryptography and blockchain architecture for secure products.",
+  },
 ];
 ---
 
-<section id="members" class="py-20 px-6">
-  <div class="text-center mb-12">
-    <h2 class="text-4xl font-bold text-white mb-4">MEMBERS</h2>
-    <p class="text-gray-400">Our team driving the vision forward.</p>
+<section id="members" class="px-6 py-24">
+  <div class="max-w-md mx-auto">
+    <span class="eyebrow mb-6" data-animate="fade-up">Section 03 · Members</span>
+    <h2 class="font-display text-4xl font-semibold text-white tracking-tight leading-tight mt-2" data-animate="fade-up" style="transition-delay: 100ms">
+      The minds behind every line.
+    </h2>
+    <p class="mt-5 text-base text-text-muted leading-relaxed" data-animate="fade-up" style="transition-delay: 200ms">
+      Five people shipping code, contracts, and specs.
+    </p>
   </div>
 
-  <div class="space-y-8">
-    {members.map(member => (
-      <div class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
-        <div class="h-80 w-full relative">
-           <img src={member.image} alt={member.name} class="w-full h-full object-cover" />
-           <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-           <div class="absolute bottom-6 left-6 text-white">
-              <h3 class="text-3xl font-bold">{member.name}</h3>
-              <p class="text-primary font-medium">{member.role}</p>
-           </div>
-        </div>
-        <div class="p-6 space-y-4">
-           <p class="text-gray-300 leading-relaxed">{member.description}</p>
-           <div class="flex flex-wrap gap-2">
-             {member.skills.map(skill => (
-               <span class="px-3 py-1 bg-white/10 rounded-full text-xs text-white/70 uppercase tracking-widest">{skill}</span>
-             ))}
-           </div>
-        </div>
-      </div>
-    ))}
+  <div class="mt-14 space-y-6 max-w-md mx-auto">
+    {
+      members.map((m, i) => {
+        const Wrapper = m.profileSlug ? "a" : "div";
+        const wrapperProps = m.profileSlug
+          ? { href: `/${m.profileSlug}` }
+          : {};
+        return (
+          <Wrapper
+            {...wrapperProps}
+            class="group block overflow-hidden rounded-2xl border border-white/10 bg-bg-card no-underline text-inherit"
+            data-animate="fade-up"
+            style={`transition-delay: ${i * 70}ms`}
+          >
+            <div class="relative h-72 w-full">
+              <img
+                src={m.image}
+                alt={m.name}
+                class="absolute inset-0 w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-bg-card via-bg-card/30 to-transparent" />
+              <div class="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-3">
+                <div>
+                  <div class="text-text-faint text-[10px] uppercase tracking-[0.3em] mb-1">
+                    {m.role}
+                  </div>
+                  <h3 class="font-display text-3xl font-semibold text-white tracking-tight leading-none">
+                    {m.name}
+                  </h3>
+                </div>
+                {m.profileSlug && (
+                  <span class="text-xs uppercase tracking-[0.2em] text-primary font-semibold pb-1">
+                    Profile →
+                  </span>
+                )}
+              </div>
+            </div>
+            <div class="p-6 space-y-4">
+              <p class="text-sm text-text-muted leading-relaxed">
+                {m.description}
+              </p>
+              <div class="flex flex-wrap gap-2">
+                {m.skills.map((skill) => (
+                  <span class="px-3 py-1 rounded-full border border-white/10 text-[10px] uppercase tracking-[0.18em] text-white/70">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </Wrapper>
+        );
+      })
+    }
   </div>
 </section>

@@ -3,43 +3,52 @@ const emit = defineEmits(['next', 'prev'])
 </script>
 
 <template>
-  <div class="w-full h-full flex">
-    <!-- 文字區 (1/3) -->
-    <div class="w-1/3 h-full bg-[#0B0E14] flex flex-col justify-center px-12 border-r border-white/10 relative">
-        <div 
-          class="absolute top-4 left-0 w-full text-2xl p-12 text-white/20 cursor-pointer hover:text-purple-400 transition-colors z-20"
-          @click="emit('prev')"
+  <div class="w-full h-full flex flex-col-reverse lg:flex-row bg-[rgb(7,11,20)]">
+    <!-- Text panel -->
+    <div class="w-full lg:w-1/3 h-1/2 lg:h-full flex flex-col justify-center px-8 lg:px-12 border-t lg:border-t-0 lg:border-r border-white/8 relative">
+      <button
+        type="button"
+        class="absolute top-6 left-8 lg:top-10 lg:left-12 text-xs uppercase tracking-[0.3em] text-text-faint hover:text-primary transition-colors"
+        @click="emit('prev')"
+      >
+        ← Prev · Intro
+      </button>
+
+      <div>
+        <div class="text-text-faint text-xs uppercase tracking-[0.3em] mb-4">Project 01</div>
+        <h2 class="font-display text-4xl lg:text-5xl font-semibold text-white tracking-tight">SeaWallet</h2>
+        <p class="mt-6 text-base text-text-muted leading-relaxed max-w-sm">
+          Store, inherit, and utilize your assets with the most intelligent
+          smart-contract wallet on the Sui network.
+        </p>
+        <a
+          href="https://example.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-10 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-bg-base text-xs font-semibold uppercase tracking-[0.18em] hover:-translate-y-px transition-transform"
         >
-          >>> Prev: Intro
-        </div>
-      <div class="z-10">
-          <h2 class="text-4xl font-bold text-white">
-            SeaWallet
-          </h2>
-          <p class="mt-8 text-lg text-slate-400 leading-relaxed">
-            Store, inherit, utilize your asset with the most intelligent smart contract wallet 
-            on Sui network.
-          </p>
-          <a href="https://example.com" target="_blank" rel="noopener noreferrer">
-            <button class="my-8 px-6 py-2 rounded-lg bg-white text-[#0B0E14] font-semibold hover:bg-slate-200 transition shadow-lg">Launch App</button>
-          </a>
-        </div>
-        <div 
-          class="absolute bottom-4 left-0 w-full text-2xl p-12 text-white/20 cursor-pointer hover:text-purple-400 transition-colors"
-          @click="emit('next')"
-        >
-          <<< Next: Nereus
-        </div>
+          Launch App
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <button
+        type="button"
+        class="absolute bottom-6 left-8 lg:bottom-10 lg:left-12 text-xs uppercase tracking-[0.3em] text-text-faint hover:text-primary transition-colors"
+        @click="emit('next')"
+      >
+        Next · Nereus →
+      </button>
     </div>
-    
-    <!-- 圖片區 (2/3) -->
-    <div class="w-2/3 h-full overflow-hidden relative bg-[#0B0E14]">
-        <!-- 操作影片之類的 -->
-        <img 
-          src="/loadingscreen.png" 
-          class="w-full h-full object-cover opacity-90 hover:scale-105 transition duration-700 ease-out" 
-          alt="App Preview"
-        />
+
+    <!-- Image panel -->
+    <div class="w-full lg:w-2/3 h-1/2 lg:h-full overflow-hidden relative bg-bg-elev">
+      <img
+        src="/loadingscreen.png"
+        class="w-full h-full object-cover opacity-90"
+        alt="SeaWallet preview"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-bg-base/60 via-transparent to-transparent pointer-events-none"></div>
     </div>
   </div>
 </template>

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm build *)",
+      "Bash(mkdir -p \"/c/Users/leftr/.claude/projects/C--Project-zzyzx-zzyzx-astro/memory\")",
+      "Read(//c/Users/leftr/.claude/projects/C--Project-zzyzx-zzyzx-astro/**)"
+    ]
+  }
+}

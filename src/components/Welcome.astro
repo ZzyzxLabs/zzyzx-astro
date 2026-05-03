@@ -8,32 +8,31 @@ import About from "./About.astro";
 import Marquee from "./Marquee.astro";
 ---
 
-<div class="">
-  <!-- Both hero backgrounds are rendered; client JS hides one -->
-  <div id="hero-globe">
-    <Globe client:load className="-z-10" />
-  </div>
-  <div id="hero-supercar" style="display:none;">
-    <SuperCarHero />
-  </div>
-
-  <div class="min-h-screen items-center justify-center flex">
-    <Page1 />
-  </div>
-  <Marquee direction="left" speed={25} />
-  <div id="projects" class="min-h-screen">
-    <Page2 />
-  </div>
-  <Marquee direction="right" speed={35} />
-  <About />
-  <Marquee direction="left" speed={30} />
-  <div id="members" class="min-h-screen">
-    <Page3 />
-  </div>
+<!-- Random hero variant: Globe (Mars) or SuperCar -->
+<div id="hero-globe">
+  <Globe client:load className="-z-10" />
+</div>
+<div id="hero-supercar" style="display:none;">
+  <SuperCarHero />
 </div>
 
+<main class="relative">
+  <Page1 />
+
+  <div id="projects">
+    <Page2 />
+  </div>
+
+  <Marquee speed={45} />
+
+  <About />
+
+  <div id="members">
+    <Page3 />
+  </div>
+</main>
+
 <script>
-  // Randomly pick hero variant on each page load
   const useGlobe = Math.random() < 0.5;
   const globe = document.getElementById("hero-globe");
   const supercar = document.getElementById("hero-supercar");
@@ -41,7 +40,6 @@ import Marquee from "./Marquee.astro";
   if (useGlobe) {
     globe!.style.display = "";
     supercar!.style.display = "none";
-    // Pause any video in supercar to save resources
     supercar?.querySelector("video")?.pause();
   } else {
     globe!.style.display = "none";

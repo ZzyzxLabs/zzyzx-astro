@@ -1,79 +1,90 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MemberCards from "./MemberCards";
-
-type Style = React.CSSProperties;
+import { useInView } from "./useInView";
 
 const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
-
-const smoothstep = (edge0: number, edge1: number, x: number) => {
-  const t = clamp01((x - edge0) / (edge1 - edge0));
+const smoothstep = (e0: number, e1: number, x: number) => {
+  const t = clamp01((x - e0) / (e1 - e0));
   return t * t * (3 - 2 * t);
 };
 
+function MobileHeadline() {
+  const [ref, visible] = useInView<HTMLDivElement>();
+  const base: React.CSSProperties = {
+    transition:
+      "opacity 800ms ease-out, transform 800ms cubic-bezier(0.2, 0.7, 0.2, 1)",
+  };
+  return (
+    <div ref={ref} className='max-w-md mx-auto text-center'>
+      <span
+        className='eyebrow mb-6 justify-center'
+        style={{
+          ...base,
+          opacity: visible ? 1 : 0,
+          transform: visible ? "translateY(0)" : "translateY(16px)",
+          transitionDelay: "0ms",
+        }}
+      >
+        Section 03
+      </span>
+      <h2
+        className='font-display font-semibold text-white tracking-tight leading-none mt-2'
+        style={{
+          ...base,
+          fontSize: "clamp(3.5rem, 14vw, 6rem)",
+          opacity: visible ? 1 : 0,
+          transform: visible ? "translateY(0)" : "translateY(20px)",
+          transitionDelay: "120ms",
+        }}
+      >
+        Members
+      </h2>
+      <p
+        className='mt-6 text-base text-text-muted'
+        style={{
+          ...base,
+          opacity: visible ? 1 : 0,
+          transform: visible ? "translateY(0)" : "translateY(16px)",
+          transitionDelay: "240ms",
+        }}
+      >
+        The minds shipping every line of code, every contract, every spec.
+      </p>
+    </div>
+  );
+}
+
 export default function MembersSection() {
   const containerRef = useRef<HTMLDivElement | null>(null);
-
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [bracketScaleProgress, setBracketScaleProgress] = useState(0);
-  const targetProgressRef = useRef(0);
-
-  const [mouseX, setMouseX] = useState(0);
-  const [mouseY, setMouseY] = useState(0);
-
-  const lastTsRef = useRef<number>(0);
+  const [progress, setProgress] = useState(0);
+  const targetRef = useRef(0);
   const rafRef = useRef<number | null>(null);
-
-  // Main scroll damping (text fade / general progress)
-  const FOLLOW_SPEED = 1000;
-  // Bracket scale damping (kept slower / more cinematic)
-  const BRACKET_SCALE_FOLLOW_SPEED = 40;
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    setMouseX((e.clientX / window.innerWidth) * 100);
-    setMouseY((e.clientY / window.innerHeight) * 100);
-  };
-
-  const handleScroll = () => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const rect = el.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-
-    const totalScroll = rect.height - windowHeight;
-    if (totalScroll <= 0) {
-      targetProgressRef.current = 0;
-      return;
-    }
-
-    const currentScroll = -rect.top;
-    const p = currentScroll / totalScroll;
-
-    targetProgressRef.current = clamp01(p);
-  };
+  const lastTsRef = useRef(0);
 
   useEffect(() => {
+    const handleScroll = () => {
+      const el = containerRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      if (total <= 0) {
+        targetRef.current = 0;
+        return;
+      }
+      targetRef.current = clamp01(-rect.top / total);
+    };
+
     const loop = (ts: number) => {
       if (!lastTsRef.current) lastTsRef.current = ts;
-      const dt = Math.min(0.05, (ts - lastTsRef.current) / 1000); // cap 50ms
+      const dt = Math.min(0.05, (ts - lastTsRef.current) / 1000);
       lastTsRef.current = ts;
-
-      const target = targetProgressRef.current;
-
-      setScrollProgress((prev) => {
-        const diff = target - prev;
-        const k = 1 - Math.exp(-FOLLOW_SPEED * dt);
-        const next = prev + diff * k;
-        return Math.abs(diff) < 0.0005 ? target : next;
+      setProgress((prev) => {
+        const k = 1 - Math.exp(-12 * dt);
+        const next = prev + (targetRef.current - prev) * k;
+        return Math.abs(targetRef.current - prev) < 0.001
+          ? targetRef.current
+          : next;
       });
-
-      setBracketScaleProgress((prev) => {
-        const diffScale = target - prev;
-        const kScale = 1 - Math.exp(-BRACKET_SCALE_FOLLOW_SPEED * dt);
-        const next = prev + diffScale * kScale;
-        return Math.abs(diffScale) < 0.0005 ? target : next;
-      });
-
       rafRef.current = requestAnimationFrame(loop);
     };
 
@@ -85,125 +96,62 @@ export default function MembersSection() {
       window.removeEventListener("scroll", handleScroll);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const bracketStyle: Style = useMemo(() => {
-    const p = scrollProgress;
-    const pScale = bracketScaleProgress;
-
-    const eased = smoothstep(0, 1, pScale);
-    const scale = 1 + eased * 80;
-
-    const fadeT = smoothstep(0.65, 1.0, p);
-    const opacity = 1 - fadeT;
-
-    const blur = fadeT * 6;
-
-    return {
-      transform: `scale(${scale}) translate(${mouseX * -0.05}%, ${mouseY * -0.05}%)`,
-      opacity,
-      filter: `blur(${blur}px)`,
-    };
-  }, [scrollProgress, bracketScaleProgress, mouseX, mouseY]);
-
-  const textStyle: Style = useMemo(() => {
-    return {
-      transform: `translate(${mouseX * -0.03}%, ${mouseY * -0.03}%)`,
-    };
-  }, [mouseX, mouseY]);
-
-  const cardsStyle: Style = useMemo(() => {
-    const p = scrollProgress;
-
-    const fadeT = smoothstep(0.4, 0.85, p);
-    const opacity = fadeT;
-
-    const scale = 0.92 + fadeT * 0.08;
-    const translateY = (1 - fadeT) * 60;
-
-    return {
-      opacity,
-      transform: `scale(${scale}) translateY(${translateY}px)`,
-      pointerEvents: fadeT > 0.1 ? "auto" : "none",
-    };
-  }, [scrollProgress]);
-
-  const centerOpacity = Math.max(0, 1 - scrollProgress * 2);
+  const introOpacity = 1 - smoothstep(0.15, 0.55, progress);
+  const introY = -smoothstep(0.15, 0.55, progress) * 40;
+  const cardsT = smoothstep(0.25, 0.75, progress);
 
   return (
-    <div
-      ref={containerRef}
-      className="relative w-full h-[300vh] bg-black"
-      onMouseMove={handleMouseMove}
-    >
-      {/* Sticky Viewport */}
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
-        {/* The expanding bracket container */}
-        <div
-          className="text-white absolute w-11/12 h-5/6 text-7xl flex flex-col justify-between pointer-events-none origin-center will-change-transform z-20"
-          style={bracketStyle}
-        >
-          {/* Top row */}
-          <div className="top-0 left-0 w-full flex flex-row justify-between">
-            <p>「</p>
-
-            <div className="text-xl flex flex-col items-end text-right">
-              <span>Zzyzx Labs</span>
-              <span>2026</span>
-              <span>The end of ALLs</span>
-            </div>
-          </div>
-
-          {/* Bottom row */}
-          <div className="w-full flex items-end relative">
-            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 text-2xl animate-bounce">
-              V V V
-            </span>
-            <span className="ml-auto text-right">」</span>
-          </div>
-        </div>
-
-        {/* Central Text Content */}
-        <div
-          className="flex flex-col z-10 gap-y-8 transition-opacity duration-300 items-center justify-center relative"
-          style={{ opacity: centerOpacity, ...textStyle }}
-        >
-          <h2 className="text-white font-bold text-8xl text-center relative z-20">
-            Members
-          </h2>
-          <p className="text-white text-3xl text-center relative z-20">
-            Meets the most ambitious minds.
-          </p>
-
-          {/* Glitch/layered effects */}
-          <h2
-            className="text-cyan-400/50 font-bold text-8xl text-center absolute top-0 left-0 w-full -z-10 pointer-events-none select-none blur-[1px]"
-            style={{
-              transform: `translate(${mouseX * -0.02}%, ${mouseY * -0.02}%)`,
-            }}
-          >
-            Members
-          </h2>
-
-          <h2
-            className="text-pink-500/50 font-bold text-8xl text-center absolute top-0 left-0 w-full -z-10 pointer-events-none select-none blur-[1px]"
-            style={{
-              transform: `translate(${mouseX * 0.02}%, ${mouseY * 0.02}%)`,
-            }}
-          >
-            Members
-          </h2>
-        </div>
-
-        {/* MemberCards with fade-in effect */}
-        <div
-          className="absolute inset-0 flex items-center justify-center z-30 will-change-transform"
-          style={cardsStyle}
-        >
+    <>
+      {/* Mobile / narrow viewports — stacked layout with per-card fade-rise on scroll */}
+      <section className='md:hidden w-full px-6 py-20'>
+        <MobileHeadline />
+        <div className='mt-12'>
           <MemberCards />
         </div>
-      </div>
-    </div>
+      </section>
+
+      {/* Desktop — sticky scroll-driven cinematic */}
+      <section
+        ref={containerRef}
+        className='hidden md:block relative w-full h-[260vh]'
+      >
+        <div className='sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center'>
+          {/* Intro headline */}
+          <div
+            className='absolute inset-0 flex flex-col items-center justify-center px-6 text-center'
+            style={{
+              opacity: introOpacity,
+              transform: `translateY(${introY}px)`,
+              pointerEvents: introOpacity < 0.05 ? "none" : "auto",
+            }}
+          >
+            <span className='eyebrow mb-6 md:mb-8'>Section 03</span>
+            <h2
+              className='font-display font-semibold text-white tracking-tight leading-none'
+              style={{ fontSize: "clamp(4rem, 14vw, 9rem)" }}
+            >
+              Members
+            </h2>
+            <p className='mt-6 md:mt-8 text-base sm:text-xl md:text-2xl text-text-muted max-w-xl px-2'>
+              The minds shipping every line of code, every contract, every spec.
+            </p>
+          </div>
+
+          {/* Cards */}
+          <div
+            className='absolute inset-0 flex items-center justify-center'
+            style={{
+              opacity: cardsT,
+              transform: `translateY(${(1 - cardsT) * 40}px)`,
+              pointerEvents: cardsT > 0.2 ? "auto" : "none",
+            }}
+          >
+            <MemberCards />
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import MemberInfoRect from "./MemberInfoRect";
+import { useInView } from "./useInView";
 
 interface Member {
   name: string;
@@ -478,93 +479,129 @@ const members: Member[] = [
   },
 ];
 
+interface MemberCardEntryProps {
+  member: Member;
+  index: number;
+  isActive: boolean;
+  isDimmed: boolean;
+  onActivate: () => void;
+  onDeactivate: () => void;
+}
+
+function MemberCardEntry({
+  member,
+  index,
+  isActive,
+  isDimmed,
+  onActivate,
+  onDeactivate,
+}: MemberCardEntryProps) {
+  const [ref, visible] = useInView<HTMLAnchorElement | HTMLDivElement>();
+  const Wrapper: any = member.profileSlug ? "a" : "div";
+  const wrapperProps: any = member.profileSlug ? { href: `/${member.profileSlug}` } : {};
+
+  // Per-card entrance: fade-rise once scrolled into view, with a small per-index stagger.
+  const entranceStyle: React.CSSProperties = {
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(24px)",
+    transition: "opacity 700ms ease-out, transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1)",
+    transitionDelay: `${index * 70}ms`,
+  };
+
+  return (
+    <Wrapper
+      ref={ref}
+      {...wrapperProps}
+      style={entranceStyle}
+      className={`
+        relative flex h-64 md:h-full rounded-3xl overflow-hidden cursor-pointer no-underline text-inherit
+        ${isActive ? "md:flex-10" : "md:flex-1"}
+        ${isDimmed ? "md:opacity-50" : ""}
+      `}
+      onMouseEnter={onActivate}
+      onMouseLeave={onDeactivate}
+    >
+      <div className='relative h-full w-full flex'>
+        {/* Image side — full width on mobile, shrinks to 55% on hover (desktop) */}
+        <div
+          className={`relative h-full w-full md:transition-[width] md:duration-700 md:ease-out ${
+            isActive ? "md:w-[55%]" : "md:w-full"
+          }`}
+        >
+          <div
+            className={`absolute inset-0 bg-linear-to-br ${member.color} opacity-50`}
+          />
+
+          <img
+            src={member.image}
+            alt={member.name}
+            className='absolute inset-0 w-full h-full object-cover'
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = "none";
+            }}
+          />
+
+          <div
+            className={`absolute inset-0 transition-opacity duration-500 ${
+              isActive ? "md:bg-black/30 bg-black/40" : "bg-black/10"
+            }`}
+          />
+
+          {/* Collapsed/mobile label */}
+          <div
+            className={`absolute inset-x-6 bottom-6 transition-opacity duration-500 ${
+              isActive ? "md:opacity-0 opacity-100" : "opacity-100"
+            }`}
+          >
+            <div className='text-2xl font-bold text-white drop-shadow-md'>
+              {member.name}
+            </div>
+            <div className='text-sm text-white/85 mt-1'>{member.role}</div>
+          </div>
+        </div>
+
+        {/* Info rect — hidden on mobile, slides in on hover (desktop) */}
+        <div
+          className={`hidden md:flex relative h-full flex-none overflow-hidden transition-all duration-700 ease-out ${
+            isActive
+              ? "basis-[45%] opacity-100 translate-x-0"
+              : "basis-0 opacity-0 translate-x-8"
+          }`}
+        >
+          <div className='h-full w-full'>
+            <MemberInfoRect
+              name={member.name}
+              role={member.role}
+              description={member.description}
+              accentClassName={
+                member.infoAccent ?? "from-zinc-800 to-zinc-950"
+              }
+            >
+              {member.info}
+            </MemberInfoRect>
+          </div>
+        </div>
+      </div>
+    </Wrapper>
+  );
+}
+
 export default function MemberCards() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   return (
-    <div className='flex w-full h-150 gap-4 px-10 py-20 items-center justify-center bg-black overflow-hidden'>
-      {members.map((member, index) => {
-        const Wrapper = member.profileSlug ? "a" : "div";
-        const wrapperProps = member.profileSlug
-          ? { href: `/${member.profileSlug}` }
-          : {};
-        return (
-          <Wrapper
-            key={member.name}
-            {...wrapperProps}
-            className={`
-            relative flex h-full rounded-3xl overflow-hidden cursor-pointer transition-all duration-700 ease-out no-underline text-inherit
-            ${activeIndex === index ? "flex-10" : "flex-1"}
-            ${activeIndex !== null && activeIndex !== index
-                ? "opacity-50"
-                : "opacity-100"
-              }
-          `}
-            onMouseEnter={() => setActiveIndex(index)}
-            onMouseLeave={() => setActiveIndex(null)}
-          >
-            <div className='relative h-full w-full flex'>
-              {/* Left: Image */}
-              <div
-                className={`relative h-full transition-[width] duration-700 ease-out ${activeIndex === index ? "w-[55%]" : "w-full"
-                  }`}
-              >
-                <div
-                  className={`absolute inset-0 bg-linear-to-br ${member.color} opacity-50`}
-                />
-
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className='absolute inset-0 w-full h-full object-cover'
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = "none";
-                  }}
-                />
-
-                <div
-                  className={`absolute inset-0 transition-opacity duration-500 ${activeIndex === index ? "bg-black/30" : "bg-black/10"
-                    }`}
-                />
-
-                {/* Collapsed label */}
-                <div
-                  className={`absolute inset-x-6 bottom-6 transition-opacity duration-500 ${activeIndex === index ? "opacity-0" : "opacity-100"
-                    }`}
-                >
-                  <div className='text-2xl font-bold text-white drop-shadow'>
-                    {member.name}
-                  </div>
-                  <div className='text-sm text-white/80 mt-1'>{member.role}</div>
-                </div>
-              </div>
-
-              {/* Right: Info rectangle (only visible on hover) */}
-              <div
-                className={`relative h-full flex-none overflow-hidden transition-all duration-700 ease-out ${activeIndex === index
-                    ? "basis-[45%] opacity-100 translate-x-0"
-                    : "basis-0 opacity-0 translate-x-8"
-                  }`}
-              >
-                <div className='h-full w-full'>
-                  <div className='h-full rounded-none'>
-                    <MemberInfoRect
-                      name={member.name}
-                      role={member.role}
-                      description={member.description}
-                      accentClassName={
-                        member.infoAccent ?? "from-zinc-800 to-zinc-950"
-                      }
-                    >
-                      {member.info}
-                    </MemberInfoRect>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Wrapper>
-        );
-      })}
+    <div className='flex flex-col md:flex-row w-full max-w-[1400px] mx-auto md:h-[min(72vh,640px)] gap-3 px-6 md:px-10 items-stretch md:items-center justify-center md:overflow-hidden'>
+      {members.map((member, index) => (
+        <MemberCardEntry
+          key={member.name}
+          member={member}
+          index={index}
+          isActive={activeIndex === index}
+          isDimmed={activeIndex !== null && activeIndex !== index}
+          onActivate={() => setActiveIndex(index)}
+          onDeactivate={() => setActiveIndex(null)}
+        />
+      ))}
     </div>
   );
 }

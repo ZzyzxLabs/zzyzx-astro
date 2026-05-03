@@ -6,24 +6,23 @@ import MobileProjects from "./MobileProjects.astro";
 import MobileMembers from "./MobileMembers.astro";
 ---
 
-<!-- Fixed background video -->
+<!-- Fixed video hero (mobile keeps SuperCar only — Mars Globe is too heavy on phones) -->
 <SuperCarHero />
 
-<!-- Main content (scrollable) -->
 <div class="relative w-full overflow-x-hidden">
-  
-  <!-- Hero / Intro Section: Transparent background to show video -->
-  <div class="relative z-10 w-full min-h-screen flex items-center justify-center">
-      <Page1 />
+  <!-- Hero on transparent background to show the video through -->
+  <div class="relative z-10 w-full">
+    <Page1 />
   </div>
 
-  <!-- Content Sections: Black background to cover video as we scroll -->
-  <div class="relative z-20 bg-black">
-      <MobileProjects />
-      <div id="about">
-        <About/>
-      </div>
-      <MobileMembers />
+  <!-- Solid sections cover the video as we scroll -->
+  <div class="relative z-20 bg-bg-base">
+    <MobileProjects />
+    <div class="hairline"></div>
+    <div id="about">
+      <About />
+    </div>
+    <div class="hairline"></div>
+    <MobileMembers />
   </div>
-
 </div>

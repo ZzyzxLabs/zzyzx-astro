@@ -1,173 +1,115 @@
 ---
+const services = [
+    {
+        title: "Website Design",
+        body: "Custom marketing sites, dApp front-ends, and interactive product surfaces.",
+    },
+    {
+        title: "Project Commission",
+        body: "End-to-end builds — smart contracts, infra, and product engineering on Sui.",
+    },
+    {
+        title: "Applied Research",
+        body: "Cryptography, agent systems, and protocol-level work for partners and our own products.",
+    },
+];
 
+const stats = [
+    { value: "6×", label: "Hackathon Wins" },
+    { value: "$26K+", label: "Prize Money" },
+    { value: "5+", label: "Products Shipped" },
+    { value: "250+", label: "Community" },
+];
 ---
 
-<section id="about" class="relative w-full py-32 px-6 overflow-hidden">
-    <!-- Background accents -->
+<section
+    id="about"
+    class="relative w-full px-5 sm:px-6 py-24 md:py-40 overflow-hidden"
+>
+    <!-- Subtle background accent -->
     <div
-        class="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px]"
-    >
-    </div>
-    <div
-        class="pointer-events-none absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-secondary/8 blur-[100px]"
+        class="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full bg-primary/[0.05] blur-[140px]"
     >
     </div>
 
-    <div class="max-w-6xl mx-auto">
-        <!-- Section Header -->
-        <div class="text-center mb-20" data-animate="fade-up">
-            <span
-                class="inline-block text-sm uppercase tracking-[0.25em] text-primary/80 font-mono mb-4"
-                >/ About Zzyzx Labs</span
-            >
+    <div class="relative max-w-6xl mx-auto">
+        <!-- Section header -->
+        <div class="max-w-3xl" data-animate="fade-up">
+            <span class="eyebrow mb-6">About the Lab</span>
             <h2
-                class="text-4xl md:text-6xl font-heading font-bold text-white leading-tight"
+                class="font-display text-[clamp(2rem,7vw,3.75rem)] font-semibold text-white leading-[1.05] tracking-tight"
             >
-                We provide cutting-edge solutions<br class="hidden md:block" />
-                driven by innovation and ambition.
+                A small studio building
+                <span class="text-primary">high-leverage</span>
+                products on Sui.
             </h2>
-        </div>
-
-        <!-- Mission & Vision Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            <!-- Mission Card -->
-            <div
-                class="group relative rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-sm p-8 md:p-10 transition-all duration-500 hover:border-primary/30 hover:bg-white/[0.06]"
-                data-animate="fade-up"
-            >
-                <div class="flex items-center gap-3 mb-6">
-                    <div
-                        class="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center"
-                    >
-                        <svg
-                            class="w-5 h-5 text-primary"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="1.5"
-                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                    </div>
-                    <span
-                        class="text-sm uppercase tracking-[0.2em] text-primary/90 font-mono"
-                        >/ Mission</span
-                    >
-                </div>
-                <p class="text-lg md:text-xl text-white/80 leading-relaxed">
-                    We build next-generation Web3 infrastructure and AI-powered
-                    tools — empowering builders and users with innovative,
-                    secure, and scalable solutions.
-                </p>
-            </div>
-
-            <!-- Vision Card -->
-            <div
-                class="group relative rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-sm p-8 md:p-10 transition-all duration-500 hover:border-secondary/30 hover:bg-white/[0.06]"
-                data-animate="fade-up"
-            >
-                <div class="flex items-center gap-3 mb-6">
-                    <div
-                        class="w-10 h-10 rounded-xl bg-secondary/15 flex items-center justify-center"
-                    >
-                        <svg
-                            class="w-5 h-5 text-secondary"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="1.5"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="1.5"
-                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                            ></path>
-                        </svg>
-                    </div>
-                    <span
-                        class="text-sm uppercase tracking-[0.2em] text-secondary/90 font-mono"
-                        >/ Vision</span
-                    >
-                </div>
-                <p class="text-lg md:text-xl text-white/80 leading-relaxed">
-                    Pioneering the convergence of AI and blockchain to create
-                    products that push the boundaries of what's possible in
-                    decentralized technology.
-                </p>
-            </div>
-        </div>
-
-        <!-- Stats Strip -->
-        <div
-            class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6"
-            data-animate="fade-up"
-        >
-            <div class="text-center">
-                <div
-                    class="text-3xl md:text-4xl font-display font-bold text-white"
-                >
-                    6x
-                </div>
-                <div
-                    class="text-sm text-white/50 mt-1 uppercase tracking-wider"
-                >
-                    Hackathon Wins
-                </div>
-            </div>
-            <div class="text-center">
-                <div
-                    class="text-3xl md:text-4xl font-display font-bold text-white"
-                >
-                    $26K+
-                </div>
-                <div
-                    class="text-sm text-white/50 mt-1 uppercase tracking-wider"
-                >
-                    Prize Money
-                </div>
-            </div>
-            <div class="text-center">
-                <div
-                    class="text-3xl md:text-4xl font-display font-bold text-white"
-                >
-                    5+
-                </div>
-                <div
-                    class="text-sm text-white/50 mt-1 uppercase tracking-wider"
-                >
-                    Products Built
-                </div>
-            </div>
-            <div class="text-center">
-                <div
-                    class="text-3xl md:text-4xl font-display font-bold text-white"
-                >
-                    250+
-                </div>
-                <div
-                    class="text-sm text-white/50 mt-1 uppercase tracking-wider"
-                >
-                    Community Members
-                </div>
-            </div>
-        </div>
-
-        <!-- Bottom tagline -->
-        <div class="mt-16 text-center" data-animate="fade-up">
-            <p
-                class="text-white/40 text-sm uppercase tracking-[0.3em] font-mono"
-            >
-                Our mission is to build high-performance, reliable products that
-                empower the next wave of builders.
+            <p class="mt-6 sm:mt-8 text-base sm:text-lg md:text-xl text-text-muted leading-relaxed max-w-2xl">
+                We pair Web3 infrastructure with AI tooling and ship them as
+                products, libraries, and the occasional protocol. Open source
+                where it makes sense, secure by default, and built to scale.
             </p>
+        </div>
+
+        <!-- Mission / Vision split -->
+        <div class="mt-20 grid grid-cols-1 md:grid-cols-2 gap-px bg-white/10 border border-white/10 rounded-2xl overflow-hidden" data-animate="fade-up">
+            <div class="bg-bg-base p-8 md:p-10">
+                <div class="text-text-faint text-xs uppercase tracking-[0.3em] mb-4">
+                    Mission
+                </div>
+                <p class="text-lg text-white/85 leading-relaxed">
+                    Build next-generation Web3 infrastructure and AI-powered
+                    tools — empowering builders and users with secure, scalable
+                    solutions.
+                </p>
+            </div>
+            <div class="bg-bg-base p-8 md:p-10">
+                <div class="text-text-faint text-xs uppercase tracking-[0.3em] mb-4">
+                    Vision
+                </div>
+                <p class="text-lg text-white/85 leading-relaxed">
+                    Pioneer the convergence of AI and blockchain to push the
+                    boundaries of what's possible in decentralized technology.
+                </p>
+            </div>
+        </div>
+
+        <!-- Services -->
+        <div class="mt-24">
+            <span class="eyebrow mb-6" data-animate="fade-up">What we do</span>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-6">
+                {
+                    services.map((s, i) => (
+                        <div class="group relative pt-8 border-t border-white/10" data-animate="fade-up" style={`transition-delay: ${i * 80}ms`}>
+                            <div class="absolute top-0 left-0 h-px w-12 bg-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            <div class="font-display text-text-faint text-sm tabular-nums mb-3">
+                                0{i + 1}
+                            </div>
+                            <h3 class="font-display text-2xl text-white font-medium mb-3">
+                                {s.title}
+                            </h3>
+                            <p class="text-text-muted leading-relaxed text-base">
+                                {s.body}
+                            </p>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+
+        <!-- Stats strip -->
+        <div class="mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/10 pt-12">
+            {
+                stats.map((s, i) => (
+                    <div data-animate="fade-up" style={`transition-delay: ${i * 60}ms`}>
+                        <div class="font-display text-3xl sm:text-4xl md:text-5xl font-semibold text-white">
+                            {s.value}
+                        </div>
+                        <div class="text-text-faint text-[10px] sm:text-xs uppercase tracking-[0.25em] mt-2">
+                            {s.label}
+                        </div>
+                    </div>
+                ))
+            }
         </div>
     </div>
 </section>

@@ -1,41 +1,58 @@
 <script setup lang="ts">
 const mouseTrack = (event: MouseEvent) => {
-  const { clientX, clientY } = event;
-  const x = (clientX / window.innerWidth) * 100;
-  const y = (clientY / window.innerHeight) * 100;
-  document.documentElement.style.setProperty('--mouse-x', `${x}%`);
-  document.documentElement.style.setProperty('--mouse-y', `${y}%`);
+  const x = (event.clientX / window.innerWidth) * 100;
+  const y = (event.clientY / window.innerHeight) * 100;
+  document.documentElement.style.setProperty('--acts-mx', `${x}%`);
+  document.documentElement.style.setProperty('--acts-my', `${y}%`);
 };
 </script>
 
 <template>
-  <div class="w-full h-full flex items-center justify-center bg-black/50" @mousemove="mouseTrack">
-    <!-- 做個框框 -->
+  <div
+    class="relative w-full h-full flex items-center justify-center bg-[rgb(7,11,20)] overflow-hidden"
+    @mousemove="mouseTrack"
+  >
+    <!-- Subtle background glow that drifts with the cursor -->
     <div
-      class="text-white absolute w-11/12 h-5/6 text-7xl flex flex-col justify-between pointer-events-none transition-transform duration-100 ease-out"
-      style="transform: translate(calc(var(--mouse-x) * -0.03), calc(var(--mouse-y) * -0.03));">
-      <span class="top-0 left-0 w-full flex flex-row justify-between">
-        <p>「 </p><span class="text-xl">Zzyzx Labs<br>2026<br>The end of ALLs</span>
-      </span>
-      <span class="self-end text-2xl"> >>> </span>
-      <span class="self-end">」</span>
+      class="absolute inset-0 pointer-events-none transition-[background] duration-300"
+      style="background: radial-gradient(800px circle at var(--acts-mx, 50%) var(--acts-my, 50%), rgba(0, 229, 255, 0.06), transparent 60%);"
+    ></div>
+
+    <!-- Frame brackets -->
+    <div class="absolute inset-x-5 inset-y-8 md:inset-x-16 md:inset-y-16 pointer-events-none border border-white/8">
+      <div class="absolute -top-px -left-px w-8 h-8 md:w-10 md:h-10 border-t border-l border-primary/60"></div>
+      <div class="absolute -top-px -right-px w-8 h-8 md:w-10 md:h-10 border-t border-r border-primary/60"></div>
+      <div class="absolute -bottom-px -left-px w-8 h-8 md:w-10 md:h-10 border-b border-l border-primary/60"></div>
+      <div class="absolute -bottom-px -right-px w-8 h-8 md:w-10 md:h-10 border-b border-r border-primary/60"></div>
     </div>
-    <div class="flex flex-col z-10 gap-y-8">
-      <h2 class="text-white font-bold text-8xl"> Acts</h2>
-      <p class="text-white text-3xl"> To Amplify the last of the planet, </p>
-      <p class="text-white text-3xl">Zzyzx Labs makes the gears and the knowledge available to all.</p>
+
+    <!-- Top metadata strip -->
+    <div class="absolute top-10 left-10 right-10 md:top-20 md:left-20 md:right-20 flex justify-between text-text-faint text-[10px] md:text-xs uppercase tracking-[0.3em] font-light">
+      <span>Zzyzx Labs / Acts</span>
+      <span class="hidden md:inline">2026 — The end of all gatekeeping</span>
     </div>
-    <div class="flex flex-col absolute gap-y-8"
-      style="transform: translate(calc(var(--mouse-x) * -0.01), calc(var(--mouse-y) * -0.01));">
-      <h2 class="text-cyan-400/50 font-bold text-8xl"> Acts</h2>
-      <p class="text-cyan-400/50 text-3xl"> To Amplify the last of the planet, </p>
-      <p class="text-cyan-400/50 text-3xl">Zzyzx Labs makes the gears and the knowledge available to all.</p>
+
+    <!-- Main content -->
+    <div class="relative z-10 max-w-4xl text-center px-8">
+      <span class="eyebrow mb-6 md:mb-8 justify-center inline-flex">Section 02</span>
+      <h2 class="font-display font-semibold text-white tracking-tight leading-none acts-title">
+        Acts
+      </h2>
+      <p class="mt-6 md:mt-10 text-base sm:text-xl md:text-2xl text-text-muted leading-relaxed max-w-2xl mx-auto">
+        To amplify the last frontier of the planet, Zzyzx Labs makes the gears
+        and the knowledge available to all.
+      </p>
     </div>
-    <div class="flex flex-col absolute gap-y-8"
-      style="transform: translate(calc(var(--mouse-x) * 0.01), calc(var(--mouse-y) * 0.01));">
-      <h2 class="text-pink-500/50 font-bold text-8xl"> Acts</h2>
-      <p class="text-pink-500/50 text-3xl"> To Amplify the last of the planet, </p>
-      <p class="text-pink-500/50 text-3xl">Zzyzx Labs makes the gears and the knowledge available to all.</p>
+
+    <!-- Scroll cue -->
+    <div class="absolute bottom-10 right-10 md:bottom-20 md:right-20 text-text-faint text-[10px] md:text-xs uppercase tracking-[0.3em]">
+      Scroll →
     </div>
   </div>
 </template>
+
+<style scoped>
+.acts-title {
+  font-size: clamp(4rem, 14vw, 9rem);
+}
+</style>

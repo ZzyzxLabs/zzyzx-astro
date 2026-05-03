@@ -1,4 +1,12 @@
 ---
-import Projects from "../Acts/Projects.vue"
+import ActsIntro from "../Acts/ActsIntro.vue";
+import Acts from "../Acts/Acts";
 ---
-<Projects client:load/>
+
+<!-- Acts intro: a single 100vh section with the section heading -->
+<section class="relative w-full h-screen">
+  <ActsIntro client:load />
+</section>
+
+<!-- Three sticky-scroll project theaters -->
+<Acts client:load />
