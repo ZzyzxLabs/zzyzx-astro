@@ -477,6 +477,44 @@ const members: Member[] = [
       </div>
     ),
   },
+  {
+    name: "Charlie",
+    role: "Head of Content",
+    description:
+      "Shapes the studio's voice — content strategy, writing, and editorial direction.",
+    image: "/member/charlie.png",
+    color: "from-rose-500 to-red-700",
+    infoAccent: "from-rose-500/35 to-red-700/20",
+    info: (
+      <div className='space-y-4'>
+        <div>
+          <div className='text-sm uppercase tracking-widest text-white/60'>
+            Focus
+          </div>
+          <div className='mt-2 flex flex-wrap gap-2'>
+            {["Content Strategy", "Editorial", "Storytelling", "Brand Voice"].map(
+              (t) => (
+                <span
+                  key={t}
+                  className='rounded-full bg-white/10 px-3 py-1 text-sm text-white/85'
+                >
+                  {t}
+                </span>
+              )
+            )}
+          </div>
+        </div>
+        <div>
+          <div className='text-sm uppercase tracking-widest text-white/60'>
+            Currently
+          </div>
+          <div className='mt-2 text-white/80'>
+            Translating hard problems into stories worth reading.
+          </div>
+        </div>
+      </div>
+    ),
+  },
 ];
 
 interface MemberCardEntryProps {
