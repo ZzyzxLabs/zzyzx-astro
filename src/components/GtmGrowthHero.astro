@@ -1,0 +1,243 @@
+<section class="gtm-hero" aria-labelledby="gtm-hero-title">
+  <div class="gtm-hero__stage">
+    <figure class="gtm-hero__media" aria-hidden="true">
+      <img
+        src="/gtm-signal-hero.webp"
+        alt=""
+        width="1585"
+        height="992"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </figure>
+
+    <div class="gtm-hero__copy">
+      <p class="gtm-hero__label">GTM &amp; Growth</p>
+      <h1 id="gtm-hero-title">Turn insight into market momentum.</h1>
+      <p class="gtm-hero__intro">
+        Positioning, KOL discovery, ecosystem strategy, and launch execution for Web3 and AI teams.
+      </p>
+      <div class="gtm-hero__actions">
+        <a
+          href="mailto:contact@zzyzx.com?subject=GTM%20and%20Growth%20Brief"
+          class="gtm-hero__primary"
+        >Start a GTM brief</a>
+        <a href="#scope" class="gtm-hero__secondary">See the scope</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .gtm-hero {
+    position: relative;
+    min-height: 100dvh;
+    overflow: hidden;
+    background: #08090a;
+    color: #f1f3f0;
+  }
+
+  .gtm-hero__stage {
+    position: relative;
+    display: grid;
+    min-height: 100dvh;
+    align-items: center;
+    padding: 6rem 1.25rem 2.75rem;
+  }
+
+  .gtm-hero__media {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .gtm-hero__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(8, 9, 10, 0.98) 0%, rgba(8, 9, 10, 0.78) 38%, rgba(8, 9, 10, 0.08) 74%),
+      linear-gradient(0deg, rgba(8, 9, 10, 0.42) 0%, transparent 42%);
+    pointer-events: none;
+  }
+
+  .gtm-hero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .gtm-hero__copy {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 88rem;
+    margin-inline: auto;
+  }
+
+  .gtm-hero__label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #74d7dd;
+  }
+
+  .gtm-hero h1 {
+    max-width: 18ch;
+    margin-top: 1.75rem;
+    font-family: var(--font-heading);
+    font-size: clamp(3.2rem, 5.6vw, 5.15rem);
+    font-weight: 500;
+    line-height: 0.97;
+    letter-spacing: -0.058em;
+    color: #f1f3f0;
+  }
+
+  .gtm-hero__intro {
+    max-width: 35rem;
+    margin-top: 1.75rem;
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: #a2a9ae;
+  }
+
+  .gtm-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.25rem;
+  }
+
+  .gtm-hero__primary,
+  .gtm-hero__secondary {
+    display: inline-flex;
+    min-height: 3rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid;
+    border-radius: 2px;
+    padding: 0.75rem 1.25rem;
+    white-space: nowrap;
+    font-size: 0.86rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 220ms ease, border-color 220ms ease, color 220ms ease, transform 220ms ease;
+  }
+
+  .gtm-hero__primary {
+    border-color: #74d7dd;
+    background: #74d7dd;
+    color: #071012;
+  }
+
+  .gtm-hero__secondary {
+    border-color: rgba(242, 243, 239, 0.24);
+    background: rgba(8, 9, 10, 0.36);
+    color: #e0e3e0;
+  }
+
+  .gtm-hero__primary:hover,
+  .gtm-hero__secondary:hover {
+    transform: translateY(-1px);
+  }
+
+  .gtm-hero__primary:hover {
+    border-color: #a3e6e9;
+    background: #a3e6e9;
+  }
+
+  .gtm-hero__secondary:hover {
+    border-color: rgba(116, 215, 221, 0.68);
+    color: #a3e6e9;
+  }
+
+  .gtm-hero__primary:focus-visible,
+  .gtm-hero__secondary:focus-visible {
+    outline: 2px solid #74d7dd;
+    outline-offset: 4px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .gtm-hero__copy {
+      animation: gtm-copy-in 850ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .gtm-hero__media img {
+      animation: gtm-media-in 1100ms 100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+  }
+
+  @keyframes gtm-copy-in {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes gtm-media-in {
+    from { opacity: 0; transform: scale(1.025); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @media (min-width: 640px) {
+    .gtm-hero__stage {
+      padding-inline: 1.75rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .gtm-hero__stage {
+      padding: 6rem 2.5rem 3rem;
+    }
+
+    .gtm-hero__copy {
+      padding-right: 48%;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .gtm-hero__stage {
+      align-items: start;
+      padding-top: 6rem;
+    }
+
+    .gtm-hero__media img {
+      object-position: 62% center;
+    }
+
+    .gtm-hero__media::after {
+      background:
+        linear-gradient(180deg, rgba(8, 9, 10, 0.98) 0%, rgba(8, 9, 10, 0.82) 54%, rgba(8, 9, 10, 0.22) 100%),
+        linear-gradient(90deg, rgba(8, 9, 10, 0.82), transparent 82%);
+    }
+
+    .gtm-hero h1 {
+      max-width: 9ch;
+      font-size: clamp(2.9rem, 13vw, 3.65rem);
+    }
+
+    .gtm-hero__intro {
+      max-width: 29rem;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .gtm-hero__actions {
+      flex-direction: column;
+    }
+
+    .gtm-hero__primary,
+    .gtm-hero__secondary {
+      width: 100%;
+      min-height: 3rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gtm-hero__primary,
+    .gtm-hero__secondary {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ServiceDetail from "../components/ServiceDetail.astro";
+import GtmGrowthHero from "../components/GtmGrowthHero.astro";
+
+const scope = [
+  {
+    title: "Market position",
+    description: "Category research, competitive analysis, and a clear point of view your team and market can repeat.",
+  },
+  {
+    title: "KOL and partner map",
+    description: "A prioritized view of the voices, communities, ecosystems, and partners that shape attention in your category.",
+  },
+  {
+    title: "Growth system",
+    description: "Channel priorities, message architecture, activation loops, and measurable learning goals tied to the product.",
+  },
+  {
+    title: "Launch execution",
+    description: "A coordinated plan for content, KOL outreach, ecosystem moments, community activation, and launch follow-through.",
+  },
+];
+
+const process = [
+  { title: "Diagnose", description: "Find the market signal, friction, and opportunity." },
+  { title: "Position", description: "Make the product easy to understand and repeat." },
+  { title: "Activate", description: "Coordinate the right voices, channels, and moments." },
+  { title: "Learn", description: "Turn market response into the next focused move." },
+];
+
+const evidence = [
+  {
+    title: "Market and competitive view",
+    description: "A shared understanding of the category, alternatives, whitespace, and the reason your product should matter now.",
+  },
+  {
+    title: "KOL and partner map",
+    description: "Prioritized relationships with context, relevance, activation ideas, and outreach direction.",
+  },
+  {
+    title: "Launch operating plan",
+    description: "Message, channels, owners, sequence, and learning goals organized into one practical release plan.",
+  },
+];
+---
+
+<Layout
+  title="GTM & Growth Strategy for Web3 & AI | Zzyzx Labs"
+  description="Market positioning, KOL discovery, ecosystem strategy, and launch planning for Web3 and AI products."
+  image="/gtm-signal-hero.webp"
+>
+  <ServiceDetail
+    statement="A launch works when the market can repeat the position."
+    statementMuted="We connect the research, relationships, and operating plan behind that moment."
+    scopeTitle="Build a market position that can move."
+    {scope}
+    processTitle="Research becomes an operating launch plan."
+    {process}
+    evidenceTitle="What the engagement leaves behind."
+    evidenceIntro="A shared market view, a prioritized relationship map, and a launch plan your team can operate."
+    {evidence}
+    ctaTitle="Bring us the market question. We will find the clearest route to demand."
+    ctaLabel="Start a GTM brief"
+    emailSubject="GTM and Growth Brief"
+  >
+    <GtmGrowthHero slot="hero" />
+  </ServiceDetail>
+</Layout>

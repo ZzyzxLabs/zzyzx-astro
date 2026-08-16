@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full w-full flex flex-col items-center justify-center gap-y-12">
+    <div class="h-full w-full flex flex-col items-center justify-center gap-y-9">
         <div class="service-item">
             <span class="service-text font-semibold text-xl md:text-2xl">
                 Website Design
@@ -10,6 +10,11 @@
                 Project Commission
             </span>
         </div>
+        <a href="/security-audit" class="service-item service-link">
+            <span class="service-text font-semibold text-xl md:text-2xl">
+                Security Audit
+            </span>
+        </a>
     </div>
 </template>
 
@@ -43,5 +48,15 @@
 
 .service-item .service-text {
     transition: text-shadow 0.7s ease-out;
+}
+
+.service-link {
+    text-decoration: none;
+}
+
+.service-link:focus-visible {
+    border-radius: 0.5rem;
+    outline: 2px solid #67e8f9;
+    outline-offset: 0.5rem;
 }
 </style>

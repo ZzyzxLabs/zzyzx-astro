@@ -1,0 +1,259 @@
+<section class="product-hero" aria-labelledby="product-hero-title">
+  <div class="product-hero__inner">
+    <header class="product-hero__header">
+      <div class="product-hero__headline">
+        <p class="product-hero__label">Product Studio</p>
+        <h1 id="product-hero-title">Ship beyond the demo.</h1>
+      </div>
+
+      <div class="product-hero__support">
+        <p>
+          One team carries product strategy, experience, smart contracts, backend systems, and AI integrations through release.
+        </p>
+        <div class="product-hero__actions">
+          <a
+            href="mailto:contact@zzyzx.com?subject=Product%20Studio%20Brief"
+            class="product-hero__primary"
+          >Start a product brief</a>
+          <a href="#scope" class="product-hero__secondary">See how we build</a>
+        </div>
+      </div>
+    </header>
+
+    <figure class="product-hero__proof">
+      <img
+        src="/nereus-case.webp"
+        alt="Nereus landing page with a dark ocean-themed interface and the headline Predict the Unknowable"
+        width="1737"
+        height="933"
+        loading="eager"
+        fetchpriority="high"
+      />
+      <figcaption>
+        <p>Nereus. An AI-agent prediction market with trusted execution for decentralized outcome resolution.</p>
+        <a href="https://trynereus.xyz">Explore Nereus</a>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .product-hero {
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    background: #08090a;
+    color: #f1f3f0;
+  }
+
+  .product-hero__inner {
+    width: min(100%, 88rem);
+    margin-inline: auto;
+    padding: 6rem 1.25rem 4rem;
+  }
+
+  .product-hero__header {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .product-hero__label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #74d7dd;
+  }
+
+  .product-hero h1 {
+    max-width: 12ch;
+    margin-top: 1.5rem;
+    font-family: var(--font-heading);
+    font-size: clamp(3.15rem, 5.6vw, 5.1rem);
+    font-weight: 500;
+    line-height: 0.97;
+    letter-spacing: -0.058em;
+    color: #f1f3f0;
+  }
+
+  .product-hero__support {
+    align-self: end;
+  }
+
+  .product-hero__support > p {
+    max-width: 31rem;
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: #969ea4;
+  }
+
+  .product-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .product-hero__primary,
+  .product-hero__secondary {
+    display: inline-flex;
+    min-height: 3rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid;
+    border-radius: 2px;
+    padding: 0.75rem 1.25rem;
+    white-space: nowrap;
+    font-size: 0.86rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 220ms ease, border-color 220ms ease, color 220ms ease, transform 220ms ease;
+  }
+
+  .product-hero__primary {
+    border-color: #74d7dd;
+    background: #74d7dd;
+    color: #071012;
+  }
+
+  .product-hero__secondary {
+    border-color: rgba(242, 243, 239, 0.2);
+    color: #d7dad7;
+  }
+
+  .product-hero__primary:hover,
+  .product-hero__secondary:hover {
+    transform: translateY(-1px);
+  }
+
+  .product-hero__primary:hover {
+    border-color: #a3e6e9;
+    background: #a3e6e9;
+  }
+
+  .product-hero__secondary:hover {
+    border-color: rgba(116, 215, 221, 0.65);
+    color: #a3e6e9;
+  }
+
+  .product-hero__primary:focus-visible,
+  .product-hero__secondary:focus-visible,
+  .product-hero__proof a:focus-visible {
+    outline: 2px solid #74d7dd;
+    outline-offset: 4px;
+  }
+
+  .product-hero__proof {
+    margin: 3.25rem 0 0;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #0b0d0f;
+  }
+
+  .product-hero__proof img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .product-hero__proof figcaption {
+    display: grid;
+    gap: 1rem;
+    padding: 1.1rem 1.25rem 1.2rem;
+    font-size: 0.84rem;
+    line-height: 1.65;
+  }
+
+  .product-hero__proof figcaption p {
+    max-width: 52rem;
+    color: #858e95;
+  }
+
+  .product-hero__proof figcaption a {
+    width: fit-content;
+    border-bottom: 1px solid rgba(116, 215, 221, 0.45);
+    padding-bottom: 0.15rem;
+    color: #9de2e6;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .product-hero__header {
+      animation: product-copy-in 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .product-hero__proof {
+      animation: product-proof-in 900ms 100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+  }
+
+  @keyframes product-copy-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes product-proof-in {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (min-width: 640px) {
+    .product-hero__inner {
+      padding-inline: 1.75rem;
+    }
+
+    .product-hero__proof figcaption {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      padding-inline: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .product-hero__inner {
+      padding: 6rem 2.5rem 5rem;
+    }
+
+    .product-hero__header {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 2.5rem;
+      align-items: end;
+    }
+
+    .product-hero__headline {
+      grid-column: 1 / 9;
+    }
+
+    .product-hero__support {
+      grid-column: 9 / -1;
+    }
+
+    .product-hero__proof {
+      margin-top: 4rem;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .product-hero h1 {
+      font-size: clamp(2.9rem, 13vw, 3.65rem);
+    }
+
+    .product-hero__actions {
+      flex-direction: column;
+    }
+
+    .product-hero__primary,
+    .product-hero__secondary {
+      width: 100%;
+      min-height: 3rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .product-hero__primary,
+    .product-hero__secondary,
+    .product-hero__proof a {
+      transition: none;
+    }
+  }
+</style>
