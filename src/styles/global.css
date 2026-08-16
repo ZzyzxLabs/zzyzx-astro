@@ -1,94 +1,102 @@
 @import "tailwindcss";
 
 :root {
-  /* Raw RGB triplets — for rgba() composition (text-shadow, box-shadow, etc.) */
-  --rgb-primary: 0 229 255;
-  --rgb-primary-soft: 84 217 255;
-  --rgb-bg-base: 7 11 20;
-  --rgb-bg-elev: 14 20 32;
-  --rgb-bg-card: 18 24 38;
-  --rgb-text-base: 232 238 248;
-  --rgb-text-muted: 140 152 174;
-  --rgb-text-faint: 90 102 124;
-  --rgb-line: 255 255 255;
-
-  /* Two fonts only */
-  --font-sans: 'Inter', system-ui, sans-serif;
+  color-scheme: dark;
+  --color-primary: 116 215 221;
+  --color-secondary: 133 143 151;
+  --color-accent: 116 215 221;
+  --color-bg-base: 8 9 10;
+  --color-bg-surface: 17 19 21;
+  --color-text-base: 242 243 239;
+  --color-text-muted: 143 151 158;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-heading: 'Space Grotesk', system-ui, sans-serif;
   --font-display: 'Space Grotesk', system-ui, sans-serif;
 }
 
 @theme {
-  /* Tailwind tokens — direct hex so utilities like bg-bg-base resolve correctly */
-  --color-primary: #00e5ff;
-  --color-primary-soft: #54d9ff;
+  --color-primary: rgb(var(--color-primary));
+  --color-secondary: rgb(var(--color-secondary));
+  --color-accent: rgb(var(--color-accent));
 
-  --color-bg-base: #070b14;
-  --color-bg-elev: #0e1420;
-  --color-bg-card: #121826;
+  --color-bg-base: rgb(var(--color-bg-base));
+  --color-bg-surface: rgb(var(--color-bg-surface));
 
-  --color-text-base: #e8eef8;
-  --color-text-muted: #8c98ae;
-  --color-text-faint: #5a667c;
+  --color-text-base: rgb(var(--color-text-base));
+  --color-text-muted: rgb(var(--color-text-muted));
 
-  --font-sans: var(--font-sans);
+  --font-body: var(--font-body);
+  --font-heading: var(--font-heading);
   --font-display: var(--font-display);
+
+  --animate-typewriter: typing 3.8s steps(43) forwards, blink-caret 0.75s step-end infinite;
 }
 
-html, body {
-  margin: 0;
-  width: 100%;
+html {
+  background: #08090a;
   scroll-behavior: smooth;
 }
 
 body {
-  font-family: var(--font-sans);
-  background-color: #070b14;
-  color: #e8eef8;
+  min-width: 320px;
+  font-family: var(--font-body);
+  background-color: rgb(var(--color-bg-base));
+  color: rgb(var(--color-text-base));
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  font-family: var(--font-heading);
+}
+
+section[id] {
+  scroll-margin-top: 5.25rem;
+}
+
+/* Scrollbar Utilities */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(var(--color-primary), 0.5),
+               0 0 20px rgba(var(--color-primary), 0.3),
+               0 0 40px rgba(var(--color-primary), 0.1);
+}
+
+section {
+  position: relative;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+a {
+  transition: color 0.2s ease;
 }
 
 ::selection {
-  background: rgba(var(--rgb-primary), 0.35);
-  color: #fff;
+  background: rgba(var(--color-primary), 0.28);
+  color: #f2f3ef;
 }
 
-/* Utilities */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-.eyebrow {
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: #00e5ff;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.eyebrow::before {
-  content: "";
-  width: 1.5rem;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.6;
+::-moz-selection {
+  background: rgba(var(--color-primary), 0.28);
+  color: #f2f3ef;
 }
 
-.hairline {
-  height: 1px;
-  width: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(var(--rgb-line), 0.12) 20%,
-    rgba(var(--rgb-line), 0.12) 80%,
-    transparent
-  );
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

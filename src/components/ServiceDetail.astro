@@ -1,0 +1,229 @@
+---
+interface ScopeItem {
+  title: string;
+  description: string;
+}
+
+interface ProcessItem {
+  title: string;
+  description: string;
+}
+
+interface EvidenceItem {
+  title: string;
+  description: string;
+  href?: string;
+  linkLabel?: string;
+}
+
+interface Props {
+  statement: string;
+  statementMuted: string;
+  scopeTitle: string;
+  scope: ScopeItem[];
+  processTitle: string;
+  process: ProcessItem[];
+  evidenceTitle: string;
+  evidenceIntro: string;
+  evidence: EvidenceItem[];
+  ctaTitle: string;
+  ctaLabel: string;
+  emailSubject: string;
+}
+
+const {
+  statement,
+  statementMuted,
+  scopeTitle,
+  scope,
+  processTitle,
+  process,
+  evidenceTitle,
+  evidenceIntro,
+  evidence,
+  ctaTitle,
+  ctaLabel,
+  emailSubject,
+} = Astro.props;
+
+const emailHref = `mailto:contact@zzyzx.com?subject=${encodeURIComponent(emailSubject)}`;
+---
+
+<main class="service-page overflow-hidden">
+  <slot name="hero" />
+
+  <section class="border-y border-white/[0.09] px-5 py-20 sm:px-7 md:py-28 lg:px-10">
+    <div class="mx-auto max-w-[88rem]" data-animate="fade-up">
+      <p class="max-w-[30ch] font-heading text-[clamp(2rem,4vw,3.75rem)] font-medium leading-[1.08] tracking-[-0.045em] text-[#e7e9e6]">
+        {statement} <span class="text-[#757e85]">{statementMuted}</span>
+      </p>
+    </div>
+  </section>
+
+  <section id="scope" class="scroll-mt-20 px-5 py-24 sm:px-7 md:py-32 lg:px-10">
+    <div class="mx-auto max-w-[88rem]">
+      <h2 class="service-title" data-animate="fade-up">{scopeTitle}</h2>
+      <div class="mt-14 grid border-t border-white/[0.11] md:grid-cols-2" data-animate="fade-up">
+        {scope.map((item, index) => (
+          <article class:list={[
+            "border-b border-white/[0.1] py-8 md:min-h-56 md:py-10",
+            index % 2 === 0 ? "md:border-r md:pr-10" : "md:pl-10",
+          ]}>
+            <h3 class="font-heading text-2xl font-medium tracking-[-0.03em] text-[#e9ece8]">{item.title}</h3>
+            <p class="mt-4 max-w-lg leading-7 text-[#838b92]">{item.description}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="border-y border-white/[0.09] bg-[#0b0d0f] px-5 py-24 sm:px-7 md:py-28 lg:px-10">
+    <div class="mx-auto max-w-[88rem]">
+      <p class="service-label" data-animate="fade-up">Engagement model</p>
+      <h2 class="service-title mt-5" data-animate="fade-up">{processTitle}</h2>
+      <ol class:list={[
+        "mt-14 grid border-y border-white/[0.11]",
+        process.length === 5 ? "sm:grid-cols-2 lg:grid-cols-5" : "sm:grid-cols-2 lg:grid-cols-4",
+      ]} data-animate="fade-up">
+        {process.map((item) => (
+          <li class="border-b border-white/[0.09] py-7 sm:px-6 sm:odd:border-r lg:border-b-0 lg:border-r lg:px-7 lg:last:border-r-0">
+            <h3 class="font-heading text-xl font-medium tracking-[-0.025em] text-[#e7eae7]">{item.title}</h3>
+            <p class="mt-3 max-w-[14rem] text-sm leading-6 text-[#7f888f]">{item.description}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="px-5 py-24 sm:px-7 md:py-32 lg:px-10">
+    <div class="mx-auto max-w-[88rem]">
+      <header class="max-w-3xl" data-animate="fade-up">
+        <h2 class="service-title">{evidenceTitle}</h2>
+        <p class="service-intro mt-6">{evidenceIntro}</p>
+      </header>
+
+      <div class="mt-14 grid border-y border-white/[0.11] lg:grid-cols-12" data-animate="fade-up">
+        {evidence.map((item, index) => (
+          <article class:list={[
+            "border-b border-white/[0.09] py-8 lg:min-h-72 lg:border-b-0 lg:px-8 lg:py-10",
+            index === 0 ? "lg:col-span-6 lg:border-r lg:pl-0" : "lg:col-span-3 lg:border-r lg:last:border-r-0",
+          ]}>
+            <h3 class:list={[
+              "font-heading font-medium tracking-[-0.035em] text-[#edf0ec]",
+              index === 0 ? "text-3xl" : "text-2xl",
+            ]}>{item.title}</h3>
+            <p class="mt-4 max-w-lg leading-7 text-[#838b92]">{item.description}</p>
+            {item.href && (
+              <a href={item.href} target="_blank" rel="noreferrer" class="service-text-link mt-7 inline-flex">
+                {item.linkLabel ?? "Visit project"} <span aria-hidden="true" class="ml-3">↗</span>
+              </a>
+            )}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-white/[0.09] px-5 py-24 sm:px-7 md:py-32 lg:px-10">
+    <div class="mx-auto grid max-w-[88rem] gap-10 lg:grid-cols-12 lg:items-end" data-animate="fade-up">
+      <h2 class="max-w-[18ch] font-heading text-[clamp(2.5rem,4.8vw,4.2rem)] font-medium leading-[1.04] tracking-[-0.05em] text-[#edf0ec] lg:col-span-9">
+        {ctaTitle}
+      </h2>
+      <a href={emailHref} class="service-button-primary lg:col-span-3 lg:justify-self-end">{ctaLabel}</a>
+    </div>
+  </section>
+</main>
+
+<style>
+  .service-page {
+    background: #08090a;
+    color: #f1f3f0;
+  }
+
+  .service-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #74d7dd;
+  }
+
+  .service-title {
+    max-width: 18ch;
+    font-family: var(--font-heading);
+    font-size: clamp(2.35rem, 4.2vw, 3.8rem);
+    font-weight: 500;
+    line-height: 1.04;
+    letter-spacing: -0.048em;
+    color: #edf0ec;
+  }
+
+  .service-intro {
+    max-width: 40rem;
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: #8b949a;
+  }
+
+  .service-button-primary,
+  .service-button-secondary {
+    display: inline-flex;
+    min-height: 3rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    padding: 0.75rem 1.25rem;
+    white-space: nowrap;
+    font-size: 0.86rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 220ms ease, border-color 220ms ease, color 220ms ease, transform 220ms ease;
+  }
+
+  .service-button-primary {
+    border: 1px solid #74d7dd;
+    background: #74d7dd;
+    color: #071012;
+  }
+
+  .service-button-primary:hover {
+    border-color: #a3e6e9;
+    background: #a3e6e9;
+    transform: translateY(-1px);
+  }
+
+  .service-button-secondary {
+    border: 1px solid rgba(242, 243, 239, 0.2);
+    color: #d7dad7;
+  }
+
+  .service-button-secondary:hover {
+    border-color: rgba(116, 215, 221, 0.65);
+    color: #a3e6e9;
+    transform: translateY(-1px);
+  }
+
+  .service-text-link {
+    border-bottom: 1px solid rgba(116, 215, 221, 0.45);
+    padding-bottom: 0.2rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #9de2e6;
+    text-decoration: none;
+  }
+
+  .service-button-primary:focus-visible,
+  .service-button-secondary:focus-visible,
+  .service-text-link:focus-visible {
+    outline: 2px solid #74d7dd;
+    outline-offset: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-page :global([data-animate]) {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+</style>

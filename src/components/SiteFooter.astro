@@ -1,0 +1,52 @@
+---
+const year = new Date().getFullYear();
+const pathname = Astro.url.pathname;
+const isCurrentPath = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+---
+
+<footer class="relative z-10 border-t border-white/[0.09] bg-[#08090a] px-5 py-10 text-[#8b9399] sm:px-7 lg:px-10">
+  <div class="mx-auto max-w-[88rem]">
+    <div class="flex flex-col gap-9 sm:flex-row sm:items-center sm:justify-between">
+      <a href="/" class="brand-link inline-flex w-fit items-center gap-3" aria-label="Zzyzx Labs home">
+        <img src="/zzyzx_white.png" alt="" width="32" height="32" class="h-7 w-7 opacity-80" />
+        <span class="font-heading text-base font-medium tracking-[-0.02em] text-[#e8eae7]">Zzyzx Labs</span>
+      </a>
+
+      <nav aria-label="Footer links" class="flex flex-wrap gap-x-7 gap-y-3 text-sm">
+        <a href="/portfolio" aria-current={isCurrentPath("/portfolio") ? "page" : undefined}>Portfolio</a>
+        <a href="/gtm-growth" aria-current={isCurrentPath("/gtm-growth") ? "page" : undefined}>GTM & Growth</a>
+        <a href="/product-studio" aria-current={isCurrentPath("/product-studio") ? "page" : undefined}>Product Studio</a>
+        <a href="/security-audit" aria-current={isCurrentPath("/security-audit") ? "page" : undefined}>Security Audit</a>
+        <a href="mailto:contact@zzyzx.com">Email</a>
+        <a href="https://github.com/ZzyzxLabs" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://t.me/ZzyzxLabs" target="_blank" rel="noreferrer">Telegram</a>
+      </nav>
+    </div>
+
+    <div class="mt-10 flex flex-col gap-3 border-t border-white/[0.08] pt-6 text-xs text-[#818b91] sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} Zzyzx Labs</p>
+      <p>Market strategy, product engineering, and security for Web3 × AI.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+
+  nav a:hover {
+    color: #9de2e6;
+  }
+
+  nav a[aria-current="page"] {
+    color: #9de2e6;
+  }
+
+  a:focus-visible {
+    outline: 2px solid #74d7dd;
+    outline-offset: 4px;
+  }
+</style>

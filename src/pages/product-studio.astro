@@ -1,0 +1,76 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ServiceDetail from "../components/ServiceDetail.astro";
+import ProductStudioHero from "../components/ProductStudioHero.astro";
+
+const scope = [
+  {
+    title: "Product definition",
+    description: "Turn the thesis into a focused product scope, user model, system boundary, and delivery roadmap.",
+  },
+  {
+    title: "Experience and brand",
+    description: "Shape the interaction, information architecture, visual language, and prototype before expensive decisions harden.",
+  },
+  {
+    title: "Web3 engineering",
+    description: "Design and deliver smart contracts, account systems, payments, onchain integrations, and transaction flows.",
+  },
+  {
+    title: "AI and backend systems",
+    description: "Build the services, agents, data paths, and infrastructure that make the product dependable beyond the interface.",
+  },
+];
+
+const process = [
+  { title: "Define", description: "Align the product thesis, user, and system boundary." },
+  { title: "Prototype", description: "Resolve the experience before scaling implementation." },
+  { title: "Build", description: "Deliver the product, contracts, services, and integrations." },
+  { title: "Harden", description: "Test critical paths, edge cases, and operational assumptions." },
+  { title: "Launch", description: "Prepare the release and stay close to real usage." },
+];
+
+const evidence = [
+  {
+    title: "Nereus",
+    description: "A prediction market using AI agents in trusted execution environments for decentralized outcome resolution.",
+    href: "https://trynereus.xyz",
+    linkLabel: "Visit Nereus",
+  },
+  {
+    title: "SeaWallet",
+    description: "A smart contract account platform for customizable inheritance and asset distribution.",
+    href: "https://SeaWallet.ai",
+    linkLabel: "Visit SeaWallet",
+  },
+  {
+    title: "SeaPay",
+    description: "A hotel payment gateway integrating x402 and A2A standards for AI-led travel booking.",
+    href: "https://SeaPay.ai",
+    linkLabel: "Visit SeaPay",
+  },
+];
+---
+
+<Layout
+  title="Product Studio for Web3 & AI | Zzyzx Labs"
+  description="Product strategy, experience design, smart contracts, backend systems, and AI integrations for Web3 and AI products."
+  image="/nereus-case.webp"
+>
+  <ServiceDetail
+    statement="Good products survive real users, real infrastructure, and real value."
+    statementMuted="We keep strategy, experience, and engineering in one delivery context."
+    scopeTitle="Turn the thesis into a working system."
+    {scope}
+    processTitle="One team stays accountable through release."
+    {process}
+    evidenceTitle="Selected systems delivered by the team."
+    evidenceIntro="Work across AI agents, smart accounts, payments, and onchain infrastructure."
+    {evidence}
+    ctaTitle="Bring us the thesis. We will turn it into a product people can use."
+    ctaLabel="Start a product brief"
+    emailSubject="Product Studio Brief"
+  >
+    <ProductStudioHero slot="hero" />
+  </ServiceDetail>
+</Layout>

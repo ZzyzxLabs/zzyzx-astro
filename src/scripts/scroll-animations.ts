@@ -17,11 +17,16 @@ function initScrollAnimations() {
   const elements = document.querySelectorAll<HTMLElement>('[data-animate]');
 
   elements.forEach((el) => {
+    if (el.dataset.animationInitialized === 'true') return;
+
     const animationType = el.dataset.animate || 'fade-up';
     const classes = animationClasses[animationType] || animationClasses['fade-up'];
 
-    // Add initial hidden state
-    el.classList.add('transition-all', 'duration-700', 'ease-out', ...classes);
+    el.dataset.animationInitialized = 'true';
+    el.style.transitionProperty = 'opacity, transform';
+    el.style.transitionDuration = '700ms';
+    el.style.transitionTimingFunction = 'cubic-bezier(0.22, 1, 0.36, 1)';
+    el.classList.add(...classes);
   });
 
   const observer = new IntersectionObserver(

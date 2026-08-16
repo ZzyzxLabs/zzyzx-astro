@@ -1,0 +1,161 @@
+<div
+  class="scroll-continuum"
+  data-scroll-continuum
+  data-state="idle"
+  data-scene="hero"
+  aria-hidden="true"
+>
+  <canvas data-scroll-continuum-canvas tabindex="-1"></canvas>
+</div>
+
+<script>
+  type NavigatorWithConnection = Navigator & {
+    connection?: {
+      saveData?: boolean;
+    };
+  };
+
+  let continuumCleanup: (() => void) | null = null;
+  let mountFrame = 0;
+  let mountGeneration = 0;
+
+  const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const compactQuery = window.matchMedia("(max-width: 1023px), (max-height: 699px)");
+  const finePointerQuery = window.matchMedia("(pointer: fine)");
+
+  const shouldRemainStatic = () => {
+    const connection = (navigator as NavigatorWithConnection).connection;
+    const lowCoreDevice =
+      typeof navigator.hardwareConcurrency === "number" &&
+      navigator.hardwareConcurrency <= 2;
+
+    return (
+      motionQuery.matches ||
+      connection?.saveData === true ||
+      lowCoreDevice
+    );
+  };
+
+  const shouldUseDomMotion = () => compactQuery.matches || !finePointerQuery.matches;
+
+  const setStaticState = () => {
+    const stage = document.querySelector<HTMLElement>("[data-scroll-continuum]");
+    const shell = document.querySelector<HTMLElement>("[data-continuum-shell]");
+
+    if (stage) stage.dataset.state = "static";
+    if (shell) {
+      shell.dataset.continuumStatus = "fallback";
+      shell.dataset.continuumMode = "static";
+    }
+  };
+
+  const unmount = () => {
+    mountGeneration += 1;
+
+    if (mountFrame) {
+      window.cancelAnimationFrame(mountFrame);
+      mountFrame = 0;
+    }
+
+    continuumCleanup?.();
+    continuumCleanup = null;
+  };
+
+  const mount = () => {
+    unmount();
+
+    if (shouldRemainStatic()) {
+      setStaticState();
+      return;
+    }
+
+    const generation = mountGeneration;
+    const enableWebGL = !shouldUseDomMotion();
+
+    mountFrame = window.requestAnimationFrame(async () => {
+      mountFrame = 0;
+
+      try {
+        const continuum = await import("../scripts/scroll-continuum");
+        if (generation !== mountGeneration) return;
+
+        if (shouldRemainStatic()) {
+          setStaticState();
+          return;
+        }
+
+        continuumCleanup = continuum.mountScrollContinuum({ enableWebGL }) ?? null;
+      } catch (error) {
+        if (generation !== mountGeneration) return;
+        console.warn("The Cut motion system could not start.", error);
+        setStaticState();
+      }
+    });
+  };
+
+  const handlePreferenceChange = () => mount();
+  const handlePageShow = (event: PageTransitionEvent) => {
+    if (event.persisted) mount();
+  };
+
+  document.addEventListener("astro:page-load", mount);
+  window.addEventListener("pageshow", handlePageShow);
+  motionQuery.addEventListener("change", handlePreferenceChange);
+  compactQuery.addEventListener("change", handlePreferenceChange);
+  finePointerQuery.addEventListener("change", handlePreferenceChange);
+  mount();
+
+  if (import.meta.hot) {
+    import.meta.hot.dispose(() => {
+      document.removeEventListener("astro:page-load", mount);
+      window.removeEventListener("pageshow", handlePageShow);
+      motionQuery.removeEventListener("change", handlePreferenceChange);
+      compactQuery.removeEventListener("change", handlePreferenceChange);
+      finePointerQuery.removeEventListener("change", handlePreferenceChange);
+      unmount();
+    });
+  }
+</script>
+
+<style>
+  .scroll-continuum {
+    position: fixed;
+    z-index: 4;
+    inset: 4.25rem 0 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    contain: strict;
+    transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .scroll-continuum[data-state="ready"] {
+    opacity: 0;
+  }
+
+  .scroll-continuum[data-state="ready"][data-scene="hero"],
+  .scroll-continuum[data-state="ready"][data-scene="cta"] {
+    opacity: 1;
+  }
+
+  .scroll-continuum[data-scene="hero"] {
+    clip-path: inset(0 0 0 61%);
+  }
+
+  .scroll-continuum[data-scene="cta"] {
+    clip-path: inset(0 64% 0 7%);
+  }
+
+  .scroll-continuum canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    outline: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-continuum {
+      display: none;
+    }
+  }
+</style>
