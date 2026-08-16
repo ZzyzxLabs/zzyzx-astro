@@ -1,4 +1,4 @@
-<main class="portfolio-shell overflow-hidden">
+<main class="portfolio-shell overflow-hidden" data-portfolio-root>
   <section class="portfolio-hero" aria-labelledby="portfolio-title">
     <div class="portfolio-hero__stage">
       <header class="portfolio-hero__copy">
@@ -24,7 +24,15 @@
           <p class="portfolio-case-lead">
             A prediction market using AI agents in trusted execution environments for decentralized outcome resolution.
           </p>
-          <a href="https://trynereus.xyz" class="portfolio-text-link">Visit Nereus <span aria-hidden="true">↗</span></a>
+          <ul class="portfolio-tags" aria-label="Zzyzx scope for Nereus">
+            <li>Product Studio</li>
+            <li>Applied AI</li>
+            <li>Smart Contracts</li>
+          </ul>
+          <div class="portfolio-case-actions">
+            <button class="portfolio-story-trigger" type="button" data-case-open="nereus" aria-haspopup="dialog" aria-controls="portfolio-case-dialog">View case story</button>
+            <a href="https://trynereus.xyz" class="portfolio-text-link">Visit Nereus <span aria-hidden="true">↗</span></a>
+          </div>
         </div>
 
         <dl class="portfolio-meta">
@@ -74,7 +82,15 @@
         <p>
           A smart contract account platform for customizable inheritance and asset distribution.
         </p>
-        <a href="https://SeaWallet.ai" class="portfolio-text-link">Visit SeaWallet <span aria-hidden="true">↗</span></a>
+        <ul class="portfolio-tags" aria-label="Zzyzx scope for SeaWallet">
+          <li>Product Studio</li>
+          <li>Smart Accounts</li>
+          <li>Experience Design</li>
+        </ul>
+        <div class="portfolio-case-actions">
+          <button class="portfolio-story-trigger" type="button" data-case-open="seawallet" aria-haspopup="dialog" aria-controls="portfolio-case-dialog">View case story</button>
+          <a href="https://SeaWallet.ai" class="portfolio-text-link">Visit SeaWallet <span aria-hidden="true">↗</span></a>
+        </div>
       </div>
     </article>
   </section>
@@ -105,7 +121,15 @@
               <dd>Hotel payment gateway</dd>
             </div>
           </dl>
-          <a href="https://SeaPay.ai" class="portfolio-text-link">Visit SeaPay <span aria-hidden="true">↗</span></a>
+          <ul class="portfolio-tags" aria-label="Zzyzx scope for SeaPay">
+            <li>Product Studio</li>
+            <li>Payment Architecture</li>
+            <li>AI Integration</li>
+          </ul>
+          <div class="portfolio-case-actions">
+            <button class="portfolio-story-trigger" type="button" data-case-open="seapay" aria-haspopup="dialog" aria-controls="portfolio-case-dialog">View case story</button>
+            <a href="https://SeaPay.ai" class="portfolio-text-link">Visit SeaPay <span aria-hidden="true">↗</span></a>
+          </div>
         </div>
       </div>
     </article>
@@ -122,7 +146,15 @@
           <p>
             A self-custodial Sui wallet that gives AI agents and services typed, revocable allowances without surrendering control.
           </p>
-          <a href="https://www.supwallet.app/" class="portfolio-text-link">Visit Sup Wallet <span aria-hidden="true">↗</span></a>
+          <ul class="portfolio-tags" aria-label="Zzyzx scope for Sup Wallet">
+            <li>Product Studio</li>
+            <li>Smart Contracts</li>
+            <li>Sui</li>
+          </ul>
+          <div class="portfolio-case-actions">
+            <button class="portfolio-story-trigger" type="button" data-case-open="supwallet" aria-haspopup="dialog" aria-controls="portfolio-case-dialog">View case story</button>
+            <a href="https://www.supwallet.app/" class="portfolio-text-link">Visit Sup Wallet <span aria-hidden="true">↗</span></a>
+          </div>
         </div>
       </article>
 
@@ -132,7 +164,15 @@
         <p class="portfolio-project__description">
           A language-agnostic Layer 1 built on a RISC-V runtime for C, C++, Rust, and other LLVM languages.
         </p>
-        <a href="https://thru.org/" class="portfolio-text-link">Visit Thru <span aria-hidden="true">↗</span></a>
+        <ul class="portfolio-tags" aria-label="Zzyzx scope for Thru">
+          <li>Product Strategy</li>
+          <li>Protocol Research</li>
+          <li>Developer Experience</li>
+        </ul>
+        <div class="portfolio-case-actions">
+          <button class="portfolio-story-trigger" type="button" data-case-open="thru" aria-haspopup="dialog" aria-controls="portfolio-case-dialog">View case story</button>
+          <a href="https://thru.org/" class="portfolio-text-link">Visit Thru <span aria-hidden="true">↗</span></a>
+        </div>
       </article>
 
       <article class="portfolio-project portfolio-project--broker" data-animate="fade-up">
@@ -141,7 +181,15 @@
         <p class="portfolio-project__description">
           A digital brokerage experience for accessing crypto and tokenized assets through one client platform.
         </p>
-        <a href="https://broker.finance/" class="portfolio-text-link">Visit Broker Finance <span aria-hidden="true">↗</span></a>
+        <ul class="portfolio-tags" aria-label="Zzyzx scope for Broker Finance">
+          <li>Product Strategy</li>
+          <li>Experience Design</li>
+          <li>Web3 Integration</li>
+        </ul>
+        <div class="portfolio-case-actions">
+          <button class="portfolio-story-trigger" type="button" data-case-open="broker-finance" aria-haspopup="dialog" aria-controls="portfolio-case-dialog">View case story</button>
+          <a href="https://broker.finance/" class="portfolio-text-link">Visit Broker Finance <span aria-hidden="true">↗</span></a>
+        </div>
       </article>
     </div>
   </section>
@@ -152,7 +200,160 @@
       <a href="mailto:contact@zzyzx.com?subject=Start%20a%20brief" class="portfolio-button-primary">Start a brief</a>
     </div>
   </section>
+
+  <dialog id="portfolio-case-dialog" class="portfolio-dialog" data-case-dialog aria-modal="true">
+    <div class="portfolio-dialog__sheet">
+      <header class="portfolio-dialog__header">
+        <span>Case story</span>
+        <button type="button" class="portfolio-dialog__close" data-case-close aria-label="Close case story">Close</button>
+      </header>
+
+      <div class="portfolio-dialog__content">
+        <article class="portfolio-dialog__case" data-case-panel="nereus" hidden>
+          <p class="portfolio-dialog__category">AI agents and onchain markets</p>
+          <h2 id="case-title-nereus">Nereus</h2>
+          <p id="case-intro-nereus" class="portfolio-dialog__intro">A market where the resolution layer is treated as part of the product, not an operational afterthought.</p>
+          <ul class="portfolio-tags portfolio-tags--dialog" aria-label="Zzyzx scope for Nereus">
+            <li>Product Studio</li><li>Applied AI</li><li>Smart Contracts</li>
+          </ul>
+          <div class="portfolio-dialog__story">
+            <section><h3>The brief</h3><p>Prediction markets need an outcome process participants can understand and inspect. Nereus brings the product experience and the resolution system into one flow.</p></section>
+            <section><h3>Our role</h3><p>Zzyzx shaped the product definition, AI system design, smart contract architecture, and experience across the user journey.</p></section>
+            <section><h3>The system</h3><p>The product uses AI agents in trusted execution environments to support decentralized outcome resolution.</p></section>
+          </div>
+          <a href="https://trynereus.xyz" class="portfolio-dialog__link">Visit Nereus <span aria-hidden="true">↗</span></a>
+        </article>
+
+        <article class="portfolio-dialog__case" data-case-panel="seawallet" hidden>
+          <p class="portfolio-dialog__category">Smart account infrastructure</p>
+          <h2 id="case-title-seawallet">SeaWallet</h2>
+          <p id="case-intro-seawallet" class="portfolio-dialog__intro">A smart account product that turns long-term asset instructions into an understandable wallet experience.</p>
+          <ul class="portfolio-tags portfolio-tags--dialog" aria-label="Zzyzx scope for SeaWallet">
+            <li>Product Studio</li><li>Smart Accounts</li><li>Experience Design</li>
+          </ul>
+          <div class="portfolio-dialog__story">
+            <section><h3>The brief</h3><p>Inheritance and asset distribution introduce rules that ordinary wallet interfaces were not designed to express.</p></section>
+            <section><h3>Our role</h3><p>Zzyzx connected product strategy, smart account architecture, contract delivery, and experience design in one product workflow.</p></section>
+            <section><h3>The system</h3><p>SeaWallet supports customizable inheritance and asset distribution through a smart contract account platform.</p></section>
+          </div>
+          <a href="https://SeaWallet.ai" class="portfolio-dialog__link">Visit SeaWallet <span aria-hidden="true">↗</span></a>
+        </article>
+
+        <article class="portfolio-dialog__case" data-case-panel="seapay" hidden>
+          <p class="portfolio-dialog__category">Agent-ready payments</p>
+          <h2 id="case-title-seapay">SeaPay</h2>
+          <p id="case-intro-seapay" class="portfolio-dialog__intro">A payment layer designed for the moment an AI-led booking becomes a real transaction.</p>
+          <ul class="portfolio-tags portfolio-tags--dialog" aria-label="Zzyzx scope for SeaPay">
+            <li>Product Studio</li><li>Payment Architecture</li><li>AI Integration</li>
+          </ul>
+          <div class="portfolio-dialog__story">
+            <section><h3>The brief</h3><p>Agent-led travel needs a clear handoff from autonomous intent to a confirmed hotel payment.</p></section>
+            <section><h3>Our role</h3><p>Zzyzx worked across payment architecture, backend systems, standards integration, and product experience.</p></section>
+            <section><h3>The system</h3><p>SeaPay integrates x402 and A2A standards in a hotel payment gateway for AI-led travel booking.</p></section>
+          </div>
+          <a href="https://SeaPay.ai" class="portfolio-dialog__link">Visit SeaPay <span aria-hidden="true">↗</span></a>
+        </article>
+
+        <article class="portfolio-dialog__case" data-case-panel="supwallet" hidden>
+          <p class="portfolio-dialog__category">Agent economy</p>
+          <h2 id="case-title-supwallet">Sup Wallet</h2>
+          <p id="case-intro-supwallet" class="portfolio-dialog__intro">A self-custodial wallet designed to give agents useful permissions without giving away account control.</p>
+          <ul class="portfolio-tags portfolio-tags--dialog" aria-label="Zzyzx scope for Sup Wallet">
+            <li>Product Studio</li><li>Smart Contracts</li><li>Sui</li>
+          </ul>
+          <div class="portfolio-dialog__story">
+            <section><h3>The brief</h3><p>AI agents need permission to act, but unrestricted wallet access creates an unacceptable trust boundary.</p></section>
+            <section><h3>Our role</h3><p>Zzyzx shaped the product, smart contract model, Sui wallet infrastructure, and interaction design.</p></section>
+            <section><h3>The system</h3><p>Sup Wallet uses typed, revocable allowances so agents and services can operate inside explicit limits.</p></section>
+          </div>
+          <a href="https://www.supwallet.app/" class="portfolio-dialog__link">Visit Sup Wallet <span aria-hidden="true">↗</span></a>
+        </article>
+
+        <article class="portfolio-dialog__case" data-case-panel="thru" hidden>
+          <p class="portfolio-dialog__category">Layer 1 infrastructure</p>
+          <h2 id="case-title-thru">Thru</h2>
+          <p id="case-intro-thru" class="portfolio-dialog__intro">A protocol proposition built around a familiar compiler toolchain instead of a chain-specific language.</p>
+          <ul class="portfolio-tags portfolio-tags--dialog" aria-label="Zzyzx scope for Thru">
+            <li>Product Strategy</li><li>Protocol Research</li><li>Developer Experience</li>
+          </ul>
+          <div class="portfolio-dialog__story">
+            <section><h3>The brief</h3><p>Protocol performance matters, but adoption also depends on how quickly developers can bring existing skills and code to the network.</p></section>
+            <section><h3>Our role</h3><p>Zzyzx contributed product strategy, protocol research, and developer experience framing.</p></section>
+            <section><h3>The system</h3><p>Thru is a language-agnostic Layer 1 built on a RISC-V runtime for C, C++, Rust, and other LLVM languages.</p></section>
+          </div>
+          <a href="https://thru.org/" class="portfolio-dialog__link">Visit Thru <span aria-hidden="true">↗</span></a>
+        </article>
+
+        <article class="portfolio-dialog__case" data-case-panel="broker-finance" hidden>
+          <p class="portfolio-dialog__category">Digital asset brokerage</p>
+          <h2 id="case-title-broker-finance">Broker Finance</h2>
+          <p id="case-intro-broker-finance" class="portfolio-dialog__intro">A brokerage experience that brings crypto and tokenized assets into one coherent client journey.</p>
+          <ul class="portfolio-tags portfolio-tags--dialog" aria-label="Zzyzx scope for Broker Finance">
+            <li>Product Strategy</li><li>Experience Design</li><li>Web3 Integration</li>
+          </ul>
+          <div class="portfolio-dialog__story">
+            <section><h3>The brief</h3><p>Digital asset access can become fragmented across products, asset types, and operational requirements.</p></section>
+            <section><h3>Our role</h3><p>Zzyzx worked across product strategy, experience design, and the Web3 integration model.</p></section>
+            <section><h3>The system</h3><p>Broker Finance presents crypto and tokenized assets through a unified digital brokerage experience.</p></section>
+          </div>
+          <a href="https://broker.finance/" class="portfolio-dialog__link">Visit Broker Finance <span aria-hidden="true">↗</span></a>
+        </article>
+      </div>
+    </div>
+  </dialog>
 </main>
+
+<script is:inline>
+  const portfolioRoot = document.querySelector("[data-portfolio-root]");
+  const caseDialog = portfolioRoot?.querySelector("[data-case-dialog]");
+  const casePanels = Array.from(portfolioRoot?.querySelectorAll("[data-case-panel]") ?? []);
+  const caseTriggers = Array.from(portfolioRoot?.querySelectorAll("[data-case-open]") ?? []);
+  const closeButton = portfolioRoot?.querySelector("[data-case-close]");
+  let activeTrigger = null;
+
+  const closeCaseDialog = () => {
+    if (caseDialog?.open) caseDialog.close();
+  };
+
+  caseTriggers.forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      if (!caseDialog) return;
+      const caseId = trigger.dataset.caseOpen;
+      const activePanel = casePanels.find((panel) => panel.dataset.casePanel === caseId);
+      if (!activePanel || !caseId) return;
+
+      casePanels.forEach((panel) => {
+        panel.hidden = panel !== activePanel;
+      });
+
+      activeTrigger = trigger;
+      caseDialog.setAttribute("aria-labelledby", `case-title-${caseId}`);
+      caseDialog.setAttribute("aria-describedby", `case-intro-${caseId}`);
+      document.documentElement.dataset.caseOpen = "true";
+      caseDialog.showModal();
+      closeButton?.focus();
+    });
+  });
+
+  closeButton?.addEventListener("click", closeCaseDialog);
+
+  caseDialog?.addEventListener("click", (event) => {
+    if (event.target === caseDialog) closeCaseDialog();
+  });
+
+  caseDialog?.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeCaseDialog();
+    }
+  });
+
+  caseDialog?.addEventListener("close", () => {
+    delete document.documentElement.dataset.caseOpen;
+    activeTrigger?.focus();
+    activeTrigger = null;
+  });
+</script>
 
 <style>
   .portfolio-shell {
@@ -351,6 +552,56 @@
     color: #c1f0f2;
   }
 
+  .portfolio-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.75rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .portfolio-tags li {
+    border: 1px solid rgba(116, 215, 221, 0.26);
+    padding: 0.48rem 0.65rem;
+    color: #a7c7ca;
+    font-size: 0.72rem;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .portfolio-case-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1.75rem;
+  }
+
+  .portfolio-case-actions .portfolio-text-link {
+    margin-top: 0;
+  }
+
+  .portfolio-story-trigger {
+    min-height: 2.75rem;
+    border: 1px solid rgba(242, 243, 239, 0.2);
+    border-radius: 0;
+    background: transparent;
+    padding: 0.65rem 0.85rem;
+    color: #eef0ed;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 220ms ease, background-color 220ms ease, color 220ms ease;
+  }
+
+  .portfolio-story-trigger:hover {
+    border-color: rgba(116, 215, 221, 0.62);
+    background: rgba(116, 215, 221, 0.07);
+    color: #bcebee;
+  }
+
   .portfolio-seawallet {
     padding: 6rem 1.25rem;
   }
@@ -501,10 +752,167 @@
     color: #edf0ec;
   }
 
+  .portfolio-dialog {
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: #08090a;
+    overflow: hidden;
+  }
+
+  .portfolio-dialog::backdrop {
+    background: rgba(8, 9, 10, 0.72);
+    backdrop-filter: grayscale(1) brightness(0.42);
+    -webkit-backdrop-filter: grayscale(1) brightness(0.42);
+  }
+
+  .portfolio-dialog__sheet {
+    width: min(100%, 51rem);
+    height: 100dvh;
+    margin-left: auto;
+    background: #c9cdca;
+    color: #0a0c0d;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .portfolio-dialog__header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    min-height: 4.25rem;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(10, 12, 13, 0.18);
+    background: rgba(201, 205, 202, 0.96);
+    padding: 0 1.5rem;
+  }
+
+  .portfolio-dialog__header > span {
+    font-size: 0.72rem;
+    font-weight: 650;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .portfolio-dialog__close {
+    min-width: 3.25rem;
+    min-height: 2.75rem;
+    border: 0;
+    border-bottom: 1px solid #0a0c0d;
+    border-radius: 0;
+    background: transparent;
+    padding: 0.5rem 0;
+    color: #0a0c0d;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 650;
+    cursor: pointer;
+  }
+
+  .portfolio-dialog__content {
+    min-height: calc(100dvh - 4.25rem);
+    padding: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4.5rem) 4rem;
+  }
+
+  .portfolio-dialog__case[hidden] {
+    display: none;
+  }
+
+  .portfolio-dialog__category {
+    color: #405357;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .portfolio-dialog__case h2 {
+    max-width: 11ch;
+    margin-top: 1.25rem;
+    font-family: var(--font-heading);
+    font-size: clamp(3.3rem, 7vw, 6.2rem);
+    font-weight: 500;
+    line-height: 0.94;
+    letter-spacing: -0.06em;
+  }
+
+  .portfolio-dialog__intro {
+    max-width: 35rem;
+    margin-top: 1.75rem;
+    color: #323b3c;
+    font-size: clamp(1.05rem, 2vw, 1.3rem);
+    line-height: 1.6;
+  }
+
+  .portfolio-tags--dialog {
+    margin-top: 2rem;
+  }
+
+  .portfolio-tags--dialog li {
+    border-color: rgba(10, 12, 13, 0.26);
+    color: #172326;
+  }
+
+  .portfolio-dialog__story {
+    display: grid;
+    gap: 2.75rem;
+    margin-top: clamp(3.5rem, 8vw, 6rem);
+  }
+
+  .portfolio-dialog__story section {
+    display: grid;
+    gap: 1rem;
+    border-top: 1px solid rgba(10, 12, 13, 0.22);
+    padding-top: 1.1rem;
+  }
+
+  .portfolio-dialog__story h3 {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .portfolio-dialog__story p {
+    max-width: 35rem;
+    color: #303839;
+    line-height: 1.75;
+  }
+
+  .portfolio-dialog__link {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 3.5rem;
+    border-bottom: 1px solid #0a0c0d;
+    padding-bottom: 0.25rem;
+    color: #0a0c0d;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  :global(html[data-case-open="true"]) {
+    overflow: hidden;
+  }
+
   .portfolio-button-primary:focus-visible,
   .portfolio-button-secondary:focus-visible,
-  .portfolio-text-link:focus-visible {
+  .portfolio-text-link:focus-visible,
+  .portfolio-story-trigger:focus-visible {
     outline: 2px solid #74d7dd;
+    outline-offset: 4px;
+  }
+
+  .portfolio-dialog__close:focus-visible,
+  .portfolio-dialog__link:focus-visible {
+    outline: 2px solid #164f54;
     outline-offset: 4px;
   }
 
@@ -513,11 +921,29 @@
       animation: portfolio-copy-in 820ms cubic-bezier(0.22, 1, 0.36, 1) both;
     }
 
+    .portfolio-dialog[open] .portfolio-dialog__sheet {
+      animation: portfolio-dialog-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .portfolio-dialog[open]::backdrop {
+      animation: portfolio-backdrop-in 260ms ease-out both;
+    }
+
   }
 
   @keyframes portfolio-copy-in {
     from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes portfolio-dialog-in {
+    from { opacity: 0; transform: translateX(2.5rem); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes portfolio-backdrop-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
   @media (min-width: 640px) {
@@ -628,13 +1054,41 @@
     .portfolio-project__body {
       margin-top: 2rem;
     }
+
+    .portfolio-case-actions {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .portfolio-story-trigger {
+      width: 100%;
+      min-height: 3rem;
+    }
+
+    .portfolio-dialog__sheet {
+      width: 100%;
+    }
+
+    .portfolio-dialog__header {
+      padding-inline: 1.25rem;
+    }
+
+    .portfolio-dialog__content {
+      padding-inline: 1.25rem;
+    }
+
+    .portfolio-dialog__case h2 {
+      font-size: clamp(3rem, 15vw, 4.8rem);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .portfolio-button-primary,
     .portfolio-button-secondary,
     .portfolio-text-link,
-    .portfolio-seawallet__media img {
+    .portfolio-seawallet__media img,
+    .portfolio-story-trigger {
       transition: none;
     }
 
