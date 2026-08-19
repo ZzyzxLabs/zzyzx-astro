@@ -1,0 +1,244 @@
+---
+import WriteupRow from "./WriteupRow.astro";
+import type { AuditRecord } from "../../data/audits";
+import "../../styles/audit-writeup.css";
+
+interface Props {
+  label: string;
+  heading: string;
+  intro: string;
+  empty: string;
+  /** Picks the lane colour: incidents run ember, our own reports run cyan. */
+  tone: "incident" | "report";
+  records: AuditRecord[];
+}
+
+const { label, heading, intro, empty, tone, records } = Astro.props;
+---
+
+<main class="index-shell" style={`--lane: var(--lane-${tone});`}>
+  <div class="index-frame">
+    <nav class="index-crumbs" aria-label="Breadcrumb">
+      <a href="/security-audit">Security Audit</a>
+      <span aria-hidden="true">/</span>
+      <span>{label}</span>
+    </nav>
+
+    <header class="index-head">
+      <div>
+        <p class="audit-label">{label}</p>
+        <h1 class="index-title">{heading}</h1>
+      </div>
+      <div class="index-head__aside">
+        <p class="index-intro">{intro}</p>
+        <p class="index-count">{records.length} {records.length === 1 ? "writeup" : "writeups"}</p>
+      </div>
+    </header>
+
+    {records.length > 0 ? (
+      <div class="index-grid">
+        {records.map((record) => <WriteupRow record={record} />)}
+      </div>
+    ) : (
+      <p class="index-empty">{empty}</p>
+    )}
+
+    <footer class="index-foot">
+      <a class="index-back" href="/security-audit"><span aria-hidden="true">&lt;&lt;</span> Back to Security Audit</a>
+      <a class="index-cta" href="mailto:contact@zzyzx.com?subject=Security%20Audit%20Inquiry">Request an audit</a>
+    </footer>
+  </div>
+</main>
+
+<style>
+  .index-shell {
+    position: relative;
+    padding: 6rem 1.25rem 0;
+    background: var(--audit-bg);
+    color: var(--audit-ink);
+  }
+
+  /* A raised header plane fading into the ground: the page has a top instead of
+   * being one uninterrupted black field. The lane wash names which archive
+   * you are in before you read the label. */
+  .index-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 34rem;
+    background:
+      radial-gradient(110% 90% at 8% 0%, color-mix(in srgb, var(--lane) 12%, transparent), transparent 60%),
+      linear-gradient(180deg, var(--audit-bg-raised), transparent);
+    pointer-events: none;
+  }
+
+  .index-frame {
+    position: relative;
+    max-width: 88rem;
+    margin-inline: auto;
+    padding-bottom: 7rem;
+  }
+
+  .index-crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--audit-ink-4);
+  }
+
+  .index-crumbs a {
+    color: var(--audit-ink-3);
+    text-decoration: none;
+  }
+
+  .index-crumbs a:hover {
+    color: var(--audit-cyan-ink);
+  }
+
+  .index-head {
+    display: grid;
+    align-items: end;
+    gap: 1.5rem 4rem;
+    margin-top: 2.5rem;
+    padding-bottom: 3rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .index-title {
+    max-width: 20ch;
+    margin: 1rem 0 0;
+    font-family: var(--font-heading);
+    font-size: clamp(2.1rem, 3.6vw, 3.1rem);
+    font-weight: 500;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+    color: var(--audit-ink);
+    text-wrap: balance;
+  }
+
+  .index-head__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .index-intro {
+    max-width: 34rem;
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.75;
+    color: var(--audit-ink-3);
+  }
+
+  .index-count {
+    margin: 0;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--audit-ink-4);
+  }
+
+  .index-grid {
+    display: grid;
+    border-top: 1px solid var(--audit-line-strong);
+    gap: 0 3.5rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .index-empty {
+    max-width: 34rem;
+    border-top: 1px solid var(--audit-line-strong);
+    padding-top: 1.75rem;
+    line-height: 1.75;
+    color: var(--audit-ink-3);
+  }
+
+  .index-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: 4rem;
+    border-top: 1px solid var(--audit-line);
+    padding-top: 2rem;
+  }
+
+  .index-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--audit-cyan-ink);
+    text-decoration: none;
+  }
+
+  .index-back span {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    color: var(--audit-cyan);
+  }
+
+  .index-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    padding: 0.8rem 1.35rem;
+    background: var(--audit-cyan);
+    color: #071012;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 220ms ease;
+  }
+
+  .index-cta:hover {
+    background: var(--audit-cyan-bright);
+  }
+
+  .index-back:focus-visible,
+  .index-cta:focus-visible {
+    outline: 2px solid var(--audit-cyan);
+    outline-offset: 4px;
+  }
+
+  .audit-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--lane, var(--audit-cyan));
+  }
+
+  @media (min-width: 900px) {
+    .index-head {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    }
+
+    .index-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 720px) {
+    .index-shell {
+      padding-top: 4.75rem;
+    }
+
+    .index-cta {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .index-cta {
+      transition: none;
+    }
+  }
+</style>

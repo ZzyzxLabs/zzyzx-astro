@@ -1,0 +1,22 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import WriteupIndex from "../../components/audit/WriteupIndex.astro";
+import { getPublishedAudits } from "../../data/audits";
+
+const records = await getPublishedAudits("audit");
+---
+
+<Layout
+  title="Audit Reports | Zzyzx Labs"
+  description="Smart contract audit engagements published with client permission: scope, findings, severity rationale, and remediation status."
+  image={null}
+>
+  <WriteupIndex
+    label="Audit reports"
+    tone="report"
+    heading="Reviewed work, published with permission."
+    intro="Each engagement lists the exact commit in scope, every finding with its evidence, and where the remediation landed."
+    empty="Reports appear here once a client approves public disclosure. Private engagements stay confidential."
+    records={records}
+  />
+</Layout>

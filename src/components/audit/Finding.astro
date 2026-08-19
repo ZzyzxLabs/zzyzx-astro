@@ -1,0 +1,28 @@
+---
+import SeverityBadge from "./SeverityBadge.astro";
+import StatusBadge from "./StatusBadge.astro";
+import type { Severity, Status } from "../../lib/findings";
+
+interface Props {
+  id: string;
+  title: string;
+  severity: Severity;
+  status: Status;
+  fix?: string;
+}
+
+const { id, title, severity, status, fix } = Astro.props;
+---
+
+<section class="finding" id={id} data-severity={severity} aria-labelledby={`${id}-title`}>
+  <div class="finding__meta">
+    <a class="finding__id" href={`#${id}`} aria-label={`Permalink to ${id}`}>{id}</a>
+    <SeverityBadge severity={severity} />
+    <StatusBadge status={status} />
+  </div>
+  <h3 class="finding__title" id={`${id}-title`}>{title}</h3>
+  {fix && (
+    <a class="finding__fix" href={fix} target="_blank" rel="noreferrer">Remediation commit ↗</a>
+  )}
+  <div class="finding__body"><slot /></div>
+</section>

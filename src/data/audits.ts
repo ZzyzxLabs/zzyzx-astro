@@ -1,26 +1,53 @@
-export interface AuditFindingSummary {
-  critical: number;
-  high: number;
-  medium: number;
-  low: number;
-  informational: number;
-}
+import { getCollection, type CollectionEntry } from "astro:content";
+import { countBySeverity, parseFindings, type Finding, type SeverityCounts } from "../lib/findings";
+
+export type AuditEntry = CollectionEntry<"audits">;
+export type AuditKind = AuditEntry["data"]["kind"];
 
 export interface AuditRecord {
-  project: string;
+  entry: AuditEntry;
   slug: string;
-  summary: string;
-  ecosystem: string;
-  auditType: string;
-  scope: string[];
-  completedAt: string;
-  reportUrl?: string;
-  projectUrl?: string;
-  findings?: AuditFindingSummary;
+  href: string;
+  findings: Finding[];
+  counts: SeverityCounts;
+}
+
+export const kindLabels: Record<AuditKind, string> = {
+  audit: "Audit report",
+  incident: "Incident analysis",
+};
+
+function toRecord(entry: AuditEntry): AuditRecord {
+  const findings = parseFindings(entry.body, entry.id);
+  return {
+    entry,
+    slug: entry.id,
+    href: `/security-audit/${entry.id}`,
+    findings,
+    counts: countBySeverity(findings),
+  };
 }
 
 /**
- * Only add engagements that are approved for public disclosure.
- * The Security Audit page renders an intentional empty state until a record is added.
+ * Everything that may be served. `disclosure` gates client-approved work;
+ * drafts stay visible in dev so a writeup can be previewed before it ships.
  */
-export const publishedAudits: AuditRecord[] = [];
+export async function getPublishedAudits(kind?: AuditKind): Promise<AuditRecord[]> {
+  const entries = await getCollection("audits", ({ data }) => {
+    if (data.disclosure !== "public") return false;
+    if (data.draft && import.meta.env.PROD) return false;
+    return kind ? data.kind === kind : true;
+  });
+
+  return entries
+    .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
+    .map(toRecord);
+}
+
+export function formatAuditDate(date: Date): string {
+  return date.toLocaleDateString("en-US", { year: "numeric", month: "long", timeZone: "UTC" });
+}
+
+export function formatAuditDay(date: Date): string {
+  return date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
+}

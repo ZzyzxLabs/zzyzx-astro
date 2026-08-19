@@ -7,18 +7,56 @@ const services = [
   { name: "Security Audit", verb: "Verify", description: "Manual review, AI-assisted analysis, adversarial testing, and formal verification.", href: "/security-audit" },
 ];
 
+/**
+ * Roles are the titles each operator states on their own profile page, and the
+ * systems are the Zzyzx product lines those same pages claim. KC and Malingshu
+ * have no profile page yet, so they keep their discipline line and carry no
+ * system list rather than an attribution nobody has put their name to.
+ */
 const credits = [
-  { name: "Frederic", role: "Architecture and engineering", href: "/frederic" },
-  { name: "Zou", role: "Strategy and product", href: "/zou" },
-  { name: "KC", role: "Backend infrastructure" },
-  { name: "Lun", role: "Creative direction" },
-  { name: "Malingshu", role: "Applied AI" },
+  { name: "Frederic", role: "Co-Founder & CEO", href: "/frederic", systems: ["SeaWallet", "SeaPay", "Nereus"] },
+  { name: "Zou", role: "CSO", href: "/zou", systems: ["SeaWallet", "Nereus"] },
+  { name: "KC", role: "Backend infrastructure", systems: [] },
+  { name: "Lun", role: "CTO", href: "/Lun", systems: ["SeaWallet", "SeaPay", "Nereus"] },
+  { name: "Malingshu", role: "Applied AI", systems: [] },
 ];
 
-const proofCredits = [
-  { name: "SeaWallet", kind: "Smart account infrastructure", description: "Smart accounts for inheritance and asset distribution.", href: "https://SeaWallet.ai" },
-  { name: "SeaPay", kind: "Agent-ready payments", description: "x402 and A2A payments for AI-led travel booking.", href: "https://SeaPay.ai" },
+// Newest work first. The proof section pins and hands off one project at a time as the scanline sweeps.
+const proofProjects = [
+  { name: "Sup Wallet", accent: "#3b3ad6", kind: "Agent economy", description: "An agentic, self-custodial wallet on Sui. Keys sign inside attested hardware, and agents act only inside the typed, capped, revocable allowances you grant.", href: "https://www.supwallet.app/", image: { src: "/supwallet-case.webp", width: 1792, height: 1008 } },
+  { name: "Thru", accent: "#1a6047", kind: "Crypto payment infrastructure", description: "The payment rail for crypto businesses. Accept stablecoins across 25+ chains, with compliance and on-chain escrow built in.", href: "https://thru.la", image: { src: "/thru-case.webp", width: 1792, height: 1008 } },
+  { name: "Broker", accent: "#a11f4c", kind: "Tokenized asset trading", description: "Trade tokenized stocks and cross-chain assets as broAssets on Sui, custodied 1:1 in Ika dWallets.", href: "https://trybroker.app", image: { src: "/broker-case.webp", width: 1792, height: 1008 } },
+  { name: "Nereus", accent: "#784903", kind: "AI agents and TEE", description: "A prediction market using AI agents in trusted execution environments for decentralized outcome resolution.", href: "https://trynereus.xyz", image: { src: "/nereus-case.webp", width: 1737, height: 933 } },
+  { name: "SeaWallet", accent: "#2b4a83", kind: "Smart account infrastructure", description: "Smart accounts for inheritance and asset distribution.", href: "https://SeaWallet.ai", image: { src: "/seawallet-case.webp", width: 1456, height: 816 } },
+  { name: "SeaPay", accent: "#125780", kind: "Agent-ready payments", description: "x402 and A2A payments for AI-led travel booking.", href: "https://SeaPay.ai", image: { src: "/seapay-case.webp", width: 1792, height: 1008 } },
 ];
+
+/**
+ * Each product name is set in the ledger with its own brand mark: the capitals
+ * take the product accent (sampled from that product’s own interface), the
+ * lowercase stays ink. Runs are grouped so "SeaWallet" emits two spans, not ten.
+ */
+function nameRuns(name) {
+  const runs = [];
+  for (const char of name) {
+    const cap = char >= "A" && char <= "Z";
+    const last = runs[runs.length - 1];
+    if (last && last.cap === cap) last.text += char;
+    else runs.push({ cap, text: char });
+  }
+  return runs;
+}
+
+/** The ledger and the credit roll name the same products, so they read from one palette. */
+const productAccent = new Map(proofProjects.map((project) => [project.name, project.accent]));
+
+// Scroll budget for the pinned proof story, in viewport heights: a hold before and after every
+// sweep, plus one sweep per hand-off. CSS sizes the spacer from these, the motion script reads them
+// back off `data-proof-timeline`, so both stay derived from one place.
+const PROOF_HOLD_VH = 1 / 6;
+const PROOF_SWEEP_VH = 0.7;
+const proofScrollVh = proofProjects.length * PROOF_HOLD_VH + (proofProjects.length - 1) * PROOF_SWEEP_VH;
+const proofTimeline = `${PROOF_HOLD_VH}|${PROOF_SWEEP_VH}|${proofProjects.length}`;
 ---
 
 <main class="home-v7" data-continuum-shell>
@@ -51,37 +89,57 @@ const proofCredits = [
     </section>
 
     <section id="work" class="work-v7" data-scene-marker="proof">
-      <div class="proof-story" data-proof-story>
+      <div
+        class="proof-story"
+        data-proof-story
+        data-proof-timeline={proofTimeline}
+        style={`--proof-story-vh: ${proofScrollVh}`}
+      >
         <div class="proof-stage" data-proof-stage>
           <div class="proof-ledger">
             <header><h2>Selected systems</h2><p>Proof lives in what ships.</p></header>
 
-            <article class="lead-proof-copy">
-              <p>AI agents and TEE</p>
-              <h3>Nereus</h3>
-              <p>A prediction market using AI agents in trusted execution environments for decentralized outcome resolution.</p>
-              <a class="ink-link" href="https://trynereus.xyz" target="_blank" rel="noreferrer">Visit Nereus <span aria-hidden="true">↗</span></a>
-            </article>
-
-            <div class="proof-credit-list">
-              {proofCredits.map((project) => (
-                <article>
+            <div class="proof-deck" data-proof-deck>
+              {proofProjects.map((project, index) => (
+                <article class="proof-copy" data-proof-copy={index} data-active={index === 0 ? "true" : "false"} style={`--accent: ${project.accent};`}>
                   <p>{project.kind}</p>
-                  <h3>{project.name}</h3>
+                  <h3>{nameRuns(project.name).map((run) => (run.cap ? <span class="proof-name-cap">{run.text}</span> : run.text))}</h3>
                   <p>{project.description}</p>
-                  <a href={project.href} target="_blank" rel="noreferrer" aria-label={`Visit ${project.name}`}><span aria-hidden="true">↗</span></a>
+                  <a class="ink-link" href={project.href} target="_blank" rel="noreferrer">Visit {project.name} <span aria-hidden="true">↗</span></a>
                 </article>
               ))}
             </div>
+
+            <ol class="proof-index" data-proof-index>
+              {proofProjects.map((project, index) => (
+                <li data-proof-index-item={index} data-active={index === 0 ? "true" : "false"} style={`--accent: ${project.accent};`}>
+                  <span class="proof-index-num">{String(index + 1).padStart(2, "0")}</span>
+                  <span class="proof-index-name">{nameRuns(project.name).map((run) => (run.cap ? <span class="proof-name-cap">{run.text}</span> : run.text))}</span>
+                  <span class="proof-index-rule" aria-hidden="true"></span>
+                </li>
+              ))}
+            </ol>
+
             <a class="ink-link portfolio-link" href="/portfolio">View portfolio <span aria-hidden="true">↗</span></a>
           </div>
 
           <figure class="proof-image" data-proof-image>
             <div class="proof-image-window">
-              <img src="/nereus-case.webp" alt="Nereus prediction market interface" width="1737" height="933" loading="lazy" />
+              {proofProjects.map((project, index) => (
+                <img
+                  class="proof-frame"
+                  data-proof-frame={index}
+                  src={project.image.src}
+                  alt={`${project.name} interface`}
+                  width={project.image.width}
+                  height={project.image.height}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+              ))}
               <span class="witness-scan" data-witness-scan aria-hidden="true"></span>
             </div>
-            <figcaption>Nereus interface, selected product work</figcaption>
+            <figcaption data-proof-caption>{proofProjects[0].name} interface, selected product work</figcaption>
           </figure>
         </div>
       </div>
@@ -93,10 +151,20 @@ const proofCredits = [
         <p>Three disciplines, one accountable delivery team.</p>
       </header>
 
-      <div class="service-index">
-        {services.map((service, index) => (
-          <article class="service-row" data-service-row={index}>
-            <span class="service-wipe" aria-hidden="true"></span>
+      <div class="service-index" data-service-index>
+        <svg class="service-pointer" data-service-pointer aria-hidden="true" focusable="false">
+          <path
+            data-service-pointer-path
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="butt"
+            stroke-linejoin="miter"
+          ></path>
+        </svg>
+
+        {services.map((service) => (
+          <article class="service-row">
             <p class="service-verb">{service.verb}</p>
             <h3><a href={service.href}>{service.name}</a></h3>
             <p class="service-description">{service.description}</p>
@@ -106,23 +174,24 @@ const proofCredits = [
       </div>
     </section>
 
-    <section id="approach" class="handoff-v7" data-scene-marker="approach">
-      <div class="handoff-heading"><h2>One feedback loop.</h2><p>No strategic handoff between demand, delivery, and verification.</p></div>
-      <ol class="handoff-steps" data-handoff-steps>
-        <li><span>Find demand</span><p>A position the market can repeat.</p></li>
-        <li><span>Build the system</span><p>A release shaped by real constraints.</p></li>
-        <li><span>Verify the release</span><p>Evidence for paths that carry value.</p></li>
-      </ol>
-      <span class="handoff-progress" data-handoff-progress aria-hidden="true"></span>
-    </section>
-
     <section id="about" class="studio-v7" data-scene-marker="studio">
       <header><h2>The operators behind the work.</h2></header>
       <div class="credit-roll" data-credit-roll>
         {credits.map((member) => (
           <div class="credit" data-credit>
-            {member.href ? <a href={member.href}>{member.name}</a> : <span>{member.name}</span>}
-            <span>{member.role}</span>
+            {member.href ? (
+              <a class="credit-name" href={member.href}>{member.name}<span aria-hidden="true">↗</span></a>
+            ) : (
+              <span class="credit-name">{member.name}</span>
+            )}
+            <span class="credit-role">{member.role}</span>
+            {member.systems.length > 0 && (
+              <ul class="credit-systems" aria-label={`Systems ${member.name} has shipped`}>
+                {member.systems.map((system) => (
+                  <li style={`--accent: ${productAccent.get(system)};`}>{system}</li>
+                ))}
+              </ul>
+            )}
           </div>
         ))}
       </div>
@@ -137,6 +206,41 @@ const proofCredits = [
     </section>
   </div>
 </main>
+
+<script>
+  import { mountServicePointer } from "../scripts/service-pointer";
+
+  const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const pointerQuery = window.matchMedia("(pointer: fine)");
+
+  let cleanup: (() => void) | null = null;
+
+  const unmount = () => {
+    cleanup?.();
+    cleanup = null;
+  };
+
+  const mount = () => {
+    unmount();
+    // The arrow is a cursor affordance: no cursor, or no appetite for motion, no arrow.
+    if (motionQuery.matches || !pointerQuery.matches) return;
+    cleanup = mountServicePointer() ?? null;
+  };
+
+  document.addEventListener("astro:page-load", mount);
+  motionQuery.addEventListener("change", mount);
+  pointerQuery.addEventListener("change", mount);
+  mount();
+
+  if (import.meta.hot) {
+    import.meta.hot.dispose(() => {
+      document.removeEventListener("astro:page-load", mount);
+      motionQuery.removeEventListener("change", mount);
+      pointerQuery.removeEventListener("change", mount);
+      unmount();
+    });
+  }
+</script>
 
 <style>
   .home-v7 {
@@ -154,7 +258,7 @@ const proofCredits = [
     color: var(--ink);
   }
 
-  .folio { position: relative; width: 93vw; margin-left: 7vw; background: var(--paper); box-shadow: -1px 0 0 rgba(216, 220, 216, 0.2); }
+  .folio { position: relative; width: 100%; background: var(--paper); }
   .line-mask { display: block; overflow: clip; padding-block: 0.02em 0.08em; }
   .line-mask > span { display: block; }
 
@@ -177,63 +281,72 @@ const proofCredits = [
   .hero-media figcaption span + span { border-left: 1px solid rgba(255, 255, 255, 0.13); }
 
   .work-v7 { border-top: 1px solid var(--hairline); }
-  .proof-story { min-height: 0; }
-  .proof-stage { position: relative; display: grid; min-height: calc(100dvh - 4.25rem); grid-template-columns: minmax(18rem, 3.4fr) minmax(0, 8.6fr); overflow: hidden; background: var(--paper-bright); }
+  .proof-story { position: relative; }
+  .proof-stage { position: relative; display: grid; min-height: calc(100dvh - 4.25rem); grid-template-columns: minmax(18rem, 3.4fr) minmax(0, 8.6fr); overflow: clip; background: var(--paper-bright); }
   .proof-ledger { position: relative; z-index: 6; display: grid; min-width: 0; align-content: space-between; padding: clamp(2rem, 4vw, 4.2rem) clamp(1.6rem, 3vw, 3.5rem); border-right: 1px solid var(--hairline); background: var(--paper-bright); }
   .proof-ledger header h2 { margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(2.4rem, 3.3vw, 3.6rem); font-weight: 470; line-height: 0.94; letter-spacing: -0.055em; }
   .proof-ledger header p { margin: 0.8rem 0 0; color: var(--muted); font-size: 0.88rem; }
-  .lead-proof-copy { margin-top: auto; padding-top: clamp(2rem, 7vh, 5rem); }
-  .lead-proof-copy > p:first-child, .proof-credit-list article > p:first-child { margin: 0; color: #444d4f; font-size: 0.69rem; line-height: 1.4; }
-  .lead-proof-copy h3 { margin: 0.5rem 0 0; font-family: var(--font-display), sans-serif; font-size: clamp(2.6rem, 4vw, 4.4rem); font-weight: 470; line-height: 0.9; letter-spacing: -0.06em; }
-  .lead-proof-copy > p:nth-of-type(2) { max-width: 30rem; margin: 1rem 0 0; color: var(--muted); font-size: 0.82rem; line-height: 1.5; }
-  .lead-proof-copy .ink-link { margin-top: 1.25rem; }
-  .proof-credit-list { display: grid; margin-top: clamp(2rem, 5vh, 3.5rem); border-top: 1px solid var(--hairline); }
-  .proof-credit-list article { position: relative; display: grid; grid-template-columns: 1fr auto; padding: 1rem 2.25rem 1rem 0; border-bottom: 1px solid var(--hairline); }
-  .proof-credit-list article > p:first-child { grid-column: 1 / -1; }
-  .proof-credit-list h3 { margin: 0.35rem 0 0; font-family: var(--font-heading), sans-serif; font-size: 1rem; font-weight: 600; }
-  .proof-credit-list article > p:nth-of-type(2) { grid-column: 1 / -1; margin: 0.35rem 0 0; color: var(--muted); font-size: 0.72rem; line-height: 1.4; }
-  .proof-credit-list a { position: absolute; right: 0; bottom: 0.95rem; color: var(--ink); text-decoration: none; }
+  .proof-deck { display: grid; }
+  .proof-copy > p:first-child { margin: 0; color: #444d4f; font-size: 0.69rem; line-height: 1.4; }
+  .proof-copy h3 { margin: 0.5rem 0 0; font-family: var(--font-display), sans-serif; font-size: clamp(2.6rem, 4vw, 4.4rem); font-weight: 470; line-height: 0.9; letter-spacing: -0.06em; }
+  /* Accent rides the capitals only, so the paper stays quiet and each project still arrives in its own colour. */
+  .proof-name-cap { transition: color 240ms ease; }
+  .proof-copy h3 .proof-name-cap { color: var(--accent, inherit); }
+  .proof-copy > p:nth-of-type(2) { max-width: 30rem; margin: 1rem 0 0; color: var(--muted); font-size: 0.82rem; line-height: 1.5; }
+  .proof-copy .ink-link { margin-top: 1.25rem; }
+  .proof-index { margin: 0; padding: 0; list-style: none; }
   .portfolio-link { margin-top: 1.4rem; }
   .proof-image { position: relative; z-index: 2; display: grid; min-width: 0; margin: 0; padding: clamp(2rem, 4vw, 4rem); align-content: center; background: #b9beb9; }
-  .proof-image-window { position: relative; overflow: hidden; border: 1px solid rgba(10, 12, 13, 0.28); background: #08101d; }
-  .proof-image img { display: block; width: 100%; height: auto; aspect-ratio: 1737 / 933; object-fit: cover; transform-origin: center center; }
+  .proof-image-window { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid rgba(10, 12, 13, 0.28); background: #08101d; }
+  .proof-frame { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
   .proof-image figcaption { margin-top: 0.8rem; color: #374143; font-size: 0.68rem; line-height: 1.35; }
-  .witness-scan { position: absolute; z-index: 3; top: 0; bottom: 0; left: 0; display: block; width: 2px; background: #6bd1d7; opacity: 0; transform: translate3d(-100%, 0, 0); }
+  .witness-scan { position: absolute; z-index: 3; top: 0; bottom: 0; left: 0; display: block; width: 3px; background: linear-gradient(180deg, rgba(107, 209, 215, 0.3), #8ef0f6 16%, #8ef0f6 84%, rgba(107, 209, 215, 0.3)); box-shadow: 0 0 3px 1px rgba(255, 255, 255, 0.95), 0 0 26px 7px rgba(22, 134, 141, 0.55); opacity: 0; }
 
-  .services-v7 { position: relative; padding: clamp(6.5rem, 13vh, 10rem) clamp(2rem, 4.6vw, 5.5rem); border-top: 1px solid var(--hairline); background: var(--paper); }
+  /* Static fallback: the deck reads as a feature plus a compact ledger list, one image, no sweep. */
+  @media (max-width: 1023px), (max-height: 639px) {
+    .proof-deck > .proof-copy:first-child { margin-top: auto; padding-top: clamp(2rem, 7vh, 5rem); }
+    .proof-deck > .proof-copy:nth-child(2) { margin-top: clamp(2rem, 5vh, 3.5rem); border-top: 1px solid var(--hairline); }
+    .proof-deck > .proof-copy + .proof-copy { padding: 1rem 0; border-bottom: 1px solid var(--hairline); }
+    .proof-deck > .proof-copy + .proof-copy h3 { font-family: var(--font-heading), sans-serif; font-size: 1rem; font-weight: 600; line-height: 1.3; letter-spacing: normal; }
+    .proof-deck > .proof-copy + .proof-copy > p:nth-of-type(2) { font-size: 0.72rem; }
+    .proof-deck > .proof-copy + .proof-copy .ink-link { margin-top: 0.65rem; font-size: 0.72rem; }
+    .proof-index { display: none; }
+    .proof-frame:not(:first-child) { display: none; }
+    .witness-scan { display: none; }
+  }
+
+  .services-v7 { --edge: clamp(2rem, 4.6vw, 5.5rem); position: relative; padding: clamp(6.5rem, 13vh, 10rem) var(--edge); border-top: 1px solid var(--hairline); background: var(--paper); }
   .services-heading { display: grid; grid-template-columns: minmax(0, 8fr) minmax(16rem, 4fr); align-items: end; gap: 2rem; padding-bottom: clamp(4rem, 9vh, 7rem); }
   .services-heading h2 { position: relative; z-index: 6; margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(3.5rem, 6.8vw, 7rem); font-weight: 450; line-height: 0.84; letter-spacing: -0.074em; }
   .services-heading p { position: relative; z-index: 6; max-width: 23rem; margin: 0 0 0.35rem; color: var(--muted); font-size: 0.96rem; line-height: 1.5; }
-  .service-index { border-top: 1px solid var(--hairline); }
-  .service-row { position: relative; display: grid; min-height: clamp(12rem, 24dvh, 16rem); grid-template-columns: 1.4fr 3.3fr 4.2fr 0.55fr; align-items: center; gap: clamp(1.25rem, 3vw, 3rem); overflow: hidden; border-bottom: 1px solid var(--hairline); color: var(--ink); }
-  .service-row > :not(.service-wipe) { position: relative; z-index: 6; }
-  .service-wipe { position: absolute; z-index: 1; top: 0; bottom: 0; left: 0; display: block; width: clamp(7rem, 10vw, 9rem); background: var(--ink); transform: scaleX(0); transform-origin: left center; }
+  .service-index { position: relative; border-top: 1px solid var(--hairline); }
+  /* The arrow rides the section's left gutter, so the list keeps its full-bleed rules. */
+  .service-pointer { position: absolute; z-index: 6; top: 0; left: calc(-1 * var(--edge)); width: var(--edge); height: 100%; color: var(--ink); opacity: 0; pointer-events: none; }
+  .service-row { position: relative; display: grid; min-height: clamp(12rem, 24dvh, 16rem); grid-template-columns: 1.4fr 3.3fr 4.2fr 0.55fr; align-items: center; gap: clamp(1.25rem, 3vw, 3rem); border-bottom: 1px solid var(--hairline); color: var(--ink); }
+  .service-row > * { position: relative; z-index: 6; }
   .service-verb { margin: 0; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
   .service-row h3 { margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(2.3rem, 3.8vw, 4rem); font-weight: 470; line-height: 0.92; letter-spacing: -0.058em; }
   .service-row h3 a, .service-arrow { color: inherit; text-decoration: none; }
   .service-description { max-width: 34rem; margin: 0; color: #4d5557; font-size: 0.9rem; line-height: 1.5; }
   .service-arrow { justify-self: end; font-size: 1.25rem; }
-  .service-row[data-active="true"] .service-verb { color: #75d3d8; }
-  .service-row[data-active="true"] .service-arrow { color: var(--cyan); }
-
-  .handoff-v7 { position: relative; display: grid; min-height: 58dvh; grid-template-columns: minmax(16rem, 4fr) minmax(0, 8fr); align-items: center; gap: clamp(3rem, 6vw, 7rem); padding: clamp(5rem, 10vh, 8rem) clamp(2rem, 4.6vw, 5.5rem); border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); background: var(--paper); }
-  .handoff-heading, .handoff-steps { position: relative; z-index: 6; }
-  .handoff-heading h2 { margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(2.7rem, 4.4vw, 4.8rem); font-weight: 460; line-height: 0.9; letter-spacing: -0.06em; }
-  .handoff-heading p { max-width: 27rem; margin: 1.15rem 0 0; color: var(--muted); font-size: 0.9rem; line-height: 1.5; }
-  .handoff-steps { display: grid; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--hairline); }
-  .handoff-steps li { display: grid; grid-template-columns: 1.1fr 1fr; gap: 2rem; padding: 1.35rem 0; border-bottom: 1px solid var(--hairline); }
-  .handoff-steps span { font-family: var(--font-heading), sans-serif; font-size: clamp(1.25rem, 2vw, 1.8rem); font-weight: 500; letter-spacing: -0.035em; }
-  .handoff-steps p { margin: 0; color: var(--muted); font-size: 0.8rem; line-height: 1.45; }
-  .handoff-progress { position: absolute; z-index: 7; top: -1px; left: 0; display: block; width: 100%; height: 2px; background: var(--cyan); transform: scaleX(0); transform-origin: left center; }
 
   .studio-v7 { position: relative; z-index: 6; padding: clamp(6rem, 12vh, 9rem) clamp(2rem, 4.6vw, 5.5rem); background: var(--paper); }
   .studio-v7 > header { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); }
   .studio-v7 h2 { grid-column: 1 / 8; max-width: 14ch; margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(2.8rem, 4.8vw, 5rem); font-weight: 460; line-height: 0.92; letter-spacing: -0.062em; }
   .credit-roll { display: grid; margin-top: clamp(4rem, 9vh, 7rem); grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--hairline); }
-  .credit { display: grid; min-width: 0; gap: 0.65rem; padding: 1.5rem clamp(0.6rem, 1.5vw, 1.4rem) 0; }
+  .credit { display: grid; min-width: 0; align-content: start; gap: 0.6rem; padding: 1.5rem clamp(0.6rem, 1.5vw, 1.4rem) 1.9rem; }
   .credit + .credit { border-left: 1px solid var(--hairline); }
-  .credit > :first-child { color: var(--ink); font-family: var(--font-heading), sans-serif; font-size: clamp(1.1rem, 1.55vw, 1.45rem); font-weight: 600; letter-spacing: -0.035em; text-decoration: none; }
-  .credit > :last-child { max-width: 15rem; color: var(--muted); font-size: 0.72rem; line-height: 1.4; }
+  .credit-name { width: fit-content; color: var(--ink); font-family: var(--font-heading), sans-serif; font-size: clamp(1.1rem, 1.55vw, 1.45rem); font-weight: 600; letter-spacing: -0.035em; text-decoration: none; }
+  /* Two of these names open a profile and three do not; they used to look identical.
+     The link now carries the cyan rule and arrow every other link on this page uses. */
+  a.credit-name { display: inline-flex; align-items: baseline; gap: 0.35rem; padding-bottom: 0.15rem; border-bottom: 1px solid var(--cyan); transition: border-color 180ms ease, color 180ms ease; }
+  a.credit-name span { font-size: 0.62em; }
+  a.credit-name:hover { border-color: var(--ink); color: #145e63; }
+  .credit-role { max-width: 15rem; color: var(--muted); font-size: 0.72rem; line-height: 1.4; }
+  /* The systems each operator shipped, in the colours those products carry in the
+     ledger above, so the roll is evidence rather than an assertion. */
+  .credit-systems { display: flex; flex-wrap: wrap; gap: 0.3rem 0.8rem; margin: 0.5rem 0 0; padding: 0; list-style: none; }
+  .credit-systems li { color: var(--accent); font-family: var(--font-heading), sans-serif; font-size: 0.73rem; font-weight: 600; letter-spacing: -0.012em; }
 
   .cta-v7 { position: relative; display: grid; min-height: 68dvh; grid-template-columns: 4fr 8fr; align-items: center; padding: clamp(5rem, 10vh, 8rem) clamp(2rem, 4.6vw, 5.5rem); border-top: 1px solid var(--hairline); background: var(--paper); }
   .cta-seal-space { min-height: 16rem; }
@@ -241,13 +354,41 @@ const proofCredits = [
   .cta-copy h2 { max-width: 12ch; margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(3rem, 5.5vw, 5.6rem); font-weight: 460; line-height: 0.88; letter-spacing: -0.068em; }
   .cta-copy .ink-link { margin-top: clamp(2rem, 5vh, 3.5rem); font-size: 1rem; }
 
-  @media (min-width: 1024px) and (min-height: 700px) and (pointer: fine) {
-    .home-v7[data-continuum-status="ready"] .proof-story { min-height: 145dvh; }
-    .home-v7[data-continuum-status="ready"] .proof-stage { position: sticky; top: 4.25rem; height: calc(100dvh - 4.25rem); min-height: 0; }
+  /* Pinned proof story: one project at a time, the scanline wipes the next one in.
+     Every vertical metric is viewport-height driven so the ledger fits real browser
+     viewports (which sit well under the screen height) without clipping. */
+  @media (min-width: 1024px) and (min-height: 640px) {
+    .proof-story { min-height: calc(100dvh * (1 + var(--proof-story-vh, 4.5))); }
+    .proof-stage { position: sticky; top: 4.25rem; height: calc(100dvh - 4.25rem); min-height: 0; }
+    /* Rows: header, deck, index, link. The deck takes the slack so the index and the
+       portfolio link can never be pushed out of the pinned stage. */
+    .proof-ledger { align-content: stretch; grid-template-rows: auto minmax(0, 1fr) auto auto; row-gap: clamp(0.5rem, 1.9vh, 1.6rem); padding-block: clamp(1.1rem, 3.2vh, 4.2rem); }
+    .proof-ledger header h2 { font-size: clamp(1.7rem, 4.4vh, 3.1rem); }
+    .proof-ledger header p { margin-top: clamp(0.35rem, 1.1vh, 0.8rem); font-size: clamp(0.74rem, 1.6vh, 0.88rem); }
+    .proof-deck { position: relative; align-content: center; overflow: hidden; }
+    .proof-deck > .proof-copy { grid-area: 1 / 1; margin: 0; padding: 0; border: 0; opacity: 0; visibility: hidden; transition: opacity 280ms ease; }
+    .proof-deck > .proof-copy[data-active="true"] { opacity: 1; visibility: visible; }
+    .proof-copy > p:first-child { font-size: clamp(0.62rem, 1.3vh, 0.69rem); }
+    .proof-copy h3 { margin-top: clamp(0.2rem, 0.8vh, 0.5rem); font-size: clamp(1.5rem, 5.2vh, 3.4rem); }
+    .proof-copy > p:nth-of-type(2) { margin-top: clamp(0.5rem, 1.4vh, 1rem); font-size: clamp(0.72rem, 1.55vh, 0.82rem); }
+    .proof-copy .ink-link { margin-top: clamp(0.55rem, 1.6vh, 1.25rem); }
+    .proof-index { display: grid; border-top: 1px solid var(--hairline); }
+    .proof-index li { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 0.8rem; padding: clamp(0.14rem, 0.55vh, 0.4rem) 0; border-bottom: 1px solid var(--hairline); color: var(--muted); transition: color 240ms ease; }
+    .proof-index li[data-active="true"] { color: var(--ink); }
+    .proof-index-num { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.08em; }
+    .proof-index-name { font-family: var(--font-heading), sans-serif; font-size: clamp(0.68rem, 1.5vh, 0.78rem); font-weight: 600; letter-spacing: -0.01em; }
+    .proof-index-rule { display: block; height: 1px; background: var(--accent, var(--cyan)); transform: scaleX(0); transform-origin: left center; transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1); }
+    .proof-index li[data-active="true"] .proof-name-cap { color: var(--accent, inherit); }
+    .proof-index li[data-active="true"] .proof-index-rule { transform: scaleX(1); }
+    .portfolio-link { margin-top: 0; }
+    /* Cap the frame by height so a wide, short viewport cannot overflow the stage. */
+    .proof-image { padding: clamp(1.25rem, 3.5vh, 4rem) clamp(2rem, 4vw, 4rem); }
+    .proof-image-window { width: min(100%, calc((100dvh - 4.25rem - 2 * clamp(1.25rem, 3.5vh, 4rem) - 2.4rem) * 16 / 9)); margin-inline: auto; }
+    .proof-frame { clip-path: inset(0 100% 0 0); }
+    .proof-frame:first-child { clip-path: inset(0 0 0 0); }
   }
 
   @media (max-width: 1023px) {
-    .folio { width: 100%; margin-left: 0; }
     .hero-grid { grid-template-columns: minmax(0, 1.15fr) minmax(21rem, 0.85fr); }
     .proof-stage { grid-template-columns: minmax(16rem, 4fr) minmax(0, 8fr); }
     .services-heading { grid-template-columns: 1fr; }
@@ -279,10 +420,11 @@ const proofCredits = [
     .proof-ledger > header { grid-row: 1; padding: 4.75rem 1.15rem 2.75rem; background: var(--paper-bright); }
     .proof-image { grid-row: 2; padding: 1.15rem; }
     .proof-image figcaption { margin-top: 0.65rem; }
-    .lead-proof-copy { grid-row: 3; margin: 0; padding: 3.5rem 1.15rem 2.5rem; background: var(--paper-bright); }
-    .proof-credit-list { grid-row: 4; margin: 0; padding-inline: 1.15rem; background: var(--paper-bright); }
-    .portfolio-link { grid-row: 5; margin: 1.75rem 1.15rem 4.75rem; }
+    .proof-deck { grid-row: 3; margin: 0; padding: 3.5rem 1.15rem 2.5rem; background: var(--paper-bright); }
+    .proof-deck > .proof-copy:first-child { padding-top: 0; }
+    .portfolio-link { grid-row: 4; margin: 1.75rem 1.15rem 4.75rem; }
     .services-v7, .studio-v7 { padding: 5.5rem 1.15rem; }
+    .services-v7 { --edge: 1.15rem; }
     .services-heading { gap: 1.4rem; padding-bottom: 4rem; }
     .services-heading h2 { font-size: clamp(3.3rem, 15vw, 5.2rem); }
     .service-row { min-height: 0; grid-template-columns: 1fr auto; gap: 1rem; padding: 2.25rem 0; }
@@ -290,12 +432,8 @@ const proofCredits = [
     .service-row h3 { grid-column: 1; font-size: clamp(2.3rem, 10vw, 3.25rem); }
     .service-arrow { grid-column: 2; grid-row: 2; }
     .service-description { grid-column: 1 / -1; }
-    .service-wipe { display: none; }
-    .service-row[data-active="true"] { color: var(--ink); }
-    .service-row[data-active="true"] .service-description { color: var(--muted); }
-    .service-row[data-active="true"] .service-verb { color: inherit; }
-    .handoff-v7 { min-height: 0; grid-template-columns: 1fr; gap: 4rem; padding: 5.5rem 1.15rem; }
-    .handoff-steps li { grid-template-columns: 1fr; gap: 0.65rem; }
+    /* No gutter left to ride at this width, and the pointer never mounts on touch. */
+    .service-pointer { display: none; }
     .studio-v7 > header { display: block; }
     .studio-v7 h2 { font-size: clamp(2.9rem, 12vw, 4rem); }
     .credit-roll { grid-template-columns: 1fr; margin-top: 4rem; }

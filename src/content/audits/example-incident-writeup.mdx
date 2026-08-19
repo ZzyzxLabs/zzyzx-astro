@@ -1,0 +1,117 @@
+---
+# Template entry for a past-exploit analysis. Copy, replace, then flip `draft` to false.
+# Incident entries take an `incident` block instead of a review window.
+kind: incident
+title: "How a single unchecked price path drained an example lending market"
+project: "Example Lending (public incident)"
+summary: "A reconstruction of a lending protocol exploit from on-chain evidence: the oracle path that accepted a spot price, the flash-loan sequence that moved it, and the check that would have cost one line to add."
+ecosystem: "EVM / Solidity"
+publishedAt: 2026-08-12
+disclosure: public
+draft: true
+target:
+  repository: "example/lending-market"
+  repositoryUrl: https://github.com/example/example
+  commit: "4c81ba0f2e7d19a3c05b6e8f41d72a90bc3e5518"
+  language: "Solidity 0.8.20"
+  scope:
+    - "contracts/LendingPool.sol"
+    - "contracts/PriceOracle.sol"
+incident:
+  occurredAt: 2026-06-18
+  chain: "Ethereum mainnet"
+  lossUsd: 4200000
+  rootCause: "Spot price read from a single AMM pool with no TWAP or deviation check"
+  transactions:
+    - label: "Exploit transaction"
+      url: https://example.com/tx
+  references:
+    - label: "Protocol post-mortem"
+      url: https://example.com/postmortem
+---
+
+Nothing here is new. That is the point of writing it up: the sequence below has drained lending
+markets since 2020, and it keeps working because the vulnerable line reads like a correct one.
+
+We rebuilt the attack from the public transaction rather than from the post-mortem, so the
+finding below is stated the same way it would appear in an engagement report — impact, the code,
+the path, and the fix.
+
+## The setup
+
+`LendingPool` values collateral by asking `PriceOracle` for a price, and `PriceOracle` answers
+by reading the reserves of a single AMM pool. Both contracts are individually reasonable. The
+vulnerability lives in the seam between them: the pool's price is a *spot* quantity that any
+caller can move inside one transaction, and the lending pool treats it as a *market* price.
+
+<Finding
+  id="ZZX-2026-101"
+  title="Collateral is valued at a manipulable spot price, so a flash loan sets the borrow limit"
+  severity="critical"
+  status="fixed"
+>
+
+**Impact.** An attacker borrows the full liquidity of the market against collateral they have
+temporarily inflated, then repays the flash loan and walks away with the difference. Realised
+loss in this incident was roughly $4.2M.
+
+**Where.** `contracts/PriceOracle.sol:88-96`
+
+```solidity
+function getPrice(address token) external view returns (uint256) {
+    (uint112 reserve0, uint112 reserve1, ) = pair.getReserves();
+    return (uint256(reserve1) * 1e18) / uint256(reserve0);
+}
+```
+
+**Path.** The whole sequence fits in one transaction, which is what makes it cheap:
+
+1. Flash-loan the quote asset from an unrelated pool.
+2. Swap into the collateral token against `pair`, moving the spot price up several multiples.
+3. Deposit a small amount of the collateral token into `LendingPool`. `getPrice` now reports the
+   inflated number, so the borrow limit is computed against it.
+4. Borrow every other asset in the market up to that limit.
+5. Swap back, repay the flash loan, keep the borrowed assets.
+
+The position is left underwater and the market absorbs the loss. No step requires privileged
+access, and the attacker's only real cost is gas plus the flash-loan fee.
+
+**Fix.** A spot read is never a price. The protocol moved to a TWAP with a deviation guard:
+
+```solidity
+uint256 spot = _spotPrice(token);
+uint256 twap = _twapPrice(token, 30 minutes);
+require(_deviation(spot, twap) <= MAX_DEVIATION_BPS, "price deviation");
+return twap;
+```
+
+The TWAP alone raises the cost of the attack; the deviation check is what turns a profitable
+manipulation into a revert.
+
+</Finding>
+
+<Finding
+  id="ZZX-2026-102"
+  title="No per-block borrow cap, so the entire market was reachable in one transaction"
+  severity="medium"
+  status="fixed"
+>
+
+**Impact.** This is not the root cause, but it set the size of the loss. With no cap on how much
+of the market a single account can draw in one block, the oracle bug converted directly into the
+full liquidity of the pool.
+
+**Path.** Rate limits do not fix a mispriced oracle. They bound what a mispriced oracle costs
+you, which is the difference between an incident and a shutdown.
+
+**Fix.** A per-block borrow ceiling as a fraction of total liquidity, plus an alert on any
+single-block draw above a threshold.
+
+</Finding>
+
+## What we take from it
+
+Two things worth carrying into a review. First, every price read should be traced back to
+whether a caller can move it inside the same transaction — the answer is a property of the
+source, not of the calling code. Second, a protocol that can lose everything in one transaction
+has no margin for any bug at all; caps and circuit breakers are what buy the time to respond.

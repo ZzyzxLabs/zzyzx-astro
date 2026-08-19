@@ -1,0 +1,126 @@
+---
+# Template entry. Copy this file, replace the content, then flip `draft` to false.
+# Drafts render in `pnpm dev` only, so a writeup can be reviewed before it ships.
+kind: audit
+title: "Reserve accounting in Meridian Vault let a redeemer round the pool down"
+project: "Meridian Vault (example)"
+summary: "A three-week review of the vault package before mainnet. Two findings changed the accounting model: a rounding direction that favoured the redeemer, and an admin path that could retire a capability while positions were still open."
+ecosystem: "Sui / Move"
+publishedAt: 2026-08-10
+disclosure: public
+draft: true
+projectUrl: https://example.com
+target:
+  repository: "meridian-labs/meridian-vault"
+  repositoryUrl: https://github.com/example/example
+  commit: "9f1c4ad3b7e28c05f1a6d0b93c7e4412d8a05e61"
+  language: "Move (Sui)"
+  reviewWindow: "2026-07-14 – 2026-08-01"
+  reviewers:
+    - "Zzyzx Labs security"
+  scope:
+    - "sources/vault.move"
+    - "sources/reserve.move"
+    - "sources/admin.move"
+report:
+  pdf: /reports/example-audit-writeup.pdf
+  sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+  pages: 24
+---
+
+Meridian Vault takes a deposit, mints a share, and pays the share back out against a reserve
+that rebases on every epoch. The Move type system already rules out the usual asset bugs, so
+the review went straight at the part no language can check for you: whether the arithmetic
+still agrees with itself once an adversary picks the inputs.
+
+Two of the findings below changed the accounting model. The rest are recorded in the full
+report.
+
+## How we approached it
+
+The vault has one invariant worth stating precisely, because everything else follows from it:
+
+> The sum of all outstanding share values, converted at the current exchange rate, never
+> exceeds the reserve balance.
+
+Every function that touches `Reserve` or mints `Share` is a candidate for breaking that. We
+enumerated them first, then asked of each one: can a caller choose inputs where the conversion
+rounds in their favour, and can they repeat it?
+
+<Finding
+  id="ZZX-2026-001"
+  title="Redeem rounds the burn down, leaving dust in the caller's favour on every call"
+  severity="high"
+  status="fixed"
+  fix="https://github.com/example/example/commit/0000000"
+>
+
+**Impact.** A caller who redeems repeatedly in small amounts keeps a share of the reserve that
+should have been burned. The loss is unbounded over time and costs only gas to exploit.
+
+**Where.** `sources/vault.move:214-238`
+
+```move
+public fun redeem(vault: &mut Vault, share: Share, ctx: &mut TxContext): Coin<SUI> {
+    let amount = share.value * vault.exchange_rate / RATE_SCALE; // rounds down
+    vault.total_shares = vault.total_shares - share.value;
+    coin::take(&mut vault.reserve, amount, ctx)
+}
+```
+
+**Path.** `exchange_rate` is scaled by `RATE_SCALE`, so the division truncates. The share is
+burned at full value while the payout truncates downward, which is correct. But
+`deposit` uses the same truncation in the opposite direction: shares minted also round down,
+so a depositor who splits one large deposit into many small ones mints fewer shares than the
+reserve received. The residue accrues to the pool, then the redeem path hands it back to
+whoever redeems in the largest single call.
+
+Sequencing the two gives a caller a positive expected return per round trip:
+
+```move
+#[test]
+fun rounding_drains_reserve() {
+    // 1_000 deposits of 1 unit each, then a single redeem of the full position.
+    // Expected: caller ends with <= 1_000. Actual: 1_003.
+}
+```
+
+**Fix.** Round the burn up and the mint down, so truncation always favours the pool:
+
+```move
+let amount = math::div_floor(share.value * vault.exchange_rate, RATE_SCALE);
+let burned = math::div_ceil(amount * RATE_SCALE, vault.exchange_rate);
+assert!(burned <= share.value, EBurnExceedsShare);
+```
+
+Fixed in `0000000`; the invariant is now asserted in `test_redeem_never_favours_caller`.
+
+</Finding>
+
+<Finding
+  id="ZZX-2026-002"
+  title="AdminCap can be burned while positions are open, freezing the reserve permanently"
+  severity="medium"
+  status="acknowledged"
+>
+
+**Impact.** `renounce_admin` destroys the capability without checking whether the vault still
+has outstanding shares. The reserve stays solvent, but nothing can ever set the exchange rate
+again, so redemptions price against a stale rate forever.
+
+**Where.** `sources/admin.move:57-64`
+
+**Path.** The function exists so a team can hand a vault to its holders. It is a reasonable
+goal, but "no admin" and "no rate oracle" are different states, and the code conflates them.
+
+**Fix.** Gate the renounce on `vault.total_shares == 0`, or move rate updates to a permissionless
+path before allowing the capability to go away. The team acknowledged this and chose to document
+the operational procedure instead of changing the code for this release.
+
+</Finding>
+
+## What the fix changed
+
+The rounding fix is small in code and large in consequence: it moves the vault from
+"approximately conservative" to "provably conservative" on every redeem path. The property is
+now stated as a test rather than a comment, which is the part that survives the next refactor.

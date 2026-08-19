@@ -1,0 +1,684 @@
+---
+import { render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Finding from "../../components/audit/Finding.astro";
+import SeverityBadge from "../../components/audit/SeverityBadge.astro";
+import StatusBadge from "../../components/audit/StatusBadge.astro";
+import { SEVERITIES } from "../../content.config";
+import { formatAuditDay, getPublishedAudits, kindLabels, type AuditRecord } from "../../data/audits";
+import "../../styles/audit-writeup.css";
+
+export async function getStaticPaths() {
+  const records = await getPublishedAudits();
+  return records.map((record) => ({ params: { slug: record.slug }, props: { record } }));
+}
+
+interface Props {
+  record: AuditRecord;
+}
+
+const { record } = Astro.props;
+const { entry, findings, counts } = record;
+const { data } = entry;
+const { Content } = await render(entry);
+
+const scored = SEVERITIES.filter((severity) => counts[severity] > 0);
+
+const usd = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});
+
+type DossierRow = { term: string; detail: string; href?: string; mono?: boolean };
+
+const dossier: DossierRow[] = [];
+
+if (data.kind === "incident") {
+  const incident = data.incident;
+  if (incident?.chain) dossier.push({ term: "Network", detail: incident.chain });
+  if (incident?.occurredAt) dossier.push({ term: "Occurred", detail: formatAuditDay(incident.occurredAt) });
+  if (incident?.lossUsd !== undefined) dossier.push({ term: "Loss", detail: usd.format(incident.lossUsd) });
+  if (incident?.rootCause) dossier.push({ term: "Root cause", detail: incident.rootCause });
+} else {
+  if (data.target.reviewWindow) dossier.push({ term: "Review window", detail: data.target.reviewWindow });
+  if (data.target.reviewers.length > 0) {
+    dossier.push({ term: "Reviewers", detail: data.target.reviewers.join(", ") });
+  }
+}
+
+if (data.target.repository) {
+  dossier.push({
+    term: "Repository",
+    detail: data.target.repository,
+    href: data.target.repositoryUrl,
+    mono: true,
+  });
+}
+if (data.target.commit) dossier.push({ term: "Commit", detail: data.target.commit, mono: true });
+if (data.target.language) dossier.push({ term: "Language", detail: data.target.language });
+
+const sources = [
+  ...(data.incident?.transactions ?? []).map((item) => ({ ...item, group: "Transaction" })),
+  ...(data.incident?.references ?? []).map((item) => ({ ...item, group: "Reference" })),
+];
+
+const pageDescription = data.summary.length > 300 ? `${data.summary.slice(0, 297)}...` : data.summary;
+const lane = data.kind === "incident" ? "incident" : "report";
+const kindIndex = data.kind === "incident" ? "/security-audit/incidents" : "/security-audit/reports";
+---
+
+<Layout title={`${data.title} | Zzyzx Labs`} description={pageDescription} image={data.cover ?? null}>
+  <main class="writeup" style={`--lane: var(--lane-${lane});`}>
+    <div class="writeup__frame">
+      <nav class="writeup__crumbs" aria-label="Breadcrumb">
+        <a href="/security-audit">Security Audit</a>
+        <span aria-hidden="true">/</span>
+        <a href={kindIndex}>{kindLabels[data.kind]}</a>
+      </nav>
+
+      <header class="writeup__head">
+        <p class="audit-label">{data.ecosystem}</p>
+        <h1 class="writeup__title">{data.title}</h1>
+        <p class="writeup__standfirst">{data.summary}</p>
+        <div class="writeup__byline">
+          <span>{data.project}</span>
+          <span aria-hidden="true">/</span>
+          <span>{kindLabels[data.kind]}</span>
+          <span aria-hidden="true">/</span>
+          <time datetime={data.publishedAt.toISOString()}>{formatAuditDay(data.publishedAt)}</time>
+          {data.draft && <span class="writeup__draft">Draft</span>}
+        </div>
+      </header>
+
+      {(dossier.length > 0 || data.target.scope.length > 0) && (
+        <section class="writeup__dossier" aria-label="Review target">
+          <dl>
+            {dossier.map((row) => (
+              <div class="writeup__row">
+                <dt>{row.term}</dt>
+                <dd class:list={[row.mono && "is-mono"]}>
+                  {row.href ? <a href={row.href} target="_blank" rel="noreferrer">{row.detail} ↗</a> : row.detail}
+                </dd>
+              </div>
+            ))}
+            {data.target.scope.length > 0 && (
+              <div class="writeup__row writeup__row--wide">
+                <dt>In scope</dt>
+                <dd class="is-mono">
+                  <ul>{data.target.scope.map((item) => <li>{item}</li>)}</ul>
+                </dd>
+              </div>
+            )}
+          </dl>
+        </section>
+      )}
+
+      {data.report?.pdf && (
+        <section class="writeup__report" aria-label="Full report">
+          <div>
+            <p class="audit-label">Formal deliverable</p>
+            <p class="writeup__report-title">
+              The full report carries the complete finding set, severity rationale, and remediation log.
+            </p>
+            {data.report.sha256 && (
+              <p class="writeup__hash">
+                <span>sha256</span>
+                <code>{data.report.sha256}</code>
+              </p>
+            )}
+          </div>
+          <a class="audit-button-primary" href={data.report.pdf} download>
+            Download PDF{data.report.pages && ` · ${data.report.pages}pp`}
+          </a>
+        </section>
+      )}
+
+      {findings.length > 0 && (
+        <section class="writeup__summary" aria-labelledby="finding-summary-title">
+          <div class="writeup__summary-head">
+            <h2 id="finding-summary-title">Findings</h2>
+            <div class="writeup__counts">
+              {scored.map((severity) => <SeverityBadge severity={severity} count={counts[severity]} />)}
+            </div>
+          </div>
+          <ol class="writeup__index">
+            {findings.map((finding) => (
+              <li data-severity={finding.severity}>
+                <a href={`#${finding.id}`}>
+                  <span class="writeup__index-id">{finding.id}</span>
+                  <span class="writeup__index-title">{finding.title}</span>
+                </a>
+                <span class="writeup__index-tags">
+                  <SeverityBadge severity={finding.severity} />
+                  <StatusBadge status={finding.status} />
+                </span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      <div class="audit-prose writeup__body">
+        <Content components={{ Finding }} />
+      </div>
+
+      {sources.length > 0 && (
+        <section class="writeup__links" aria-label="Sources">
+          <p class="audit-label">Sources</p>
+          <ul>
+            {sources.map((link) => (
+              <li>
+                <span class="writeup__link-group">{link.group}</span>
+                <a href={link.url} target="_blank" rel="noreferrer">{link.label} ↗</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <footer class="writeup__foot">
+        <div>
+          <h2>Reviewing something that holds value?</h2>
+          <p>Scope, commit, and trust boundaries first. Evidence and a remediation path at the end.</p>
+        </div>
+        <div class="writeup__foot-actions">
+          <a class="audit-button-primary" href="mailto:contact@zzyzx.com?subject=Security%20Audit%20Inquiry">
+            Request an audit
+          </a>
+          <a class="audit-button-secondary" href={kindIndex}>More writeups</a>
+        </div>
+      </footer>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .writeup {
+    position: relative;
+    padding: 6rem 1.25rem 0;
+    background: var(--audit-bg);
+    color: var(--audit-ink);
+  }
+
+  /* Same raised header plane as the archive indexes, tinted by the lane this
+   * writeup belongs to, so a reader arriving from either index stays oriented. */
+  .writeup::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 38rem;
+    background:
+      radial-gradient(110% 80% at 6% 0%, color-mix(in srgb, var(--lane) 13%, transparent), transparent 60%),
+      linear-gradient(180deg, var(--audit-bg-raised), transparent);
+    pointer-events: none;
+  }
+
+  .writeup__frame {
+    position: relative;
+    max-width: 62rem;
+    margin-inline: auto;
+    padding-bottom: 7rem;
+  }
+
+  .writeup__crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--audit-ink-4);
+  }
+
+  .writeup__crumbs a {
+    color: var(--audit-ink-3);
+    text-decoration: none;
+  }
+
+  .writeup__crumbs a:hover {
+    color: var(--audit-cyan-ink);
+  }
+
+  .writeup__head {
+    margin-top: 2.75rem;
+    padding-bottom: 2.75rem;
+    border-bottom: 1px solid var(--audit-line-strong);
+  }
+
+  .writeup__title {
+    max-width: 20ch;
+    margin: 1.25rem 0 0;
+    font-family: var(--font-heading);
+    font-size: clamp(2.5rem, 5.4vw, 4rem);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.038em;
+    color: var(--audit-ink);
+    text-wrap: balance;
+  }
+
+  .writeup__standfirst {
+    max-width: 42rem;
+    margin: 1.75rem 0 0;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--audit-ink-3);
+  }
+
+  .writeup__byline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: var(--audit-ink-4);
+  }
+
+  .writeup__byline span[aria-hidden] {
+    color: var(--audit-ink-5);
+  }
+
+  .writeup__draft {
+    border: 1px dashed color-mix(in srgb, var(--sev-medium) 40%, transparent);
+    padding: 0.1rem 0.45rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sev-medium);
+  }
+
+  /* The dossier is the evidence panel: it sits above the page, not level with it. */
+  .writeup__dossier {
+    margin-top: 3rem;
+    border: 1px solid var(--audit-line);
+    background: var(--audit-bg-panel);
+  }
+
+  .writeup__dossier dl {
+    display: grid;
+    margin: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .writeup__row {
+    padding: 1.35rem 1.5rem;
+    border-top: 1px solid var(--audit-line);
+    border-right: 1px solid var(--audit-line);
+  }
+
+  .writeup__row:nth-child(-n + 2) {
+    border-top: 0;
+  }
+
+  .writeup__row:nth-child(2n) {
+    border-right: 0;
+  }
+
+  .writeup__row--wide {
+    grid-column: 1 / -1;
+    border-right: 0;
+  }
+
+  .writeup__row dt {
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--audit-cyan);
+  }
+
+  .writeup__row dd {
+    margin: 0.85rem 0 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--audit-ink-2);
+    overflow-wrap: anywhere;
+  }
+
+  .writeup__row dd.is-mono {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-size: 0.84rem;
+    color: var(--audit-ink-3);
+  }
+
+  .writeup__row dd a {
+    color: var(--audit-cyan-ink);
+    text-decoration: none;
+  }
+
+  .writeup__row dd ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .writeup__row dd li + li {
+    margin-top: 0.4rem;
+  }
+
+  .writeup__report {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.75rem;
+    margin-top: 2rem;
+    border: 1px solid color-mix(in srgb, var(--audit-cyan) 30%, transparent);
+    padding: 1.75rem;
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--audit-cyan) 8%, transparent), transparent),
+      var(--audit-bg-raised);
+  }
+
+  .writeup__report-title {
+    max-width: 34rem;
+    margin: 1rem 0 0;
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: var(--audit-ink-2);
+  }
+
+  .writeup__hash {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin: 1rem 0 0;
+    font-size: 0.72rem;
+    color: var(--audit-ink-4);
+  }
+
+  .writeup__hash span {
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .writeup__hash code {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    color: var(--audit-ink-3);
+    overflow-wrap: anywhere;
+  }
+
+  .writeup__summary {
+    margin-top: 4rem;
+    border-top: 1px solid var(--audit-line-strong);
+    padding-top: 2.5rem;
+  }
+
+  .writeup__summary-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .writeup__summary-head h2 {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    color: var(--audit-ink);
+  }
+
+  .writeup__counts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .writeup__index {
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Each row of the finding index is ruled in its own severity, so the summary
+   * reads as a risk profile at a glance rather than a list of links. */
+  .writeup__index li {
+    --row-tone: var(--sev-info);
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-top: 1px solid color-mix(in srgb, var(--row-tone) 42%, transparent);
+    padding: 1.05rem 0;
+  }
+
+  .writeup__index li[data-severity="critical"] { --row-tone: var(--sev-critical); }
+  .writeup__index li[data-severity="high"] { --row-tone: var(--sev-high); }
+  .writeup__index li[data-severity="medium"] { --row-tone: var(--sev-medium); }
+  .writeup__index li[data-severity="low"] { --row-tone: var(--sev-low); }
+
+  .writeup__index li::before {
+    content: "";
+    position: absolute;
+    inset: 1px -1rem 0;
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--row-tone) 10%, transparent), transparent 55%),
+      var(--audit-bg-raised);
+    opacity: 0;
+    transition: opacity 200ms cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+
+  .writeup__index li:hover::before,
+  .writeup__index li:focus-within::before {
+    opacity: 1;
+  }
+
+  .writeup__index a,
+  .writeup__index-tags {
+    position: relative;
+  }
+
+  .writeup__index a {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.9rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .writeup__index-id {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--audit-cyan);
+  }
+
+  .writeup__index-title {
+    max-width: 34rem;
+    font-size: 1.02rem;
+    line-height: 1.5;
+    color: var(--audit-ink-2);
+  }
+
+  .writeup__index a:hover .writeup__index-title {
+    color: var(--audit-cyan-ink);
+  }
+
+  .writeup__index a:focus-visible {
+    outline: 2px solid var(--audit-cyan);
+    outline-offset: 4px;
+  }
+
+  .writeup__index-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .writeup__body {
+    margin-top: 3.5rem;
+  }
+
+  .writeup__links {
+    margin-top: 4.5rem;
+    border-top: 1px solid var(--audit-line-strong);
+    padding-top: 2.25rem;
+  }
+
+  .writeup__links ul {
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .writeup__links li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.55rem 0;
+  }
+
+  .writeup__link-group {
+    min-width: 7rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--audit-ink-4);
+  }
+
+  .writeup__links a {
+    color: var(--audit-cyan-ink);
+    text-decoration: none;
+  }
+
+  .writeup__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: 5rem;
+    border-top: 1px solid var(--audit-line-strong);
+    padding-top: 3rem;
+  }
+
+  .writeup__foot h2 {
+    max-width: 18ch;
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 3vw, 2.35rem);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.038em;
+    color: var(--audit-ink);
+    text-wrap: balance;
+  }
+
+  .writeup__foot p {
+    max-width: 32rem;
+    margin: 1rem 0 0;
+    line-height: 1.7;
+    color: var(--audit-ink-3);
+  }
+
+  .writeup__foot-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .audit-button-primary,
+  .audit-button-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    padding: 0.85rem 1.4rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    transition: transform 220ms ease, background-color 220ms ease, border-color 220ms ease, color 220ms ease;
+  }
+
+  .audit-button-primary {
+    border: 1px solid var(--audit-cyan);
+    background: var(--audit-cyan);
+    color: #071012;
+  }
+
+  .audit-button-primary:hover {
+    border-color: var(--audit-cyan-bright);
+    background: var(--audit-cyan-bright);
+    transform: translateY(-1px);
+  }
+
+  .audit-button-secondary {
+    border: 1px solid var(--audit-line-strong);
+    color: var(--audit-ink-2);
+  }
+
+  .audit-button-secondary:hover {
+    border-color: color-mix(in srgb, var(--audit-cyan) 65%, transparent);
+    background: var(--audit-bg-hover);
+    color: var(--audit-cyan-bright);
+  }
+
+  .audit-button-primary:focus-visible,
+  .audit-button-secondary:focus-visible {
+    outline: 2px solid var(--audit-cyan);
+    outline-offset: 4px;
+  }
+
+  .audit-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--lane, var(--audit-cyan));
+  }
+
+  @media (max-width: 720px) {
+    .writeup {
+      padding-top: 4.75rem;
+    }
+
+    .writeup__dossier dl {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .writeup__row,
+    .writeup__row:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .writeup__row:nth-child(-n + 2) {
+      border-top: 1px solid var(--audit-line);
+    }
+
+    .writeup__row:first-child {
+      border-top: 0;
+    }
+
+    .writeup__report {
+      align-items: flex-start;
+    }
+
+    .writeup__foot-actions .audit-button-primary,
+    .writeup__foot-actions .audit-button-secondary {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .audit-button-primary,
+    .audit-button-secondary,
+    .writeup__index li::before {
+      transition: none;
+    }
+  }
+</style>

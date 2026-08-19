@@ -1,0 +1,14 @@
+---
+import { severityLabels, type Severity } from "../../lib/findings";
+
+interface Props {
+  severity: Severity;
+  count?: number;
+}
+
+const { severity, count } = Astro.props;
+---
+
+<span class="audit-badge" data-severity={severity}>
+  {severityLabels[severity]}{count !== undefined && <b>{count}</b>}
+</span>

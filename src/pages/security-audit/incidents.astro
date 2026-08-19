@@ -1,0 +1,22 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import WriteupIndex from "../../components/audit/WriteupIndex.astro";
+import { getPublishedAudits } from "../../data/audits";
+
+const records = await getPublishedAudits("incident");
+---
+
+<Layout
+  title="Incident Analysis | Zzyzx Labs"
+  description="Public smart contract exploits rebuilt from on-chain evidence: the vulnerable code, the transaction sequence, and the fix that would have prevented it."
+  image={null}
+>
+  <WriteupIndex
+    label="Incident analysis"
+    tone="incident"
+    heading="Past exploits, taken apart."
+    intro="Public incidents rebuilt from on-chain evidence and written in the same finding format we use for client engagements."
+    empty="Incident writeups are being prepared."
+    records={records}
+  />
+</Layout>

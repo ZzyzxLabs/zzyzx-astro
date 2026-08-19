@@ -13,7 +13,7 @@ export interface ScrollContinuumOptions {
   enableWebGL?: boolean;
 }
 
-type SceneId = "hero" | "proof" | "services" | "approach" | "studio" | "cta";
+type SceneId = "hero" | "proof" | "services" | "studio" | "cta";
 
 interface SealState {
   xPct: number;
@@ -146,7 +146,7 @@ async function createSealRenderer(canvas: HTMLCanvasElement): Promise<SealRender
 
     const zPoses = [
       { x: 0, y: 0.58, rotation: 0, length: 1.46 },
-      { x: 0, y: 0, rotation: -0.69, length: 1.62 },
+      { x: 0, y: 0, rotation: 0.69, length: 1.62 },
       { x: 0, y: -0.58, rotation: 0, length: 1.46 },
     ];
     root.position.set(toX(state.xPct), toY(state.yPct), 0);
@@ -200,14 +200,12 @@ export function mountScrollContinuum(options: ScrollContinuumOptions = {}) {
   const proofSection = shell.querySelector<HTMLElement>("[data-scene-marker='proof']");
   const proofStory = shell.querySelector<HTMLElement>("[data-proof-story]");
   const proofImage = shell.querySelector<HTMLElement>("[data-proof-image]");
-  const proofImageInner = proofImage?.querySelector<HTMLElement>("img");
+  const proofFrames = Array.from(shell.querySelectorAll<HTMLElement>("[data-proof-frame]"));
+  const proofCopies = Array.from(shell.querySelectorAll<HTMLElement>("[data-proof-copy]"));
+  const proofIndexItems = Array.from(shell.querySelectorAll<HTMLElement>("[data-proof-index-item]"));
+  const proofCaption = shell.querySelector<HTMLElement>("[data-proof-caption]");
   const witnessScan = shell.querySelector<HTMLElement>("[data-witness-scan]");
   const servicesSection = shell.querySelector<HTMLElement>("[data-scene-marker='services']");
-  const serviceRows = Array.from(shell.querySelectorAll<HTMLElement>("[data-service-row]"));
-  const serviceWipes = serviceRows.map((row) => row.querySelector<HTMLElement>(".service-wipe"));
-  const approachSection = shell.querySelector<HTMLElement>("[data-scene-marker='approach']");
-  const handoffProgress = shell.querySelector<HTMLElement>("[data-handoff-progress]");
-  const handoffSteps = Array.from(shell.querySelectorAll<HTMLElement>("[data-handoff-steps] li"));
   const studioSection = shell.querySelector<HTMLElement>("[data-scene-marker='studio']");
   const credits = Array.from(shell.querySelectorAll<HTMLElement>("[data-credit]"));
   const ctaSection = shell.querySelector<HTMLElement>("[data-scene-marker='cta']");
@@ -224,12 +222,8 @@ export function mountScrollContinuum(options: ScrollContinuumOptions = {}) {
     ...heroLines,
     ...(heroKicker ? [heroKicker] : []),
     ...(heroSupport ? [heroSupport] : []),
-    ...(proofImageInner ? [proofImageInner] : []),
+    ...proofFrames,
     ...(witnessScan ? [witnessScan] : []),
-    ...serviceRows,
-    ...serviceWipes.filter((item): item is HTMLElement => Boolean(item)),
-    ...(handoffProgress ? [handoffProgress] : []),
-    ...handoffSteps,
     ...credits,
     ...(ctaCopy ? [ctaCopy] : []),
   ]));
@@ -250,7 +244,6 @@ export function mountScrollContinuum(options: ScrollContinuumOptions = {}) {
 
   let disposed = false;
   let activeScene: SceneId = "hero";
-  let activeService = -1;
   let renderFrame = 0;
   let resizeFrame = 0;
   let rendererGeneration = 0;
@@ -303,45 +296,41 @@ export function mountScrollContinuum(options: ScrollContinuumOptions = {}) {
     return (rect.left + rect.width * xRatio) / Math.max(1, window.innerWidth) * 100;
   };
 
+  // Deliberately unclamped: the seal has to be allowed to read as off-screen so the
+  // reveal below can fade it out instead of pinning it to a viewport edge.
   const yPercentageAtElement = (element: HTMLElement | null | undefined, yRatio = 0.5) => {
     if (!element) return 50;
     const rect = element.getBoundingClientRect();
     const viewportTop = 4.25 * 16;
     const viewportHeight = Math.max(1, window.innerHeight - viewportTop);
-    return clamp01((rect.top + rect.height * yRatio - viewportTop) / viewportHeight) * 100;
+    return (rect.top + rect.height * yRatio - viewportTop) / viewportHeight * 100;
   };
 
-  const activateService = (index: number) => {
-    const next = Math.max(0, Math.min(serviceRows.length - 1, index));
-    if (next === activeService || !serviceRows[next]) return;
-    activeService = next;
+  /** Half the seal, as a percentage of the usable viewport. Its lit band keeps this clear of both edges. */
+  const CTA_SEAL_HALF = 11;
 
-    serviceRows.forEach((row, rowIndex) => {
-      const isActive = rowIndex === next;
-      if (isActive) row.dataset.active = "true";
-      else delete row.dataset.active;
-      const wipe = serviceWipes[rowIndex];
-      if (wipe) {
-        gsap.to(wipe, {
-          scaleX: isActive ? 1 : 0,
-          transformOrigin: isActive ? "left center" : "right center",
-          duration: isActive ? 0.62 : 0.38,
-          ease: "power3.inOut",
-          overwrite: true,
-        });
-      }
-    });
+  /**
+   * The seal belongs to the CTA empty column, so it is measured from that column on
+   * every scroll frame rather than sampled once on entry. Sampling on entry parked it
+   * at the fold with its lower bar cut off, and it then sat there, a stray line, for
+   * the rest of the scroll. Opacity rides the same measurement: the mark is lit only
+   * while it is clear of both viewport edges.
+   */
+  const ctaSealState = (): Partial<SealState> => {
+    const yPct = yPercentageAtElement(ctaSealAnchor);
+    const lit =
+      clamp01((yPct - CTA_SEAL_HALF) / 12) *
+      clamp01((100 - CTA_SEAL_HALF - yPct) / 12);
 
+    return {
+      xPct: percentageAtElement(ctaSealAnchor, 0.36),
+      yPct,
+      scale: 0.62,
+      rotation: 0,
+      opacity: enableWebGL ? 0.56 * lit : 0,
+      edgeAlpha: 0.56,
+    };
   };
-
-  const ctaSealState = (): Partial<SealState> => ({
-    xPct: percentageAtElement(ctaSealAnchor, 0.36),
-    yPct: yPercentageAtElement(ctaSealAnchor),
-    scale: 0.62,
-    rotation: 0,
-    opacity: enableWebGL ? 0.56 : 0,
-    edgeAlpha: 0.56,
-  });
 
   const animationContext = gsap.context(() => {
     if (heroMediaImage) gsap.set(heroMediaImage, { scale: 1.06, transformOrigin: "center center" });
@@ -398,7 +387,76 @@ export function mountScrollContinuum(options: ScrollContinuumOptions = {}) {
       });
     }
 
-    if (proofStory) {
+    if (proofStory && proofFrames.length > 1) {
+      // The pinned story alternates hold -> sweep -> hold. `data-proof-timeline` carries the same
+      // hold/sweep/count the component sized the spacer from, so CSS and motion cannot drift apart.
+      const [holdVh, sweepVh, projectCount] = (proofStory.dataset.proofTimeline ?? "")
+        .split("|")
+        .map(Number);
+      const timelineOk =
+        Number.isFinite(holdVh) && Number.isFinite(sweepVh) && Number.isFinite(projectCount) && projectCount > 1;
+      const count = timelineOk ? projectCount : proofFrames.length;
+      const hold = timelineOk ? holdVh : 1 / 6;
+      const sweep = timelineOk ? sweepVh : 0.7;
+      const totalVh = count * hold + (count - 1) * sweep;
+      const pinQuery = window.matchMedia("(min-width: 1024px) and (min-height: 640px)");
+      const captionFor = (index: number) =>
+        `${proofCopies[index]?.querySelector("h3")?.textContent ?? ""} interface, selected product work`;
+
+      let settledCopy = -1;
+
+      const paintProof = (progress: number) => {
+        if (!pinQuery.matches) {
+          // Static fallback shows only the first frame; leave every node at its authored state.
+          proofFrames.forEach((frame) => frame.style.removeProperty("clip-path"));
+          proofCopies.forEach((copy, index) => copy.setAttribute("data-active", index === 0 ? "true" : "false"));
+          proofIndexItems.forEach((item, index) => item.setAttribute("data-active", index === 0 ? "true" : "false"));
+          if (witnessScan) witnessScan.style.opacity = "0";
+          settledCopy = 0;
+          return;
+        }
+
+        const position = clamp01(progress) * totalVh;
+        let cursor = 0;
+        let base = count - 1;
+        let sweepProgress = -1;
+
+        for (let index = 0; index < count; index += 1) {
+          if (position < cursor + hold || index === count - 1) {
+            base = index;
+            sweepProgress = -1;
+            break;
+          }
+          cursor += hold;
+          if (position < cursor + sweep) {
+            base = index;
+            sweepProgress = clamp01((position - cursor) / sweep);
+            break;
+          }
+          cursor += sweep;
+        }
+
+        // The ledger announces the incoming project the moment the line starts travelling.
+        const incoming = sweepProgress >= 0 ? Math.min(base + 1, count - 1) : base;
+
+        proofFrames.forEach((frame, index) => {
+          const revealed = index <= base ? 1 : index === base + 1 && sweepProgress >= 0 ? sweepProgress : 0;
+          frame.style.clipPath = `inset(0 ${((1 - revealed) * 100).toFixed(3)}% 0 0)`;
+        });
+
+        if (witnessScan) {
+          witnessScan.style.opacity = sweepProgress >= 0 ? "1" : "0";
+          if (sweepProgress >= 0) witnessScan.style.left = (sweepProgress * 100).toFixed(3) + "%";
+        }
+
+        if (incoming !== settledCopy) {
+          settledCopy = incoming;
+          proofCopies.forEach((copy, index) => copy.setAttribute("data-active", index === incoming ? "true" : "false"));
+          proofIndexItems.forEach((item, index) => item.setAttribute("data-active", index === incoming ? "true" : "false"));
+          if (proofCaption) proofCaption.textContent = captionFor(incoming);
+        }
+      };
+
       const proofDriver = { progress: 0 };
       gsap.to(proofDriver, {
         progress: 1,
@@ -413,62 +471,28 @@ export function mountScrollContinuum(options: ScrollContinuumOptions = {}) {
           onEnter: () => activateScene("proof"),
           onEnterBack: () => activateScene("proof"),
           onLeaveBack: () => activateScene("hero"),
+          onRefresh: () => paintProof(proofDriver.progress),
         },
-        onUpdate: () => {
-          const progress = clamp01(proofDriver.progress);
-          const scan = clamp01((progress - 0.05) / 0.72);
-          if (proofImageInner) gsap.set(proofImageInner, { scale: mix(1.035, 1, progress), xPercent: mix(1.2, 0, progress) });
-          if (witnessScan) {
-            witnessScan.style.left = (scan * 100).toFixed(3) + "%";
-            witnessScan.style.opacity = progress < 0.04 || progress > 0.87 ? "0" : "1";
-            witnessScan.style.transform = "translate3d(-50%, 0, 0)";
-          }
-        },
+        onUpdate: () => paintProof(proofDriver.progress),
       });
+
+      const handlePinChange = () => paintProof(proofDriver.progress);
+      pinQuery.addEventListener("change", handlePinChange);
+      disposers.push(() => pinQuery.removeEventListener("change", handlePinChange));
+      paintProof(0);
     }
 
-    serviceRows.forEach((row, index) => {
+    // The list itself no longer animates on scroll: the cursor-driven margin arrow is the
+    // only indicator here. This trigger just hands the seal its scene.
+    if (servicesSection) {
       ScrollTrigger.create({
-        id: `zzyzx-v7-service-${index}`,
-        trigger: row,
+        id: "zzyzx-v7-services",
+        trigger: servicesSection,
         start: "top 58%",
         end: "bottom 42%",
-        onEnter: () => {
-          activateScene("services");
-          activateService(index);
-        },
-        onEnterBack: () => {
-          activateScene("services");
-          activateService(index);
-        },
-        onLeaveBack: index === 0 ? () => activateScene("proof") : undefined,
-      });
-    });
-
-    if (approachSection) {
-      const handoffDriver = { progress: 0 };
-      gsap.to(handoffDriver, {
-        progress: 1,
-        ease: "none",
-        scrollTrigger: {
-          id: "zzyzx-v7-approach",
-          trigger: approachSection,
-          start: "top 78%",
-          end: "bottom 22%",
-          scrub: 0.2,
-          invalidateOnRefresh: true,
-          onEnter: () => activateScene("approach"),
-          onEnterBack: () => activateScene("approach"),
-          onLeaveBack: () => activateScene("services"),
-        },
-        onUpdate: () => {
-          const progress = clamp01(handoffDriver.progress);
-          if (handoffProgress) gsap.set(handoffProgress, { scaleX: progress, transformOrigin: "left center" });
-          handoffSteps.forEach((step, index) => {
-            const local = clamp01((progress - index * 0.24) / 0.28);
-            gsap.set(step, { opacity: mix(0.34, 1, local), y: mix(12, 0, local) });
-          });
-        },
+        onEnter: () => activateScene("services"),
+        onEnterBack: () => activateScene("services"),
+        onLeaveBack: () => activateScene("proof"),
       });
     }
 
@@ -484,7 +508,7 @@ export function mountScrollContinuum(options: ScrollContinuumOptions = {}) {
             animateSeal({ opacity: 0 }, 0.35);
           },
           onEnterBack: () => activateScene("studio"),
-          onLeaveBack: () => activateScene("approach"),
+          onLeaveBack: () => activateScene("services"),
         },
       });
       if (credits.length) {
@@ -511,7 +535,7 @@ export function mountScrollContinuum(options: ScrollContinuumOptions = {}) {
           toggleActions: "restart none none reverse",
           onEnter: () => {
             activateScene("cta");
-            animateSeal(ctaSealState(), 0.62);
+            commit(ctaSealState());
           },
           onEnterBack: () => activateScene("cta"),
           onLeaveBack: () => {
@@ -523,6 +547,17 @@ export function mountScrollContinuum(options: ScrollContinuumOptions = {}) {
       if (ctaCopy) {
         ctaTimeline.fromTo(ctaCopy, { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, duration: 0.62, ease: "power3.out" }, 0.12);
       }
+
+      ScrollTrigger.create({
+        id: "zzyzx-v7-cta-seal",
+        trigger: ctaSection,
+        start: "top bottom",
+        end: "bottom top",
+        onUpdate: () => {
+          if (activeScene !== "cta") return;
+          commit(ctaSealState());
+        },
+      });
     }
   }, shell);
   disposers.push(() => animationContext.revert());
@@ -532,7 +567,6 @@ export function mountScrollContinuum(options: ScrollContinuumOptions = {}) {
       ["hero", heroSection, 0],
       ["proof", proofSection, 0.56],
       ["services", servicesSection, 0.58],
-      ["approach", approachSection, 0.7],
       ["studio", studioSection, 0.7],
       ["cta", ctaSection, 0.68],
     ];
@@ -541,10 +575,6 @@ export function mountScrollContinuum(options: ScrollContinuumOptions = {}) {
       if (element && element.getBoundingClientRect().top <= window.innerHeight * threshold) next = scene;
     }
     activateScene(next);
-    if (next === "services") {
-      const visibleIndex = serviceRows.findLastIndex((row) => row.getBoundingClientRect().top <= window.innerHeight * 0.58);
-      activateService(Math.max(0, visibleIndex));
-    }
     if (next === "cta") commit(ctaSealState());
     else if (next !== "hero") commit({ opacity: 0 });
   };

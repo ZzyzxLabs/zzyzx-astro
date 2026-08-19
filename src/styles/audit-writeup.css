@@ -1,0 +1,373 @@
+/**
+ * Shared styling for the security writeup archive and detail pages.
+ * Kept global because writeup bodies are authored in MDX and slotted in,
+ * which Astro's scoped styles never reach.
+ */
+
+/* ---------- Surface system ----------
+ * The audit surface is deliberately near-black, but near-black was doing all
+ * the work on its own: two greys 1.5% apart in lightness read as one flat
+ * plane, a single hairline weight separated everything from everything, and
+ * severity - the one axis this domain actually needs to communicate - stayed
+ * locked inside 10px badges. These tokens split that into three jobs that
+ * never overlap:
+ *
+ *   surface steps  -> structure   (where am I in the page)
+ *   cyan           -> interactive (what can I click)
+ *   severity hues  -> risk        (how bad is it)
+ *
+ * Neutrals carry a little chroma toward the brand cyan; pure grey beside a
+ * cyan brand reads as dead. Every ink token clears 4.5:1 on --audit-bg.
+ */
+:root {
+  --audit-bg: oklch(14.5% 0.006 205);
+  --audit-bg-raised: oklch(19.5% 0.011 205);
+  --audit-bg-panel: oklch(23.5% 0.014 205);
+  --audit-bg-hover: oklch(21% 0.016 205);
+
+  --audit-line-soft: oklch(74% 0.03 205 / 0.12);
+  --audit-line: oklch(76% 0.035 205 / 0.2);
+  --audit-line-strong: oklch(80% 0.05 205 / 0.34);
+
+  --audit-ink: oklch(96% 0.006 195);
+  --audit-ink-2: oklch(85% 0.012 200);
+  --audit-ink-3: oklch(74% 0.016 205);
+  --audit-ink-4: oklch(66% 0.02 205);
+  --audit-ink-5: oklch(58% 0.024 205);
+
+  --audit-cyan: #74d7dd;
+  --audit-cyan-ink: #9de2e6;
+  --audit-cyan-bright: #a3e6e9;
+
+  --sev-critical: #ff7a7a;
+  --sev-high: #ffa268;
+  --sev-medium: #f0cf74;
+  --sev-low: #9de2e6;
+  --sev-info: #9aa3aa;
+  --sev-fixed: #7fdfa8;
+
+  /* The two public lanes read as the same thing today. Incidents are a breach
+   * that already happened to someone else; reports are work we signed off on.
+   * Different tone, same system. */
+  --lane-incident: var(--sev-high);
+  --lane-report: var(--audit-cyan);
+}
+
+/* ---------- Severity + status badges ---------- */
+
+.audit-badge {
+  --badge-tone: var(--audit-ink-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.24rem 0.55rem 0.24rem 0.45rem;
+  border: 1px solid color-mix(in srgb, var(--badge-tone) 40%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--badge-tone) 13%, transparent);
+  color: var(--badge-tone);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* The swatch makes severity pre-attentive at 10px, where the label alone is not. */
+.audit-badge::before {
+  content: "";
+  width: 0.34rem;
+  height: 0.34rem;
+  flex: none;
+  border-radius: 1px;
+  background: var(--badge-tone);
+}
+
+.audit-badge b {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.audit-badge[data-severity="critical"],
+.audit-badge[data-status="open"] {
+  --badge-tone: var(--sev-critical);
+  /* Critical is the one severity that should stop a reader mid-scroll. */
+  border-color: color-mix(in srgb, var(--sev-critical) 55%, transparent);
+  background: color-mix(in srgb, var(--sev-critical) 18%, transparent);
+}
+
+.audit-badge[data-severity="high"] {
+  --badge-tone: var(--sev-high);
+}
+
+.audit-badge[data-severity="medium"],
+.audit-badge[data-status="acknowledged"] {
+  --badge-tone: var(--sev-medium);
+}
+
+.audit-badge[data-severity="low"],
+.audit-badge[data-status="mitigated"] {
+  --badge-tone: var(--sev-low);
+}
+
+.audit-badge[data-status="fixed"] {
+  --badge-tone: var(--sev-fixed);
+}
+
+.audit-badge[data-severity="informational"],
+.audit-badge[data-status="wontfix"] {
+  --badge-tone: var(--sev-info);
+}
+
+/* ---------- Finding block ---------- */
+
+.finding {
+  --finding-tone: var(--sev-info);
+  position: relative;
+  margin-top: 4.5rem;
+  padding-top: 2.25rem;
+  border-top: 1px solid color-mix(in srgb, var(--finding-tone) 45%, transparent);
+  scroll-margin-top: 6rem;
+}
+
+/* Severity is legible before a single word is read. */
+.finding::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 7rem;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--finding-tone) 9%, transparent),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.finding[data-severity="critical"] { --finding-tone: var(--sev-critical); }
+.finding[data-severity="high"] { --finding-tone: var(--sev-high); }
+.finding[data-severity="medium"] { --finding-tone: var(--sev-medium); }
+.finding[data-severity="low"] { --finding-tone: var(--sev-low); }
+
+.finding__meta {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.finding__id {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--audit-cyan);
+  text-decoration: none;
+}
+
+.finding__id:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+}
+
+.finding__title {
+  position: relative;
+  margin: 1.15rem 0 0;
+  max-width: 26ch;
+  font-family: var(--font-heading);
+  font-size: clamp(1.65rem, 2.6vw, 2.15rem);
+  font-weight: 500;
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+  color: var(--audit-ink);
+  text-wrap: balance;
+}
+
+.finding__fix {
+  position: relative;
+  display: inline-block;
+  margin-top: 1.1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--audit-cyan) 45%, transparent);
+  padding-bottom: 0.15rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--audit-cyan-ink);
+  text-decoration: none;
+}
+
+.finding__body {
+  position: relative;
+  margin-top: 1.5rem;
+}
+
+/* ---------- Writeup prose ---------- */
+
+.audit-prose {
+  max-width: 46rem;
+  font-size: 1.0125rem;
+  line-height: 1.8;
+  color: var(--audit-ink-3);
+  text-wrap: pretty;
+}
+
+.audit-prose > :first-child {
+  margin-top: 0;
+}
+
+.audit-prose p {
+  margin: 1.4rem 0;
+}
+
+.audit-prose strong {
+  font-weight: 600;
+  color: var(--audit-ink-2);
+}
+
+.audit-prose a:not(.finding__id):not(.finding__fix) {
+  border-bottom: 1px solid color-mix(in srgb, var(--audit-cyan) 45%, transparent);
+  color: var(--audit-cyan-ink);
+  text-decoration: none;
+}
+
+.audit-prose h2 {
+  margin: 3.5rem 0 0;
+  font-size: clamp(1.5rem, 2.4vw, 1.95rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+  color: var(--audit-ink);
+  text-wrap: balance;
+}
+
+.audit-prose h3:not(.finding__title) {
+  margin: 2.75rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--audit-ink-2);
+  text-wrap: balance;
+}
+
+.audit-prose h4 {
+  margin: 2.25rem 0 0;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--audit-cyan);
+}
+
+.audit-prose ul,
+.audit-prose ol {
+  margin: 1.4rem 0;
+  padding-left: 1.25rem;
+}
+
+.audit-prose li {
+  margin: 0.55rem 0;
+  padding-left: 0.35rem;
+}
+
+.audit-prose li::marker {
+  color: var(--audit-cyan);
+}
+
+/* Was a 2px left stripe. A full hairline plus a brand wash carries the same
+ * emphasis without the callout-stripe reflex. */
+.audit-prose blockquote {
+  margin: 1.75rem 0;
+  border: 1px solid color-mix(in srgb, var(--audit-cyan) 26%, transparent);
+  border-radius: 2px;
+  padding: 1.1rem 1.35rem;
+  background: color-mix(in srgb, var(--audit-cyan) 6%, transparent);
+  color: var(--audit-ink-2);
+  font-style: normal;
+}
+
+.audit-prose blockquote > :first-child {
+  margin-top: 0;
+}
+
+.audit-prose blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.audit-prose hr {
+  margin: 3rem 0;
+  border: 0;
+  border-top: 1px solid var(--audit-line);
+}
+
+.audit-prose :not(pre) > code {
+  padding: 0.12rem 0.35rem;
+  border: 1px solid var(--audit-line);
+  border-radius: 2px;
+  background: var(--audit-bg-panel);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 0.86em;
+  color: var(--audit-ink-2);
+}
+
+.audit-prose pre {
+  margin: 1.75rem 0;
+  overflow-x: auto;
+  border: 1px solid var(--audit-line);
+  border-radius: 3px;
+  padding: 1.25rem 1.35rem;
+  background: var(--audit-bg-panel) !important;
+  font-size: 0.845rem;
+  line-height: 1.7;
+  tab-size: 2;
+}
+
+.audit-prose pre code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+}
+
+.audit-prose table {
+  width: 100%;
+  margin: 1.75rem 0;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.audit-prose th,
+.audit-prose td {
+  border-bottom: 1px solid var(--audit-line-soft);
+  padding: 0.7rem 0.9rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.audit-prose th {
+  border-bottom-color: var(--audit-line-strong);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--audit-cyan);
+}
+
+.audit-prose tbody tr:nth-child(odd) td {
+  background: var(--audit-bg-raised);
+}
+
+.audit-prose img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 2rem 0;
+  border: 1px solid var(--audit-line);
+}
+
+@media (max-width: 640px) {
+  .audit-prose {
+    font-size: 1rem;
+  }
+
+  .audit-prose pre {
+    border-radius: 0;
+    padding: 1rem;
+    font-size: 0.8rem;
+  }
+}

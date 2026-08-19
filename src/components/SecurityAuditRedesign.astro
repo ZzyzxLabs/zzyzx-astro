@@ -1,5 +1,32 @@
 ---
-import { publishedAudits } from "../data/audits";
+import WriteupRow from "./audit/WriteupRow.astro";
+import { getPublishedAudits } from "../data/audits";
+import "../styles/audit-writeup.css";
+
+const auditReports = await getPublishedAudits("audit");
+const incidentAnalyses = await getPublishedAudits("incident");
+const ARCHIVE_PREVIEW = 4;
+
+const archive = [
+  {
+    id: "incident-analysis",
+    tone: "incident",
+    label: "Incident analysis",
+    intro: "Public exploits rebuilt from on-chain evidence, in the finding format we use for client work.",
+    empty: "Incident writeups are being prepared.",
+    href: "/security-audit/incidents",
+    records: incidentAnalyses,
+  },
+  {
+    id: "audit-reports",
+    tone: "report",
+    label: "Audit reports",
+    intro: "Engagements published once the client approves disclosure. Private work stays confidential.",
+    empty: "Reports appear here after a client approves public disclosure.",
+    href: "/security-audit/reports",
+    records: auditReports,
+  },
+];
 
 const heroDocket = [
   {
@@ -16,9 +43,9 @@ const heroDocket = [
   },
 ];
 
-const hasPublicReports = publishedAudits.length > 0;
+const hasPublicReports = auditReports.length + incidentAnalyses.length > 0;
 const heroSecondaryHref = hasPublicReports ? "#audit-work" : "#review-method";
-const heroSecondaryLabel = hasPublicReports ? "View public reports" : "Review methodology";
+const heroSecondaryLabel = hasPublicReports ? "Read the writeups" : "Review methodology";
 
 const reviewAreas = [
   {
@@ -66,13 +93,6 @@ const auditProcess = [
   },
 ];
 
-const findingLabels = {
-  critical: "Critical",
-  high: "High",
-  medium: "Medium",
-  low: "Low",
-  informational: "Informational",
-} as const;
 ---
 
 <main class="audit-shell overflow-hidden">
@@ -106,7 +126,7 @@ const findingLabels = {
     </div>
   </section>
 
-  <section id="review-method" class="scroll-mt-20 border-y border-white/[0.09] bg-[#0b0d0f] px-5 py-24 sm:px-7 md:py-32 lg:px-10">
+  <section id="review-method" class="audit-band scroll-mt-20 px-5 py-24 sm:px-7 md:py-32 lg:px-10">
     <div class="mx-auto max-w-[88rem]">
       <header class="max-w-3xl" data-animate="fade-up">
         <p class="audit-label">Review surface</p>
@@ -114,92 +134,81 @@ const findingLabels = {
         <p class="audit-intro mt-6">A secure language removes entire bug classes. It does not replace adversarial review of custom business logic.</p>
       </header>
 
-      <div class="mt-16 grid border-b border-white/[0.11] md:grid-cols-2" data-animate="fade-up">
+      <div class="mt-16 grid border-b border-[var(--audit-line)] md:grid-cols-2" data-animate="fade-up">
         {reviewAreas.map((area, index) => (
           <article class:list={[
-            "border-t border-white/[0.11] py-8 md:min-h-56 md:py-10",
+            "border-t border-[var(--audit-line)] py-8 md:min-h-56 md:py-10",
             index % 2 === 0 ? "md:border-r md:pr-10" : "md:pl-10",
           ]}>
-            <p class="text-[0.68rem] font-medium tracking-[0.16em] text-[#535c63]">0{index + 1}</p>
-            <h3 class="mt-7 font-heading text-2xl font-medium tracking-[-0.03em] text-[#e9ece8]">{area.title}</h3>
-            <p class="mt-4 max-w-lg leading-7 text-[#818a91]">{area.description}</p>
+            <p class="text-[0.68rem] font-medium tracking-[0.16em] text-[var(--audit-ink-4)]">0{index + 1}</p>
+            <h3 class="mt-7 font-heading text-2xl font-medium tracking-[-0.03em] text-[var(--audit-ink)]">{area.title}</h3>
+            <p class="mt-4 max-w-lg leading-7 text-[var(--audit-ink-3)]">{area.description}</p>
           </article>
         ))}
       </div>
     </div>
   </section>
 
-  <section id="audit-work" class="scroll-mt-20 px-5 py-24 sm:px-7 md:py-32 lg:px-10">
+  <section id="audit-work" class="scroll-mt-20 px-5 py-24 sm:px-7 md:py-28 lg:px-10">
     <div class="mx-auto max-w-[88rem]">
-      <header class="max-w-3xl" data-animate="fade-up">
-        <p class="audit-label">Public audit archive</p>
-        <h2 class="audit-title mt-5">Reviewed work, published with permission.</h2>
-        <p class="audit-intro mt-6">Reports appear here only after the client approves public disclosure.</p>
+      <header class="archive-head" data-animate="fade-up">
+        <div>
+          <p class="audit-label">Public writeups</p>
+          <h2 class="archive-title mt-4">Findings, written out in full.</h2>
+        </div>
+        <p class="archive-standfirst">
+          Every writeup carries the same record: what was in scope, how the assumption broke, and what the fix was.
+        </p>
       </header>
 
-      {publishedAudits.length > 0 ? (
-        <div class="mt-16 grid border-b border-white/[0.11] lg:grid-cols-2">
-          {publishedAudits.map((audit, index) => (
-            <article class:list={[
-              "border-t border-white/[0.11] py-9",
-              index % 2 === 0 ? "lg:border-r lg:pr-10" : "lg:pl-10",
-            ]} data-animate="fade-up">
-              <div class="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <p class="audit-label">{audit.ecosystem}</p>
-                  <h3 class="mt-4 font-heading text-3xl font-medium tracking-[-0.035em] text-[#eceeeb]">{audit.project}</h3>
-                </div>
-                <p class="text-xs text-[#707980]">{audit.completedAt}</p>
+      <div class="archive-grid">
+        {archive.map((group) => (
+          <div id={group.id} class="archive-column scroll-mt-24" style={`--lane: var(--lane-${group.tone});`}>
+            <div class="archive-column__head" data-animate="fade-up">
+              <div class="flex flex-wrap items-baseline justify-between gap-3">
+                <p class="audit-label">{group.label}</p>
+                <p class="text-xs text-[var(--audit-ink-4)]">
+                  {group.records.length} {group.records.length === 1 ? "writeup" : "writeups"}
+                </p>
               </div>
-              <p class="mt-5 max-w-xl leading-7 text-[#8b949a]">{audit.summary}</p>
-              <p class="mt-6 text-sm leading-7 text-[#a8afb4]">{audit.scope.join(" / ")}</p>
-              {audit.findings && (
-                <dl class="mt-8 grid grid-cols-2 gap-5 border-t border-white/[0.09] pt-6 sm:grid-cols-5">
-                  {Object.entries(audit.findings).map(([severity, count]) => (
-                    <div>
-                      <dt class="text-[0.68rem] text-[#626b72]">{findingLabels[severity as keyof typeof findingLabels]}</dt>
-                      <dd class="mt-1 font-heading text-lg text-[#e5e8e5]">{count}</dd>
-                    </div>
-                  ))}
-                </dl>
+              <p class="archive-column__intro">{group.intro}</p>
+            </div>
+
+            {group.records.length > 0 ? (
+              <div class="archive-column__list">
+                {group.records.slice(0, ARCHIVE_PREVIEW).map((record) => <WriteupRow record={record} />)}
+              </div>
+            ) : (
+              <p class="archive-column__empty" data-animate="fade-up">{group.empty}</p>
+            )}
+
+            <div class="archive-column__foot">
+              {group.records.length > 0 && (
+                <a class="archive-see-all" href={group.href}>
+                  <span aria-hidden="true">&gt;&gt;</span> See all {group.label.toLowerCase()}
+                </a>
               )}
-              {(audit.reportUrl || audit.projectUrl) && (
-                <div class="mt-8 flex flex-wrap gap-6">
-                  {audit.reportUrl && <a class="audit-text-link" href={audit.reportUrl} target="_blank" rel="noreferrer">Read report ↗</a>}
-                  {audit.projectUrl && <a class="audit-text-link muted" href={audit.projectUrl} target="_blank" rel="noreferrer">Visit project ↗</a>}
-                </div>
-              )}
-            </article>
-          ))}
-        </div>
-      ) : (
-        <div class="mt-16 grid border-y border-white/[0.11] py-9 lg:grid-cols-12 lg:items-center lg:py-12" data-animate="fade-up">
-          <div class="lg:col-span-8">
-            <h3 class="font-heading text-2xl font-medium tracking-[-0.03em] text-[#e9ece8]">Public reports are being prepared.</h3>
-            <p class="mt-4 max-w-xl leading-7 text-[#818a91]">Client names and reports will be added after disclosure approval. Private engagements remain confidential.</p>
+            </div>
           </div>
-          <p class="mt-8 text-[0.68rem] font-medium uppercase leading-6 tracking-[0.18em] text-[#687178] lg:col-span-4 lg:mt-0 lg:text-right">
-            Disclosure first<br />Evidence attached<br />Scope identified
-          </p>
-        </div>
-      )}
+        ))}
+      </div>
     </div>
   </section>
 
-  <section class="border-y border-white/[0.09] bg-[#0b0d0f] px-5 py-24 sm:px-7 md:py-32 lg:px-10">
+  <section class="audit-band px-5 py-24 sm:px-7 md:py-32 lg:px-10">
     <div class="mx-auto grid max-w-[88rem] gap-14 lg:grid-cols-12 lg:gap-16">
       <div class="lg:col-span-5" data-animate="fade-up">
         <p class="audit-label">The process</p>
         <h2 class="audit-title mt-5">A review built for remediation.</h2>
         <p class="audit-intro mt-6">The goal is not a long finding list. It is a precise record of risk and a clear path to safer code.</p>
       </div>
-      <ol class="border-b border-white/[0.11] lg:col-span-7" data-animate="fade-up">
+      <ol class="border-b border-[var(--audit-line)] lg:col-span-7" data-animate="fade-up">
         {auditProcess.map((item, index) => (
-          <li class="grid gap-5 border-t border-white/[0.11] py-7 sm:grid-cols-[3.5rem_1fr] sm:py-8">
-            <span class="text-xs tracking-[0.16em] text-[#515a61]">0{index + 1}</span>
+          <li class="grid gap-5 border-t border-[var(--audit-line)] py-7 sm:grid-cols-[3.5rem_1fr] sm:py-8">
+            <span class="text-xs tracking-[0.16em] text-[var(--audit-ink-4)]">0{index + 1}</span>
             <div>
-              <h3 class="font-heading text-xl font-medium tracking-[-0.025em] text-[#e7eae7]">{item.title}</h3>
-              <p class="mt-3 max-w-xl leading-7 text-[#818a91]">{item.description}</p>
+              <h3 class="font-heading text-xl font-medium tracking-[-0.025em] text-[var(--audit-ink)]">{item.title}</h3>
+              <p class="mt-3 max-w-xl leading-7 text-[var(--audit-ink-3)]">{item.description}</p>
             </div>
           </li>
         ))}
@@ -207,15 +216,15 @@ const findingLabels = {
     </div>
   </section>
 
-  <section class="px-5 py-24 sm:px-7 md:py-32 lg:px-10">
+  <section class="audit-close px-5 py-24 sm:px-7 md:py-32 lg:px-10">
     <div class="mx-auto max-w-[88rem]" data-animate="fade-up">
       <p class="audit-label">Scope an engagement</p>
       <div class="mt-6 grid gap-10 lg:grid-cols-12 lg:items-end">
         <div class="lg:col-span-9">
-          <h2 class="max-w-[18ch] font-heading text-[clamp(2.5rem,4.8vw,4.2rem)] font-medium leading-[1.04] tracking-[-0.05em] text-[#edf0ec]">
+          <h2 class="max-w-[18ch] font-heading text-[clamp(2.5rem,4.8vw,4.2rem)] font-medium leading-[1.04] tracking-[-0.05em] text-[var(--audit-ink)]">
             Put an adversarial reviewer on the critical path.
           </h2>
-          <p class="mt-6 max-w-2xl leading-7 text-[#8b949a]">Send the repository, target commit, documentation, and expected launch window. We will reply with scope and availability.</p>
+          <p class="mt-6 max-w-2xl leading-7 text-[var(--audit-ink-3)]">Send the repository, target commit, documentation, and expected launch window. We will reply with scope and availability.</p>
         </div>
         <a href="mailto:contact@zzyzx.com?subject=Security%20Audit%20Inquiry" class="audit-button-primary lg:col-span-3 lg:justify-self-end">Request an audit</a>
       </div>
@@ -225,21 +234,48 @@ const findingLabels = {
 
 <style>
   .audit-shell {
-    background: #08090a;
-    color: #f1f3f0;
+    background: var(--audit-bg);
+    color: var(--audit-ink);
+  }
+
+  /* ---------- Planes ----------
+   * The page alternates between the ground and one raised band so the reader
+   * can feel section boundaries without reading a heading. Before this, the
+   * bands were #0b0d0f on #08090a: a 1.5% lightness step nobody can see. */
+  .audit-band {
+    border-block: 1px solid var(--audit-line-strong);
+    background: var(--audit-bg-raised);
+  }
+
+  .audit-close {
+    position: relative;
+    border-top: 1px solid var(--audit-line-strong);
+    background:
+      radial-gradient(78% 120% at 88% 8%, color-mix(in srgb, var(--audit-cyan) 11%, transparent), transparent 62%),
+      var(--audit-bg);
   }
 
   .audit-cover {
+    position: relative;
     padding: 4.25rem 1rem 0;
-    background: #08090a;
+    background: var(--audit-bg);
+  }
+
+  .audit-cover::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(66% 52% at 16% 34%, color-mix(in srgb, var(--audit-cyan) 10%, transparent), transparent 70%);
+    pointer-events: none;
   }
 
   .audit-cover__frame {
+    position: relative;
     display: grid;
     min-height: calc(100dvh - 4.25rem);
     max-width: 88rem;
     margin-inline: auto;
-    border-inline: 1px solid rgba(255, 255, 255, 0.1);
+    border-inline: 1px solid var(--audit-line);
     grid-template-columns: repeat(12, minmax(0, 1fr));
     grid-template-rows: auto 1fr;
   }
@@ -247,7 +283,7 @@ const findingLabels = {
   .audit-cover__mast {
     grid-column: 1 / -1;
     padding: 1rem clamp(1.25rem, 3vw, 2.5rem);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--audit-line);
   }
 
   .audit-cover__message {
@@ -264,8 +300,9 @@ const findingLabels = {
     font-size: clamp(3.15rem, 5.2vw, 4.6rem);
     font-weight: 500;
     line-height: 0.98;
-    letter-spacing: -0.055em;
-    color: #f1f3f0;
+    letter-spacing: -0.038em;
+    color: var(--audit-ink);
+    text-wrap: balance;
   }
 
   .audit-cover__intro {
@@ -273,7 +310,7 @@ const findingLabels = {
     margin-top: 1.75rem;
     font-size: 1.0625rem;
     line-height: 1.75;
-    color: #969ea4;
+    color: var(--audit-ink-3);
   }
 
   .audit-cover__actions {
@@ -283,10 +320,15 @@ const findingLabels = {
     margin-top: 2.25rem;
   }
 
+  /* The engagement record is the one panel in the hero, so it sits two steps
+   * above the ground rather than one imperceptible step. */
   .audit-cover__ledger {
+    position: relative;
     grid-column: 9 / -1;
-    border-left: 1px solid rgba(255, 255, 255, 0.11);
-    background: #0b0d0f;
+    border-left: 1px solid var(--audit-line-strong);
+    background:
+      linear-gradient(200deg, color-mix(in srgb, var(--audit-cyan) 7%, transparent), transparent 58%),
+      var(--audit-bg-panel);
   }
 
   .audit-cover__ledger dl {
@@ -301,7 +343,7 @@ const findingLabels = {
     flex-direction: column;
     justify-content: flex-end;
     padding: clamp(1.5rem, 3vw, 2.5rem);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    border-bottom: 1px solid var(--audit-line);
   }
 
   .audit-cover__entry:last-child {
@@ -313,7 +355,7 @@ const findingLabels = {
     font-weight: 500;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: #74d7dd;
+    color: var(--audit-cyan);
   }
 
   .audit-cover__entry dd {
@@ -322,7 +364,7 @@ const findingLabels = {
     font-family: var(--font-heading);
     font-size: 1.15rem;
     line-height: 1.5;
-    color: #dfe3df;
+    color: var(--audit-ink-2);
   }
 
   .audit-label {
@@ -330,7 +372,7 @@ const findingLabels = {
     font-weight: 500;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: #74d7dd;
+    color: var(--lane, var(--audit-cyan));
   }
 
   .audit-title {
@@ -339,15 +381,159 @@ const findingLabels = {
     font-size: clamp(2.35rem, 4.2vw, 3.8rem);
     font-weight: 500;
     line-height: 1.04;
-    letter-spacing: -0.048em;
-    color: #edf0ec;
+    letter-spacing: -0.038em;
+    color: var(--audit-ink);
+    text-wrap: balance;
   }
 
   .audit-intro {
     max-width: 40rem;
     font-size: 1.0625rem;
     line-height: 1.75;
-    color: #8b949a;
+    color: var(--audit-ink-3);
+  }
+
+  .archive-head {
+    display: grid;
+    align-items: end;
+    gap: 1.5rem 4rem;
+    padding-bottom: 3rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .archive-title {
+    max-width: 22ch;
+    font-family: var(--font-heading);
+    font-size: clamp(1.95rem, 3vw, 2.75rem);
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: -0.036em;
+    color: var(--audit-ink);
+    text-wrap: balance;
+  }
+
+  .archive-standfirst {
+    max-width: 34rem;
+    font-size: 0.98rem;
+    line-height: 1.75;
+    color: var(--audit-ink-3);
+  }
+
+  .archive-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Incidents and reports are two different promises. They used to be the same
+   * cyan eyebrow over the same black column; now each lane owns a tone. */
+  .archive-column {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-top: 2px solid var(--lane);
+    padding: 2.5rem 0 0;
+  }
+
+  .archive-column::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 13rem;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--lane) 9%, transparent), transparent);
+    pointer-events: none;
+  }
+
+  .archive-column > * {
+    position: relative;
+  }
+
+  .archive-column__intro {
+    max-width: 32rem;
+    margin-top: 0.9rem;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--audit-ink-3);
+  }
+
+  .archive-column__list {
+    margin-top: 2rem;
+  }
+
+  .archive-column__empty {
+    margin-top: 2rem;
+    border-top: 1px solid var(--audit-line);
+    padding-top: 1.35rem;
+    max-width: 30rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--audit-ink-3);
+  }
+
+  .archive-column__foot {
+    margin-top: auto;
+    border-top: 1px solid var(--audit-line);
+    padding-top: 1.5rem;
+  }
+
+  .archive-see-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--audit-cyan-ink);
+    text-decoration: none;
+    transition: gap 200ms ease;
+  }
+
+  .archive-see-all span {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    color: var(--lane, var(--audit-cyan));
+  }
+
+  .archive-see-all:hover {
+    gap: 0.85rem;
+  }
+
+  .archive-see-all:focus-visible {
+    outline: 2px solid var(--audit-cyan);
+    outline-offset: 4px;
+  }
+
+  @media (min-width: 900px) {
+    .archive-head {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    }
+
+    .archive-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .archive-column:first-child {
+      padding-right: 3.5rem;
+    }
+
+    .archive-column:last-child {
+      border-left: 1px solid var(--audit-line);
+      padding-left: 3.5rem;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .archive-column + .archive-column {
+      margin-top: 3rem;
+    }
+
+    .archive-column__foot {
+      padding-bottom: 0.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .archive-see-all {
+      transition: none;
+    }
   }
 
   .audit-button-primary,
@@ -366,46 +552,47 @@ const findingLabels = {
   }
 
   .audit-button-primary {
-    border: 1px solid #74d7dd;
-    background: #74d7dd;
+    border: 1px solid var(--audit-cyan);
+    background: var(--audit-cyan);
     color: #071012;
   }
 
   .audit-button-primary:hover {
-    border-color: #a3e6e9;
-    background: #a3e6e9;
+    border-color: var(--audit-cyan-bright);
+    background: var(--audit-cyan-bright);
     transform: translateY(-1px);
   }
 
   .audit-button-secondary {
-    border: 1px solid rgba(242, 243, 239, 0.2);
-    color: #d7dad7;
+    border: 1px solid var(--audit-line-strong);
+    color: var(--audit-ink-2);
   }
 
   .audit-button-secondary:hover {
-    border-color: rgba(116, 215, 221, 0.65);
-    color: #a3e6e9;
+    border-color: color-mix(in srgb, var(--audit-cyan) 65%, transparent);
+    background: var(--audit-bg-hover);
+    color: var(--audit-cyan-bright);
     transform: translateY(-1px);
   }
 
   .audit-text-link {
-    border-bottom: 1px solid rgba(116, 215, 221, 0.45);
+    border-bottom: 1px solid color-mix(in srgb, var(--audit-cyan) 45%, transparent);
     padding-bottom: 0.2rem;
     font-size: 0.88rem;
     font-weight: 600;
-    color: #9de2e6;
+    color: var(--audit-cyan-ink);
     text-decoration: none;
   }
 
   .audit-text-link.muted {
-    border-color: rgba(255, 255, 255, 0.18);
-    color: #a8afb4;
+    border-color: var(--audit-line);
+    color: var(--audit-ink-3);
   }
 
   .audit-button-primary:focus-visible,
   .audit-button-secondary:focus-visible,
   .audit-text-link:focus-visible {
-    outline: 2px solid #74d7dd;
+    outline: 2px solid var(--audit-cyan);
     outline-offset: 4px;
   }
 
@@ -467,7 +654,7 @@ const findingLabels = {
     }
 
     .audit-cover__ledger {
-      border-top: 1px solid rgba(255, 255, 255, 0.11);
+      border-top: 1px solid var(--audit-line-strong);
       border-left: 0;
     }
 

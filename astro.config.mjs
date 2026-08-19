@@ -6,10 +6,20 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
 
 import vue from '@astrojs/vue';
+import mdx from '@astrojs/mdx';
 import { templateCompilerOptions } from '@tresjs/core';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://zzyzxlabs.com',
+
+  markdown: {
+    shikiConfig: {
+      theme: 'github-dark-default',
+      wrap: false,
+    },
+  },
+
   vite: {
     plugins: [tailwindcss()],
     ssr: {
@@ -19,5 +29,5 @@ export default defineConfig({
 
   integrations: [react(), vue({
     ...templateCompilerOptions
-  })]
+  }), mdx()]
 });

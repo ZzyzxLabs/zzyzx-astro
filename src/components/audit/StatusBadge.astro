@@ -1,0 +1,11 @@
+---
+import { statusLabels, type Status } from "../../lib/findings";
+
+interface Props {
+  status: Status;
+}
+
+const { status } = Astro.props;
+---
+
+<span class="audit-badge" data-status={status}>{statusLabels[status]}</span>
