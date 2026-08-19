@@ -64,7 +64,10 @@ Optional blocks:
   Name the exact commit; a report against "main" is not a report.
 - **`incident`** — `kind: incident` only. `occurredAt`, `chain`, `lossUsd` (a **number**, not
   `"$4.2M"`), `rootCause`, `transactions` and `references` (each a list of `{label, url}`).
-- **`report`** — the PDF. `pdf` (path under `public/`), `sha256`, `pages`.
+- **`report`** — one PDF. `pdf` (path under `public/`), `sha256`, `pages`.
+- **`reports`** — multiple PDF deliverables. Each item accepts `label`, `pdf`, `sha256`, and
+  `pages`. Use this when an engagement publishes a manual audit and a companion formal
+  verification report. `report` remains supported for older entries.
 - **`cover`** — image path for the social card. **`projectUrl`** — the client's site.
 
 ## 3. Write the body
@@ -129,6 +132,20 @@ report:
   pdf: /reports/meridian-vault.pdf
   sha256: "…"
   pages: 24
+```
+
+For multiple deliverables:
+
+```yaml
+reports:
+  - label: "Manual Security Audit"
+    pdf: /reports/project-manual-security-audit.pdf
+    sha256: "…"
+    pages: 12
+  - label: "Formal Verification Report"
+    pdf: /reports/project-formal-verification.pdf
+    sha256: "…"
+    pages: 9
 ```
 
 Generate the hash so a reader can verify the file they downloaded:

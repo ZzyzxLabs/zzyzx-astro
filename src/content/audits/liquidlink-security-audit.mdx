@@ -1,0 +1,242 @@
+---
+kind: audit
+title: "LiquidLink closed every implementation finding across score, policy, and orderbook flows"
+project: "LiquidLink"
+summary: "The final assessment reconciled 24 canonical findings across score accounting, policy settlement, point tokenization, point trading, referrals, staking, and check-in. Fifteen findings were resolved or removed, nine remain documented trust or operating assumptions, and no implementation finding remains open."
+ecosystem: "Sui / Move"
+publishedAt: 2026-08-17
+disclosure: public
+draft: false
+target:
+  repository: "Zzyzx-Security/Liquidlink-Security-Audit"
+  repositoryUrl: https://github.com/Zzyzx-Security/Liquidlink-Security-Audit
+  commit: "64a477bf9ae945ff585f9dd70231945a9a741ea9 plus reviewed working-tree changes"
+  language: "Move (Sui)"
+  reviewers:
+    - "Zzyzx Security Review"
+  scope:
+    - "LiquidLink core and administration packages"
+    - "Score accounting, Stamps, and policy settlement"
+    - "Point tokenization and the point-trading orderbook"
+    - "Referral, Nemo Staking, and Check-in policies"
+reports:
+  - label: "Manual Security Audit"
+    pdf: /reports/liquidlink-manual-security-audit-2026-08-17.pdf
+    sha256: "379f8edb221ee290973a9710803bd2fd86d02f7941c506d1b6a4a2ba5517acf6"
+    pages: 6
+  - label: "Formal Verification Report"
+    pdf: /reports/liquidlink-formal-verification-2026-08-17.pdf
+    sha256: "227cf25d20633ad4bf455457afdd5deeaab28eb0b2b3cc251db3d0a6599f2f4c"
+    pages: 8
+---
+
+LiquidLink combines score accounting, configurable policy pipelines, tokenized points, an
+orderbook, referrals, staking, and check-in campaigns. The assessment treated those systems as
+one settlement graph: an identity or lifecycle error in one package could invalidate accounting
+that looked correct in isolation.
+
+The final manual assessment records **24 canonical findings: 15 resolved or removed, nine
+acknowledged or conditional, and zero open**. The companion formal program passed **191 of 191
+shared-suite proofs** and mapped every LiquidLink finding to direct proofs, protocol models,
+Move regressions, structural evidence, or an explicit trusted boundary.
+
+## Security model
+
+The review centered on six invariants:
+
+1. Project, Scoreboard, source, operation, and nonce identities must bind exactly.
+2. Policy registration, generation, state, and order must match the configured pipeline.
+3. Every required policy must execute exactly once before settlement.
+4. Tokenized scores, holding registries, treasury capabilities, and orderbooks must bind to the
+   intended project and asset type.
+5. Orderbook custody, fees, cancellation, and claims must conserve value.
+6. Closing a campaign must stop new accrual without destroying an existing claim.
+
+## Canonical finding register
+
+### Core and orderbook
+
+<Finding id="LL-01" title="Exact-in orderbook arithmetic could overflow" severity="medium" status="fixed">
+
+**Impact.** Full-width arithmetic could abort a valid exact-in fill. The implementation now uses
+bounded intermediates and preserves the intended rounding direction.
+
+</Finding>
+
+<Finding id="LL-02" title="Orderbook custody could retain ambiguous residual dust" severity="medium" status="fixed">
+
+**Impact.** Residual balances could become detached from a clear accounting owner. Custody and
+claim accounting now assign every balance to an explicit liability.
+
+</Finding>
+
+<Finding id="LL-03" title="Token holding registry accounting could be bypassed" severity="medium" status="fixed">
+
+**Impact.** A non-canonical holding path could diverge from project accounting. Registry and
+holding identities are now checked at the mutation boundary.
+
+</Finding>
+
+<Finding id="LL-04" title="Best-fill composition lacked an intrinsic limit-price guard" severity="medium" status="fixed">
+
+**Impact.** A caller could compose a fill without an on-chain price limit inside the package.
+The supported transaction composition now enforces the user limit before settlement.
+
+</Finding>
+
+<Finding id="LL-05" title="Fee configuration permits a one-hundred-percent rate" severity="medium" status="acknowledged">
+
+**Impact.** Governance can configure a trade whose proceeds are entirely redirected as fees.
+This remains an explicit governance boundary and must be controlled operationally.
+
+</Finding>
+
+<Finding id="LL-06" title="TGE redemption could bind mismatched project assets" severity="medium" status="fixed">
+
+**Impact.** Redemption could combine assets from different project contexts. The affected path
+was removed from the release architecture rather than patched in place.
+
+</Finding>
+
+<Finding id="LL-07" title="PointCap remains an unbounded privileged issuance lane" severity="medium" status="acknowledged">
+
+**Impact.** A privileged holder can issue outside the normal automated policy path. The
+capability is treated as a narrow governance authority that requires controlled custody.
+
+</Finding>
+
+<Finding id="LL-08" title="Project state version was coupled to package version" severity="medium" status="fixed">
+
+**Impact.** State lifecycle and package deployment could drift together in unsafe ways. The
+version domains are now validated independently.
+
+</Finding>
+
+<Finding id="LL-09" title="Keeper cancellation remains a governance authority" severity="low" status="acknowledged">
+
+**Impact.** An authorized keeper can affect order lifecycle. The role is retained as an explicit
+operating trust assumption with auditable use.
+
+</Finding>
+
+<Finding id="LL-10" title="Orderbook storage and gas growth remain operationally bounded" severity="low" status="acknowledged">
+
+**Impact.** Long-lived books can accumulate state and cleanup cost. Bounded operations and keeper
+maintenance reduce the exposure, but economically bounded storage is not formally guaranteed.
+
+</Finding>
+
+<Finding id="LL-11" title="Counterparty registry entries were not exact-bound" severity="low" status="fixed">
+
+**Impact.** A structurally valid but incorrect registry object could be supplied. Exact identity
+binding now rejects cross-context substitution.
+
+</Finding>
+
+<Finding id="LL-12" title="Order events mixed gross and net values" severity="low" status="fixed">
+
+**Impact.** Indexers could interpret one value as both pre-fee and post-fee settlement. Events now
+emit distinct accounting values.
+
+</Finding>
+
+<Finding id="LL-13" title="Fee recipient handling was inconsistent across paths" severity="informational" status="fixed">
+
+**Impact.** Equivalent fee flows could route through different recipient logic. The implementation
+now uses one consistent recipient source.
+
+</Finding>
+
+### Policy and lifecycle
+
+<Finding id="LL-14" title="A full redirect could create a zero-value add operation" severity="medium" status="fixed">
+
+**Impact.** A one-hundred-percent redirect could leave a zero operation in the settlement path.
+The zero-value branch is now handled explicitly.
+
+</Finding>
+
+<Finding id="LL-15" title="Multiple policies could overwrite the same linear stream" severity="medium" status="fixed">
+
+**Impact.** Policy order could silently discard an earlier mutation. The pipeline now enforces
+single-consumer behavior and exact configured order.
+
+</Finding>
+
+<Finding id="LL-16" title="Unregistering a policy did not retire its linear streams" severity="medium" status="fixed">
+
+**Impact.** A removed policy could leave live state that continued to affect settlement. Policy
+generation and lifecycle checks now retire stale streams.
+
+</Finding>
+
+<Finding id="LL-17" title="A legacy PointCap path bypassed pause and version gates" severity="medium" status="fixed">
+
+**Impact.** Legacy privileged issuance could mutate state while the canonical package was paused
+or out of version. The path now obeys the same gates as production issuance.
+
+</Finding>
+
+<Finding id="AUX-01" title="Referral bonuses intentionally increase total issuance" severity="medium" status="acknowledged">
+
+**Impact.** Referral rewards are additive rather than value-neutral. The inflation is an explicit
+economic policy and must be budgeted and monitored as such.
+
+</Finding>
+
+<Finding id="AUX-04" title="Nemo unstaking depends on an authorized keeper" severity="medium" status="acknowledged">
+
+**Impact.** User exit liveness depends on keeper availability. Operational monitoring and recovery
+procedures remain part of the trust model.
+
+</Finding>
+
+<Finding id="AUX-05" title="Check-in rewards retain a Sybil and budget boundary" severity="medium" status="acknowledged">
+
+**Impact.** On-chain eligibility does not prove unique human participation. Campaign budgets and
+off-chain anti-abuse controls remain necessary.
+
+</Finding>
+
+<Finding id="AUX-07" title="Staking tier and duration transitions were asymmetric" severity="medium" status="fixed">
+
+**Impact.** Equivalent stake transitions could accrue different outcomes. Checkpointing now
+settles the old interval before applying new tier or duration state.
+
+</Finding>
+
+<Finding id="AUX-08" title="Reset-bucket configuration can be misconfigured" severity="low" status="acknowledged">
+
+**Impact.** A valid but unsafe administrative configuration can distort campaign cadence. This is
+retained as a documented configuration and governance risk.
+
+</Finding>
+
+<Finding id="AUX-09" title="Zero referrer bonus routing was inconsistent" severity="low" status="fixed">
+
+**Impact.** The zero-bonus branch could produce different routing from nonzero referrals. The path
+now settles deterministically without creating an invalid recipient operation.
+
+</Finding>
+
+<Finding id="AUX-11" title="Pause can block detach and transfer operations" severity="low" status="acknowledged">
+
+**Impact.** Emergency pause favors containment over some user lifecycle operations. The tradeoff
+is documented in the operating runbook and recovery model.
+
+</Finding>
+
+## Formal verification evidence
+
+The formal report records **191 passing proof functions** across LiquidLink models and direct
+production targets. The evidence covers exact project and policy binding, stale-generation
+invalidation, strict policy order, complete one-time settlement, referral accounting, staking
+checkpointing, orderbook custody and fee conservation, limit-price behavior, and check-in replay
+prevention.
+
+Formal success does not prove honest administration, Sybil resistance, keeper availability,
+economic value, frontend transaction composition, or indexer completeness. Those boundaries are
+kept explicit rather than being converted into implementation closure.
+
+The original deliverables and publication history are available in the
+[public report repository](https://github.com/Zzyzx-Security/Liquidlink-Security-Audit).

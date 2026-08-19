@@ -9,6 +9,13 @@ const reference = z.object({
   url: z.string().url(),
 });
 
+const report = z.object({
+  label: z.string().optional(),
+  pdf: z.string(),
+  sha256: z.string().optional(),
+  pages: z.number().optional(),
+});
+
 /**
  * Writeups are authored as MDX. Finding metadata lives on the `<Finding>` tags in
  * the body, not here, so severity counts can never drift from the prose.
@@ -54,14 +61,10 @@ const audits = defineCollection({
       })
       .optional(),
 
-    /** The formal deliverable, served from public/reports/. */
-    report: z
-      .object({
-        pdf: z.string(),
-        sha256: z.string().optional(),
-        pages: z.number().optional(),
-      })
-      .optional(),
+    /** Published deliverables, served from public/reports/. */
+    report: report.optional(),
+    /** Multiple public deliverables, for example a manual audit and formal verification report. */
+    reports: z.array(report).default([]),
   }),
 });
 

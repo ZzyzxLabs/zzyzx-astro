@@ -66,6 +66,11 @@ const sources = [
 const pageDescription = data.summary.length > 300 ? `${data.summary.slice(0, 297)}...` : data.summary;
 const lane = data.kind === "incident" ? "incident" : "report";
 const kindIndex = data.kind === "incident" ? "/security-audit/incidents" : "/security-audit/reports";
+const reports = data.reports.length > 0
+  ? data.reports
+  : data.report
+    ? [{ label: "Full security report", ...data.report }]
+    : [];
 ---
 
 <Layout title={`${data.title} | Zzyzx Labs`} description={pageDescription} image={data.cover ?? null}>
@@ -114,23 +119,33 @@ const kindIndex = data.kind === "incident" ? "/security-audit/incidents" : "/sec
         </section>
       )}
 
-      {data.report?.pdf && (
-        <section class="writeup__report" aria-label="Full report">
-          <div>
-            <p class="audit-label">Formal deliverable</p>
-            <p class="writeup__report-title">
-              The full report carries the complete finding set, severity rationale, and remediation log.
-            </p>
-            {data.report.sha256 && (
-              <p class="writeup__hash">
-                <span>sha256</span>
-                <code>{data.report.sha256}</code>
-              </p>
-            )}
+      {reports.length > 0 && (
+        <section class="writeup__reports" aria-labelledby="published-deliverables-title">
+          <div class="writeup__reports-head">
+            <p class="audit-label">Published deliverables</p>
+            <h2 id="published-deliverables-title">
+              Complete evidence, severity rationale, and remediation record.
+            </h2>
           </div>
-          <a class="audit-button-primary" href={data.report.pdf} download>
-            Download PDF{data.report.pages && ` · ${data.report.pages}pp`}
-          </a>
+          <div class="writeup__report-grid">
+            {reports.map((report, index) => (
+              <article class="writeup__report-card">
+                <div>
+                  <p class="writeup__report-number">{String(index + 1).padStart(2, "0")}</p>
+                  <h3>{report.label ?? "Security report"}</h3>
+                  {report.sha256 && (
+                    <p class="writeup__hash">
+                      <span>sha256</span>
+                      <code>{report.sha256}</code>
+                    </p>
+                  )}
+                </div>
+                <a class="audit-button-primary" href={report.pdf} download>
+                  Download PDF{report.pages && ` · ${report.pages}pp`}
+                </a>
+              </article>
+            ))}
+          </div>
         </section>
       )}
 
@@ -360,27 +375,63 @@ const kindIndex = data.kind === "incident" ? "/security-audit/incidents" : "/sec
     margin-top: 0.4rem;
   }
 
-  .writeup__report {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.75rem;
+  .writeup__reports {
     margin-top: 2rem;
     border: 1px solid color-mix(in srgb, var(--audit-cyan) 30%, transparent);
-    padding: 1.75rem;
     background:
       linear-gradient(180deg, color-mix(in srgb, var(--audit-cyan) 8%, transparent), transparent),
       var(--audit-bg-raised);
   }
 
-  .writeup__report-title {
-    max-width: 34rem;
+  .writeup__reports-head {
+    padding: 1.75rem;
+  }
+
+  .writeup__reports-head h2 {
+    max-width: 36rem;
     margin: 1rem 0 0;
     font-family: var(--font-heading);
     font-size: 1.2rem;
+    font-weight: 500;
     line-height: 1.5;
     color: var(--audit-ink-2);
+  }
+
+  .writeup__report-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--audit-line);
+  }
+
+  .writeup__report-card {
+    display: flex;
+    min-width: 0;
+    min-height: 18rem;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 1.75rem;
+  }
+
+  .writeup__report-card + .writeup__report-card {
+    border-left: 1px solid var(--audit-line);
+  }
+
+  .writeup__report-number {
+    margin: 0;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    color: var(--audit-cyan);
+  }
+
+  .writeup__report-card h3 {
+    margin: 1.25rem 0 0;
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--audit-ink);
   }
 
   .writeup__hash {
@@ -664,8 +715,17 @@ const kindIndex = data.kind === "incident" ? "/security-audit/incidents" : "/sec
       border-top: 0;
     }
 
-    .writeup__report {
-      align-items: flex-start;
+    .writeup__report-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .writeup__report-card {
+      min-height: 0;
+    }
+
+    .writeup__report-card + .writeup__report-card {
+      border-top: 1px solid var(--audit-line);
+      border-left: 0;
     }
 
     .writeup__foot-actions .audit-button-primary,

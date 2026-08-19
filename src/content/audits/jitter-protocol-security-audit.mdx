@@ -1,0 +1,474 @@
+---
+kind: audit
+title: "Jitter Protocol reached a release posture with no open implementation findings"
+project: "Jitter Protocol"
+summary: "The final assessment reconciled 65 canonical findings across core markets, arithmetic, rewards, adapters, registry, lifecycle, and deployment posture. Thirty-eight findings were resolved or removed, 25 remain acknowledged or conditional, two experimental surfaces are excluded from deployment, and none remains open."
+ecosystem: "Sui / Move"
+publishedAt: 2026-08-17
+disclosure: public
+draft: false
+target:
+  repository: "Zzyzx-Security/Jitter-Audit-Report"
+  repositoryUrl: https://github.com/Zzyzx-Security/Jitter-Audit-Report
+  commit: "64a477bf9ae945ff585f9dd70231945a9a741ea9 plus reviewed working-tree changes"
+  language: "Move (Sui)"
+  reviewers:
+    - "Zzyzx Security Review"
+  scope:
+    - "Jitter core market state, PT and YT issuance, positions, and liquidity"
+    - "AMM arithmetic, exact-in and exact-out solvers, and maturity"
+    - "Rewards, oracle aggregation, adapters, registry, and view packages"
+    - "Experimental Jitter orderbook deployment boundary"
+reports:
+  - label: "Manual Security Audit"
+    pdf: /reports/jitter-protocol-manual-security-audit-2026-08-17.pdf
+    sha256: "03678e5aea79dae4d3c993c0b40a92c234da7d8df6d41a4f9a741873f1ebcdcf"
+    pages: 12
+  - label: "Formal Verification Report"
+    pdf: /reports/jitter-protocol-formal-verification-2026-08-17.pdf
+    sha256: "00ae8f553a8dc93dff65174bd52f10f83d9cd5b9ea930c125ac65eef4ac75297"
+    pages: 9
+---
+
+Jitter Protocol combines principal and yield token issuance, an AMM, positions, liquidity,
+rewards, oracle aggregation, third-party adapters, registry discovery, lifecycle controls, and
+an experimental orderbook. The review followed value and authority through that entire graph,
+then separated production guarantees from deployment exclusions and operating assumptions.
+
+The final manual assessment records **65 canonical findings: 38 resolved or architecture-
+eliminated, 25 acknowledged or conditional, two deployment-excluded, and zero open**. No
+confirmed Critical or High attack chain was identified that lets an unprivileged user steal
+Jitter V1 core principal. The High experimental-orderbook finding is excluded from the V1
+deployment graph.
+
+## Release posture
+
+The reviewed tree becomes a release artifact only after a clean commit and dependency graph are
+frozen, acknowledged arithmetic and reward boundaries are recorded in the runbook, production
+adapters are signed off, excluded packages are removed, and the Move, formal, mutation,
+deployment, and operational suites pass from a clean checkout.
+
+## Canonical finding register
+
+### Oracle and adapters
+
+<Finding id="ORC-01" title="The demo adapter accepts a caller-supplied SY index" severity="high" status="mitigated">
+
+The demo package is excluded from production deployment and remains testnet-only.
+
+</Finding>
+
+<Finding id="ORC-02" title="Adapter vaults lacked canonical market and underlying binding" severity="high" status="fixed">
+
+Requests, vaults, markets, SY registrations, and underlying types are now bound at both layers.
+
+</Finding>
+
+<Finding id="ORC-03" title="Oracle source identity could be forged" severity="high" status="fixed">
+
+Registered source witnesses and exact aggregator-rule binding now authenticate the source.
+
+</Finding>
+
+<Finding id="ORC-04" title="Markets did not bind one canonical price aggregator" severity="medium" status="fixed">
+
+Execution now validates exact aggregator, market, freshness, and single-use price information.
+
+</Finding>
+
+<Finding id="ORC-05" title="Outlier filtering cannot independently corroborate one source" severity="medium" status="acknowledged">
+
+Source count, freshness, required-source, deviation monitoring, and emergency pause remain the controls.
+
+</Finding>
+
+<Finding id="ORC-06" title="Adapter freshness could use read time instead of source update time" severity="medium" status="acknowledged">
+
+Ember is not deployed. Activation requires authoritative upstream timestamps and production-ABI tests.
+
+</Finding>
+
+<Finding id="ORC-07" title="Upstream package upgrades can block adapter liveness" severity="medium" status="acknowledged">
+
+Upstream versions remain an operational dependency with monitoring and recovery runbooks.
+
+</Finding>
+
+<Finding id="ORC-08" title="Scallop withdrawal queues retain lifecycle and storage exposure" severity="medium" status="acknowledged">
+
+Owner cancellation, administrative resolution, linked storage, and queued-reserve accounting mitigate the risk.
+
+</Finding>
+
+<Finding id="ORC-09" title="Current and NAVI payout equality is not proven" severity="medium" status="acknowledged">
+
+Both adapters are excluded until actual payout equality is proven or settlement uses actual output with a user minimum.
+
+</Finding>
+
+<Finding id="ORC-10" title="Current rates narrow into a u64 domain" severity="low" status="acknowledged">
+
+Current is not deployed; production activation requires domain and overflow validation.
+
+</Finding>
+
+<Finding id="ORC-11" title="The first Scallop withdrawal window starts with zero quota" severity="low" status="acknowledged">
+
+The accepted keeper model requires an immediate refresh after vault creation and baseline monitoring.
+
+</Finding>
+
+<Finding id="ORC-12" title="Scallop accrual and version checks add liveness dependencies" severity="low" status="acknowledged">
+
+Accrual and upstream version availability remain monitored integration dependencies.
+
+</Finding>
+
+<Finding id="ORC-13" title="NAVI AccountCap and residual balance lifecycle is incomplete" severity="low" status="acknowledged">
+
+NAVI remains undeployed until capability, recovery, and migration semantics are complete.
+
+</Finding>
+
+<Finding id="ORC-14" title="The oracle package originally lacked version and pause enforcement" severity="low" status="fixed">
+
+Persistent oracle paths now enforce package registration, version, and pause checks.
+
+</Finding>
+
+<Finding id="ORC-15" title="Suilend conversion may read a pre-compound ratio" severity="informational" status="acknowledged">
+
+Suilend remains undeployed until production compound and refresh semantics are validated.
+
+</Finding>
+
+### Jitter core
+
+<Finding id="JIT-01" title="The PY-index arithmetic domain guard is not enforced" severity="medium" status="acknowledged">
+
+Deployment is restricted to the tested domain with monitoring and an upgrade path until safe guard values are calibrated.
+
+</Finding>
+
+<Finding id="JIT-02" title="Rewarder composition could create topology drift" severity="medium" status="fixed">
+
+The architecture now binds one canonical distributor and validates market scope atomically.
+
+</Finding>
+
+<Finding id="JIT-03" title="Maturity settlement depends on an authorized live keeper" severity="medium" status="acknowledged">
+
+Keeper service levels, alerting, and settlement drills remain explicit operational requirements.
+
+</Finding>
+
+<Finding id="JIT-04" title="Disabling a RewardDistributor could freeze exits" severity="medium" status="fixed">
+
+Campaign close is separate from emergency pause, preserving liability-reducing exits.
+
+</Finding>
+
+<Finding id="JIT-05" title="Small liquidity removal could round PT output to zero" severity="medium" status="fixed">
+
+Execution uses the quoted candidate state and rejects zero-output removals.
+
+</Finding>
+
+<Finding id="JIT-06" title="Market creation could accept pre-issued PT or YT supply" severity="medium" status="fixed">
+
+Market creation now requires zero PT and YT TreasuryCap supply.
+
+</Finding>
+
+<Finding id="JIT-07" title="SY deregistration could strand an active market" severity="medium" status="fixed">
+
+Deregistration is rejected while a live market or liability references the SY registration.
+
+</Finding>
+
+<Finding id="JIT-08" title="Underlying type was not fully enforced across mint and burn" severity="medium" status="fixed">
+
+Exact underlying type binding now spans requests, vaults, and market state.
+
+</Finding>
+
+<Finding id="JIT-09" title="Fee recipient and treasury accounting could diverge" severity="medium" status="fixed">
+
+One on-chain treasury source now controls recipient and accounting state.
+
+</Finding>
+
+<Finding id="JIT-10" title="Global pause lookup is linear in configured domains" severity="medium" status="acknowledged">
+
+Bounded operational use and explicit unpause cleanup are accepted for the small configured set.
+
+</Finding>
+
+<Finding id="JIT-11" title="An external YT bridge could bypass canonical reward gates" severity="low" status="fixed">
+
+The bridge was removed; YT exposure changes stay on canonical gated position routes.
+
+</Finding>
+
+<Finding id="JIT-12" title="A position could be destroyed with accrued interest" severity="low" status="fixed">
+
+Destruction now requires PT, YT, LP, and accrued interest to be zero.
+
+</Finding>
+
+<Finding id="JIT-13" title="A zero deadline permits a PTB-level opt-out" severity="low" status="acknowledged">
+
+Zero remains an explicit integration choice; user-facing SDK routes must enforce nonzero deadlines.
+
+</Finding>
+
+<Finding id="JIT-14" title="Post-swap events could be recomputed from different state" severity="low" status="fixed">
+
+Events now emit values captured from the executed candidate state.
+
+</Finding>
+
+<Finding id="JIT-15" title="RouterMintEvent was dead or inconsistently emitted" severity="low" status="fixed">
+
+The unused event and its dead construction path were removed.
+
+</Finding>
+
+<Finding id="JIT-16" title="Ownerless minimum LP complicated final withdrawal" severity="medium" status="fixed">
+
+The revised lifecycle lets circulating LP reach zero and reserves drain safely.
+
+</Finding>
+
+### Rewards and points
+
+<Finding id="EXT-01" title="Point accounting could run without a canonical market reward gate" severity="medium" status="fixed">
+
+Point configuration and reward topology now attach to the canonical market and distributor gate.
+
+</Finding>
+
+<Finding id="EXT-02" title="Global point rewarders could contaminate unrelated markets" severity="medium" status="fixed">
+
+Market-scoped rewarder selection replaced the mutable global union.
+
+</Finding>
+
+<Finding id="EXT-03" title="Rewarder re-registration could backpay historical exposure" severity="medium" status="fixed">
+
+Registration generation and start-time baselines prevent historical backpay.
+
+</Finding>
+
+<Finding id="EXT-04" title="LP referral state lacked exact policy and project binding" severity="medium" status="fixed">
+
+Referral state now binds policy, project, position, owner, and registration generation.
+
+</Finding>
+
+<Finding id="EXT-05" title="LP point claims were not reliably reachable" severity="medium" status="fixed">
+
+Canonical permissionless checkpoint and claim routes preserve detached pending rewards.
+
+</Finding>
+
+<Finding id="EXT-06" title="Pool reward scope used ambiguous zero-address semantics" severity="low" status="acknowledged">
+
+The accepted architecture documents scope topology and pairs LP and pool checkpoint capabilities.
+
+</Finding>
+
+<Finding id="EXT-07" title="Reward withdrawal authority lacks a narrow governance lane" severity="low" status="acknowledged">
+
+Withdrawal remains an auditable ACL or multisig governance operation.
+
+</Finding>
+
+<Finding id="EXT-08" title="Reward accounting can retain terminal fractional dust" severity="low" status="acknowledged">
+
+Claimant-less sub-raw dust is accepted because principal is unaffected; closed-lot residuals are monitored.
+
+</Finding>
+
+<Finding id="EXT-09" title="PointCap was not bound to the canonical Scoreboard" severity="low" status="fixed">
+
+Canonical integrations use Project and Stamp witnesses and isolate manual issuance.
+
+</Finding>
+
+<Finding id="EXT-10" title="PointConfig catch-up can require many versions" severity="low" status="acknowledged">
+
+Permissionless bounded checkpoints mitigate the accepted catch-up requirement.
+
+</Finding>
+
+<Finding id="EXT-11" title="LP multiplier updates could skip an uncheckpointed interval" severity="low" status="fixed">
+
+Effective-time versioning settles old intervals under their prior configuration.
+
+</Finding>
+
+### Policy and auxiliary packages
+
+<Finding id="AUX-02" title="Reward pause could freeze order escrow exits" severity="medium" status="fixed">
+
+Normal campaign close is separate from emergency pause and preserves canonical exits.
+
+</Finding>
+
+<Finding id="AUX-03" title="The experimental orderbook retained unbounded traversal risk" severity="medium" status="mitigated">
+
+The package is excluded from V1 deployment and retains bounded keeper cleanup requirements.
+
+</Finding>
+
+<Finding id="AUX-06" title="Orderbook reward exposure was not a reliable canonical source" severity="medium" status="fixed">
+
+Orderbook exposure was removed from canonical rewards until a stable topology exists.
+
+</Finding>
+
+<Finding id="AUX-10" title="The experimental orderbook could strand terminal fee dust" severity="low" status="fixed">
+
+Cumulative fee accounting resolves the issue before any future deployment.
+
+</Finding>
+
+### Math and solvers
+
+<Finding id="MATH-01" title="SY-to-PT quote and execution could disagree at a curve boundary" severity="medium" status="fixed">
+
+Execution now consumes the exact candidate state returned by the solver.
+
+</Finding>
+
+<Finding id="MATH-02" title="Exact-out search could miss feasible depth after an invalid probe" severity="low" status="fixed">
+
+The solver recovers the last valid bracket and resumes maximality search.
+
+</Finding>
+
+<Finding id="MATH-03" title="The exp2 implementation consumed excessive gas" severity="low" status="acknowledged">
+
+The bounded implementation is optimized, with gas and dense-vector behavior retained as monitored limits.
+
+</Finding>
+
+<Finding id="MATH-04" title="last_ln used a sentinel that overlapped a valid value" severity="low" status="fixed">
+
+An explicit validity representation replaced the overlapping sentinel.
+
+</Finding>
+
+<Finding id="MATH-05" title="Aggregate multiplication can exceed the intended domain" severity="low" status="acknowledged">
+
+The extreme index frontier remains accepted until the guard is calibrated or the proof domain expands.
+
+</Finding>
+
+<Finding id="MATH-06" title="Unused public math helpers enlarged the audited ABI" severity="informational" status="fixed">
+
+Unused public helpers were removed from the production surface.
+
+</Finding>
+
+<Finding id="MATH-07" title="Signed exponential inputs require an explicit negative domain" severity="informational" status="acknowledged">
+
+The signed Q64 negative domain remains a documented boundary that must fail closed outside its range.
+
+</Finding>
+
+### Administration and registry
+
+<Finding id="ADM-01" title="Registry design permits multiple instances and raw object IDs" severity="low" status="acknowledged">
+
+Canonical discovery, exact IDs, and explicit multi-instance administration mitigate the accepted design.
+
+</Finding>
+
+<Finding id="ADM-02" title="Zero-output checks had ambiguous zero-basis-point semantics" severity="low" status="fixed">
+
+Nonzero result validation is now independent from the configured basis-point value.
+
+</Finding>
+
+<Finding id="ADM-03" title="AdminCap remains a broad trusted authority" severity="informational" status="acknowledged">
+
+AdminCap is an explicit multisig trust boundary; scoped ACL operations are preferred.
+
+</Finding>
+
+<Finding id="ADM-04" title="ACL events and role tombstones were incomplete" severity="informational" status="acknowledged">
+
+Lifecycle events and generation controls harden the accepted governance boundary.
+
+</Finding>
+
+<Finding id="ADM-05" title="Registry default state can outlive a delisted market" severity="informational" status="acknowledged">
+
+SDK and indexer revalidation plus lifecycle runbooks control the discovery-layer risk.
+
+</Finding>
+
+### Version control
+
+<Finding id="VC-01" title="Root configuration did not validate its package version" severity="high" status="fixed">
+
+Governance and downstream checks now assert the root marker and allowed version.
+
+</Finding>
+
+<Finding id="VC-02" title="Deployment discovery could miss a nested package marker" severity="medium" status="fixed">
+
+Deployment manifests now use recursive discovery with regression coverage.
+
+</Finding>
+
+<Finding id="VC-03" title="Position transfer-lock mutation lacked a root version gate" severity="low" status="fixed">
+
+Persistent position mutation now requires GlobalConfig and core package version checks.
+
+</Finding>
+
+<Finding id="VC-04" title="A paused adapter could create new custody state" severity="medium" status="fixed">
+
+Creation requires strict-active status; version-only paths are limited to liability reduction.
+
+</Finding>
+
+<Finding id="VC-05" title="Package-registration resume was not idempotent" severity="low" status="fixed">
+
+Same-version registration is idempotent and version changes require explicit approval.
+
+</Finding>
+
+<Finding id="VC-06" title="NAVI exposed an ungated public helper" severity="informational" status="fixed">
+
+The helper is private and only the gated ticket route remains public.
+
+</Finding>
+
+<Finding id="VC-07" title="A paused campaign could be re-enabled through recovery" severity="low" status="fixed">
+
+Recovery may disable a campaign, but enabling now requires strict package-active status.
+
+</Finding>
+
+## Formal verification evidence
+
+The formal program passed **191 of 191 shared-suite proofs**, mapped all **65 Jitter findings**,
+and detected all **14 deliberate mutations**. Direct proofs and models cover solver boundaries,
+market-ledger conservation, calendar reward-lot conservation, registry behavior, adapter
+conversion direction, reserve-fee remainders, and final user-fund preservation.
+
+Ten symbolic obligations remain at the proof frontier: indexed-quote zero-edge bodies,
+production logarithms, power-of-two log specifications, production natural logarithm behavior,
+and full-domain `sqrt_u256` convergence. These are coverage gaps rather than confirmed
+vulnerabilities; they become release blockers if production parameters can reach those domains.
+
+Formal verification does not prove third-party adapter semantics, oracle economic truth, honest
+administration or keeper operation, arbitrary transaction gas feasibility, RPC availability,
+frontend correctness, wallet behavior, key custody, or specification completeness.
+
+The original deliverables and publication history are available in the
+[public report repository](https://github.com/Zzyzx-Security/Jitter-Audit-Report).
