@@ -105,6 +105,15 @@ const proofTimeline = `${PROOF_HOLD_VH}|${PROOF_SWEEP_VH}|${proofProjects.length
                   <p>{project.kind}</p>
                   <h3>{nameRuns(project.name).map((run) => (run.cap ? <span class="proof-name-cap">{run.text}</span> : run.text))}</h3>
                   <p>{project.description}</p>
+                  <img
+                    class="proof-copy__shot"
+                    src={project.image.src}
+                    alt={`${project.name} interface`}
+                    width={project.image.width}
+                    height={project.image.height}
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <a class="ink-link" href={project.href} target="_blank" rel="noreferrer">Visit {project.name} <span aria-hidden="true">↗</span></a>
                 </article>
               ))}
@@ -302,7 +311,10 @@ const proofTimeline = `${PROOF_HOLD_VH}|${PROOF_SWEEP_VH}|${proofProjects.length
   .proof-image figcaption { margin-top: 0.8rem; color: #374143; font-size: 0.68rem; line-height: 1.35; }
   /* The last cyan on the site: three hex values with baked-in alpha, which the
    * token sweep did not match. The scan line takes the brand signal now. */
-  .witness-scan { position: absolute; z-index: 3; top: 0; bottom: 0; left: 0; display: block; width: 3px; background: linear-gradient(180deg, color-mix(in srgb, var(--signal) 30%, transparent), color-mix(in srgb, var(--signal) 92%, white) 16%, color-mix(in srgb, var(--signal) 92%, white) 84%, color-mix(in srgb, var(--signal) 30%, transparent)); box-shadow: 0 0 3px 1px rgba(255, 255, 255, 0.95), 0 0 26px 7px color-mix(in srgb, var(--signal) 55%, transparent); opacity: 0; }
+  /* `--scan` is set from the incoming product's own accent as the sweep runs,
+     so the line reads as that product arriving rather than as one flat alert. */
+  .proof-copy__shot { display: none; }
+  .witness-scan { --scan: var(--signal); position: absolute; z-index: 3; top: 0; bottom: 0; left: 0; display: block; width: 1.5px; background: linear-gradient(180deg, color-mix(in srgb, var(--scan) 30%, transparent), color-mix(in srgb, var(--scan) 92%, white) 16%, color-mix(in srgb, var(--scan) 92%, white) 84%, color-mix(in srgb, var(--scan) 30%, transparent)); box-shadow: 0 0 2px 0.5px rgba(255, 255, 255, 0.9), 0 0 18px 5px color-mix(in srgb, var(--scan) 45%, transparent); opacity: 0; }
 
   /* Static fallback: the deck reads as a feature plus a compact ledger list, one image, no sweep. */
   @media (max-width: 1023px), (max-height: 639px) {
@@ -313,8 +325,12 @@ const proofTimeline = `${PROOF_HOLD_VH}|${PROOF_SWEEP_VH}|${proofProjects.length
     .proof-deck > .proof-copy + .proof-copy > p:nth-of-type(2) { font-size: 0.72rem; }
     .proof-deck > .proof-copy + .proof-copy .ink-link { margin-top: 0.65rem; font-size: 0.72rem; }
     .proof-index { display: none; }
-    .proof-frame:not(:first-child) { display: none; }
+    /* The stage can only ever show frame 1 without the pinned sweep, and its
+       caption goes stale. Each copy carries its own shot below instead. */
+    .proof-image { display: none; }
     .witness-scan { display: none; }
+    .proof-copy__shot { display: block; width: 100%; height: auto; margin-top: 1.1rem; border: 1px solid var(--hairline); background: var(--panel-bright); }
+    .proof-deck > .proof-copy + .proof-copy .proof-copy__shot { margin-top: 0.9rem; }
   }
 
   .services-v7 { --edge: clamp(2rem, 4.6vw, 5.5rem); position: relative; padding: clamp(6.5rem, 13vh, 10rem) var(--edge); border-top: 1px solid var(--hairline); background: var(--panel); }

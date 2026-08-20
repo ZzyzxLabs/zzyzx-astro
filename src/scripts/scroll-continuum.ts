@@ -442,6 +442,9 @@ export function mountScrollContinuum(options: ScrollContinuumOptions = {}) {
           proofCopies.forEach((copy, index) => copy.setAttribute("data-active", index === 0 ? "true" : "false"));
           proofIndexItems.forEach((item, index) => item.setAttribute("data-active", index === 0 ? "true" : "false"));
           if (witnessScan) witnessScan.style.opacity = "0";
+          // The caption used to keep whatever the last sweep set, so a phone
+          // could show one product's shot under another product's name.
+          if (proofCaption) proofCaption.textContent = captionFor(0);
           settledCopy = 0;
           return;
         }
@@ -476,7 +479,12 @@ export function mountScrollContinuum(options: ScrollContinuumOptions = {}) {
 
         if (witnessScan) {
           witnessScan.style.opacity = sweepProgress >= 0 ? "1" : "0";
-          if (sweepProgress >= 0) witnessScan.style.left = (sweepProgress * 100).toFixed(3) + "%";
+          if (sweepProgress >= 0) {
+            witnessScan.style.left = (sweepProgress * 100).toFixed(3) + "%";
+            // Colour the line with the product it is revealing.
+            const accent = proofCopies[Math.min(base + 1, count - 1)]?.style.getPropertyValue("--accent").trim();
+            if (accent) witnessScan.style.setProperty("--scan", accent);
+          }
         }
 
         if (incoming !== settledCopy) {
