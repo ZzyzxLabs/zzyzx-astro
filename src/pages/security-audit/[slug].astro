@@ -381,25 +381,24 @@ const reports = data.reports.length > 0
 
   .writeup__reports {
     margin-top: 2rem;
-    border: 1px solid color-mix(in srgb, var(--audit-signal) 30%, transparent);
-    padding: 1.75rem;
-    background:
-      linear-gradient(180deg, color-mix(in srgb, var(--audit-signal) 8%, transparent), transparent),
-      var(--audit-ground-2);
+    border: 1px solid var(--audit-line);
+    background: var(--audit-ground-2);
   }
 
   .writeup__reports-head {
     padding: 1.75rem;
+    border-bottom: 1px solid var(--audit-line);
   }
 
   .writeup__reports-head h2 {
     max-width: 36rem;
-    margin: 1rem 0 0;
+    margin: 0;
     font-family: var(--font-heading);
-    font-size: 1.2rem;
-    font-weight: 500;
-    line-height: 1.5;
-    color: var(--audit-ink-2);
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.45;
+    color: var(--audit-ink);
   }
 
   .writeup__report-grid {
