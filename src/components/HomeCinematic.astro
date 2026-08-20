@@ -300,7 +300,9 @@ const proofTimeline = `${PROOF_HOLD_VH}|${PROOF_SWEEP_VH}|${proofProjects.length
   .proof-image-window { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid rgba(10, 12, 13, 0.28); background: #08101d; }
   .proof-frame { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
   .proof-image figcaption { margin-top: 0.8rem; color: #374143; font-size: 0.68rem; line-height: 1.35; }
-  .witness-scan { position: absolute; z-index: 3; top: 0; bottom: 0; left: 0; display: block; width: 3px; background: linear-gradient(180deg, rgba(107, 209, 215, 0.3), #8ef0f6 16%, #8ef0f6 84%, rgba(107, 209, 215, 0.3)); box-shadow: 0 0 3px 1px rgba(255, 255, 255, 0.95), 0 0 26px 7px rgba(22, 134, 141, 0.55); opacity: 0; }
+  /* The last cyan on the site: three hex values with baked-in alpha, which the
+   * token sweep did not match. The scan line takes the brand signal now. */
+  .witness-scan { position: absolute; z-index: 3; top: 0; bottom: 0; left: 0; display: block; width: 3px; background: linear-gradient(180deg, color-mix(in srgb, var(--signal) 30%, transparent), color-mix(in srgb, var(--signal) 92%, white) 16%, color-mix(in srgb, var(--signal) 92%, white) 84%, color-mix(in srgb, var(--signal) 30%, transparent)); box-shadow: 0 0 3px 1px rgba(255, 255, 255, 0.95), 0 0 26px 7px color-mix(in srgb, var(--signal) 55%, transparent); opacity: 0; }
 
   /* Static fallback: the deck reads as a feature plus a compact ledger list, one image, no sweep. */
   @media (max-width: 1023px), (max-height: 639px) {
