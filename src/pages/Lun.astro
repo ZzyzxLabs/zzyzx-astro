@@ -1,5 +1,7 @@
 ---
+import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
+import lunPortrait from "../assets/member/lun.png";
 
 const skills = [
   "TypeScript",
@@ -112,18 +114,19 @@ const ongoing = [
 <Layout
   title="Lun | CTO @ Zzyzx Labs"
   description="Lun (倫) — Front-end engineer, Sui dApp builder, and open-source advocate. CTO at Zzyzx Labs pushing information literacy through code."
+  noindex
 >
   <main class="min-h-screen bg-black text-white">
     <div class="relative overflow-hidden">
-      <div class="pointer-events-none absolute -top-24 right-[-20%] h-72 w-72 rounded-full bg-orange-500/15 blur-3xl" aria-hidden="true"></div>
-      <div class="pointer-events-none absolute -bottom-24 left-[-10%] h-80 w-80 rounded-full bg-sky-500/10 blur-3xl" aria-hidden="true"></div>
-      <div class="pointer-events-none absolute top-1/3 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-fuchsia-500/10 blur-3xl" aria-hidden="true"></div>
+      <div class="pointer-events-none absolute -top-24 right-[-20%] h-72 w-72 rounded-full bg-[var(--shell-accent)]/15 blur-3xl" aria-hidden="true"></div>
+      <div class="pointer-events-none absolute -bottom-24 left-[-10%] h-80 w-80 rounded-full bg-[var(--shell-accent)]/10 blur-3xl" aria-hidden="true"></div>
+      <div class="pointer-events-none absolute top-1/3 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-[var(--shell-accent)]/10 blur-3xl" aria-hidden="true"></div>
 
       <div class="max-w-6xl mx-auto px-6 py-12 md:py-20 relative">
         <!-- Back link -->
         <a
           href="/"
-          class="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm uppercase tracking-widest mb-10 transition-colors animate-fade-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+          class="inline-flex min-h-7 items-center gap-2 text-white/70 hover:text-white text-sm font-medium mb-10 transition-colors animate-fade-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--shell-accent)] rounded"
         >
           <span aria-hidden="true">←</span> Back to Team
         </a>
@@ -136,9 +139,12 @@ const ongoing = [
           >
             <div class="grid gap-6 md:grid-cols-[240px_minmax(0,1fr)] md:items-center">
               <div class="relative aspect-3/4 rounded-2xl overflow-hidden">
-                <div class="absolute inset-0 bg-linear-to-br from-indigo-500 to-purple-600 opacity-50" aria-hidden="true"></div>
-                <img
-                  src="/member/lun.png"
+                <div class="absolute inset-0 bg-linear-to-br from-[var(--shell-accent)] to-purple-600 opacity-50" aria-hidden="true"></div>
+                <Image
+                  src={lunPortrait}
+                  widths={[320, 480, 640]}
+                  sizes="(max-width: 640px) 90vw, 480px"
+                  loading="eager"
                   alt="Portrait of Lun"
                   loading="eager"
                   decoding="async"
@@ -166,7 +172,7 @@ const ongoing = [
                 <nav aria-label="Lun's profiles" class="flex flex-wrap gap-2">
                   <a
                     href="mailto:w0979563238@gmail.com"
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--shell-accent)]"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                       <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
@@ -178,7 +184,7 @@ const ongoing = [
                     href="https://github.com/creaper9487"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--shell-accent)]"
                   >
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                       <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"></path>
@@ -189,7 +195,7 @@ const ongoing = [
                     href="https://x.com/creapergod"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--shell-accent)]"
                   >
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -200,7 +206,7 @@ const ongoing = [
                     href="https://discord.com/users/cr3ap3r9487"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--shell-accent)]"
                   >
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.04.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.331c-1.183 0-2.156-1.085-2.156-2.419 0-1.333.956-2.419 2.156-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.974 0c-1.183 0-2.156-1.085-2.156-2.419 0-1.333.955-2.419 2.156-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
@@ -270,7 +276,7 @@ const ongoing = [
                           href={p.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          class="text-orange-400 hover:text-orange-300 text-xs underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 rounded"
+                          class="inline-flex min-h-7 items-center text-[var(--shell-accent)] hover:text-[var(--shell-ink)] text-xs underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--shell-accent)] rounded"
                           aria-label={`Visit ${p.name} site`}
                         >
                           Site ↗
@@ -280,7 +286,7 @@ const ongoing = [
                         href={p.repo}
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="text-white/60 hover:text-white text-xs underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+                        class="inline-flex min-h-7 items-center text-white/60 hover:text-white text-xs underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--shell-accent)] rounded"
                         aria-label={`Open ${p.name} repo on GitHub`}
                       >
                         Repo ↗
@@ -316,9 +322,9 @@ const ongoing = [
                   </div>
                 </header>
                 <ul class="space-y-2 text-white/75 text-sm list-none p-0">
-                  <li class="flex gap-2"><span class="text-orange-500 mt-1" aria-hidden="true">•</span><span>Lead front-end and dApp architecture across SeaWallet, SeaPay and Nereus product lines.</span></li>
-                  <li class="flex gap-2"><span class="text-orange-500 mt-1" aria-hidden="true">•</span><span>Drive performance, accessibility and onboarding flow design — turning protocol mechanics into mainstream UX.</span></li>
-                  <li class="flex gap-2"><span class="text-orange-500 mt-1" aria-hidden="true">•</span><span>Mentor contributors and run technical workshops inside the Zzyzx Club and partner communities.</span></li>
+                  <li class="flex gap-2"><span class="text-[var(--shell-accent)] mt-1" aria-hidden="true">•</span><span>Lead front-end and dApp architecture across SeaWallet, SeaPay and Nereus product lines.</span></li>
+                  <li class="flex gap-2"><span class="text-[var(--shell-accent)] mt-1" aria-hidden="true">•</span><span>Drive performance, accessibility and onboarding flow design — turning protocol mechanics into mainstream UX.</span></li>
+                  <li class="flex gap-2"><span class="text-[var(--shell-accent)] mt-1" aria-hidden="true">•</span><span>Mentor contributors and run technical workshops inside the Zzyzx Club and partner communities.</span></li>
                 </ul>
               </article>
 
@@ -334,8 +340,8 @@ const ongoing = [
                   </div>
                 </header>
                 <ul class="space-y-2 text-white/75 text-sm list-none p-0">
-                  <li class="flex gap-2"><span class="text-orange-500 mt-1" aria-hidden="true">•</span><span>Delivered the advanced applications session of the NTHU × Sui workshop series.</span></li>
-                  <li class="flex gap-2"><span class="text-orange-500 mt-1" aria-hidden="true">•</span><span>Built hands-on materials guiding students from Move basics to live dApp deployment.</span></li>
+                  <li class="flex gap-2"><span class="text-[var(--shell-accent)] mt-1" aria-hidden="true">•</span><span>Delivered the advanced applications session of the NTHU × Sui workshop series.</span></li>
+                  <li class="flex gap-2"><span class="text-[var(--shell-accent)] mt-1" aria-hidden="true">•</span><span>Built hands-on materials guiding students from Move basics to live dApp deployment.</span></li>
                 </ul>
               </article>
 
@@ -351,8 +357,8 @@ const ongoing = [
                   </div>
                 </header>
                 <ul class="space-y-2 text-white/75 text-sm list-none p-0">
-                  <li class="flex gap-2"><span class="text-orange-500 mt-1" aria-hidden="true">•</span><span>Lead front-end and product on rapid prototyping teams; turn ideas into shippable demos within 48 hours.</span></li>
-                  <li class="flex gap-2"><span class="text-orange-500 mt-1" aria-hidden="true">•</span><span>Multi-time finalist and prize-winner across Web3, civic-tech, and cyber-security tracks.</span></li>
+                  <li class="flex gap-2"><span class="text-[var(--shell-accent)] mt-1" aria-hidden="true">•</span><span>Lead front-end and product on rapid prototyping teams; turn ideas into shippable demos within 48 hours.</span></li>
+                  <li class="flex gap-2"><span class="text-[var(--shell-accent)] mt-1" aria-hidden="true">•</span><span>Multi-time finalist and prize-winner across Web3, civic-tech, and cyber-security tracks.</span></li>
                 </ul>
               </article>
             </div>
@@ -376,13 +382,13 @@ const ongoing = [
             <h2 id="ongoing-h" class="text-2xl font-bold text-white/90 mb-4">Ongoing Work</h2>
             <ul class="space-y-2 text-white/75 text-sm list-none p-0">
               {ongoing.map((o) => (
-                <li class="flex gap-2"><span class="text-orange-500 mt-1" aria-hidden="true">•</span><span>{o}</span></li>
+                <li class="flex gap-2"><span class="text-[var(--shell-accent)] mt-1" aria-hidden="true">•</span><span>{o}</span></li>
               ))}
             </ul>
           </section>
 
           <!-- Collab CTA -->
-          <section class="rounded-3xl border border-white/10 bg-linear-to-br from-indigo-500/10 via-fuchsia-500/5 to-orange-500/10 p-6 md:p-8 backdrop-blur animate-fade-in text-center" aria-labelledby="cta-h">
+          <section class="rounded-3xl border border-white/10 bg-linear-to-br from-[var(--shell-accent)]/10 via-fuchsia-500/5 to-orange-500/10 p-6 md:p-8 backdrop-blur animate-fade-in text-center" aria-labelledby="cta-h">
             <h2 id="cta-h" class="text-2xl font-bold text-white mb-3">Got a wonderful idea?</h2>
             <p class="text-white/75 max-w-xl mx-auto mb-5">
               Always open to thoughtful collabs in front-end, Sui dApps, open source and info-literacy.
@@ -390,7 +396,7 @@ const ongoing = [
             <div class="flex flex-wrap justify-center gap-3">
               <a
                 href="mailto:w0979563238@gmail.com"
-                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-black hover:bg-white/90 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-black hover:bg-white/90 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--shell-accent)]"
               >
                 Start a conversation
               </a>
@@ -398,7 +404,7 @@ const ongoing = [
                 href="https://github.com/creaper9487"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/20 hover:bg-white/10 text-white text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/20 hover:bg-white/10 text-white text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--shell-accent)]"
               >
                 See more on GitHub
               </a>

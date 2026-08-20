@@ -41,8 +41,8 @@
   .product-hero {
     overflow: hidden;
     border-bottom: 1px solid rgba(255, 255, 255, 0.09);
-    background: #08090a;
-    color: #f1f3f0;
+    background: var(--shell-bg);
+    color: var(--shell-ink);
   }
 
   .product-hero__inner {
@@ -57,11 +57,10 @@
   }
 
   .product-hero__label {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #74d7dd;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    color: var(--shell-ink);
   }
 
   .product-hero h1 {
@@ -72,7 +71,7 @@
     font-weight: 500;
     line-height: 0.97;
     letter-spacing: -0.058em;
-    color: #f1f3f0;
+    color: var(--shell-ink);
   }
 
   .product-hero__support {
@@ -83,7 +82,7 @@
     max-width: 31rem;
     font-size: 1.0625rem;
     line-height: 1.75;
-    color: #969ea4;
+    color: var(--shell-ink-3);
   }
 
   .product-hero__actions {
@@ -110,14 +109,14 @@
   }
 
   .product-hero__primary {
-    border-color: #74d7dd;
-    background: #74d7dd;
-    color: #071012;
+    border-color: var(--shell-accent);
+    background: var(--shell-accent);
+    color: var(--shell-on-accent);
   }
 
   .product-hero__secondary {
     border-color: rgba(242, 243, 239, 0.2);
-    color: #d7dad7;
+    color: var(--shell-ink-2);
   }
 
   .product-hero__primary:hover,
@@ -126,26 +125,26 @@
   }
 
   .product-hero__primary:hover {
-    border-color: #a3e6e9;
-    background: #a3e6e9;
+    border-color: var(--shell-accent-ink);
+    background: var(--shell-accent-ink);
   }
 
   .product-hero__secondary:hover {
     border-color: rgba(116, 215, 221, 0.65);
-    color: #a3e6e9;
+    color: var(--shell-accent-ink);
   }
 
   .product-hero__primary:focus-visible,
   .product-hero__secondary:focus-visible,
   .product-hero__proof a:focus-visible {
-    outline: 2px solid #74d7dd;
+    outline: 2px solid var(--shell-accent);
     outline-offset: 4px;
   }
 
   .product-hero__proof {
     margin: 3.25rem 0 0;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    background: #0b0d0f;
+    background: var(--shell-surface);
   }
 
   .product-hero__proof img {
@@ -165,14 +164,14 @@
 
   .product-hero__proof figcaption p {
     max-width: 52rem;
-    color: #858e95;
+    color: var(--shell-ink-3);
   }
 
   .product-hero__proof figcaption a {
     width: fit-content;
     border-bottom: 1px solid rgba(116, 215, 221, 0.45);
     padding-bottom: 0.15rem;
-    color: #9de2e6;
+    color: var(--shell-accent-ink);
     font-weight: 600;
     text-decoration: none;
   }

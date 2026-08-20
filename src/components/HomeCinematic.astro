@@ -246,11 +246,11 @@ const proofTimeline = `${PROOF_HOLD_VH}|${PROOF_SWEEP_VH}|${proofProjects.length
   .home-v7 {
     --black: #050607;
     --ink: #0a0c0d;
-    --paper: #c9cdca;
-    --paper-bright: #d8dcd8;
+    --panel: #c9cdca;
+    --panel-bright: #d8dcd8;
     --muted: #4c5557;
     --hairline: rgba(10, 12, 13, 0.2);
-    --cyan: #16868d;
+    --signal: var(--brand-signal);
     position: relative;
     isolation: isolate;
     overflow-x: clip;
@@ -258,13 +258,13 @@ const proofTimeline = `${PROOF_HOLD_VH}|${PROOF_SWEEP_VH}|${proofProjects.length
     color: var(--ink);
   }
 
-  .folio { position: relative; width: 100%; background: var(--paper); }
+  .folio { position: relative; width: 100%; background: var(--panel); }
   .line-mask { display: block; overflow: clip; padding-block: 0.02em 0.08em; }
   .line-mask > span { display: block; }
 
-  .ink-link { display: inline-flex; width: fit-content; align-items: center; gap: 0.65rem; padding-bottom: 0.23rem; border-bottom: 1px solid var(--cyan); color: var(--ink); font-family: var(--font-heading), sans-serif; font-size: 0.86rem; font-weight: 600; line-height: 1.35; text-decoration: none; transition: border-color 180ms ease, color 180ms ease; }
-  .ink-link:hover { border-color: var(--ink); color: #145e63; }
-  .ink-link:focus-visible, .service-row a:focus-visible, .credit a:focus-visible { outline: 2px solid #0a565b; outline-offset: 5px; }
+  .ink-link { display: inline-flex; width: fit-content; min-height: 1.75rem; align-items: center; gap: 0.65rem; padding-bottom: 0.23rem; border-bottom: 1px solid var(--signal); color: var(--ink); font-family: var(--font-heading), sans-serif; font-size: 0.86rem; font-weight: 600; line-height: 1.35; text-decoration: none; transition: border-color 180ms ease, color 180ms ease; }
+  .ink-link:hover { border-color: var(--ink); color: var(--brand-signal); }
+  .ink-link:focus-visible, .service-row a:focus-visible, .credit a:focus-visible { outline: 2px solid var(--brand-signal); outline-offset: 5px; }
 
   .hero-v7 { min-height: 100dvh; padding-top: 4.25rem; }
   .hero-grid { display: grid; min-height: calc(100dvh - 4.25rem); grid-template-columns: minmax(0, 7fr) minmax(27rem, 5fr); }
@@ -282,8 +282,8 @@ const proofTimeline = `${PROOF_HOLD_VH}|${PROOF_SWEEP_VH}|${proofProjects.length
 
   .work-v7 { border-top: 1px solid var(--hairline); }
   .proof-story { position: relative; }
-  .proof-stage { position: relative; display: grid; min-height: calc(100dvh - 4.25rem); grid-template-columns: minmax(18rem, 3.4fr) minmax(0, 8.6fr); overflow: clip; background: var(--paper-bright); }
-  .proof-ledger { position: relative; z-index: 6; display: grid; min-width: 0; align-content: space-between; padding: clamp(2rem, 4vw, 4.2rem) clamp(1.6rem, 3vw, 3.5rem); border-right: 1px solid var(--hairline); background: var(--paper-bright); }
+  .proof-stage { position: relative; display: grid; min-height: calc(100dvh - 4.25rem); grid-template-columns: minmax(18rem, 3.4fr) minmax(0, 8.6fr); overflow: clip; background: var(--panel-bright); }
+  .proof-ledger { position: relative; z-index: 6; display: grid; min-width: 0; align-content: space-between; padding: clamp(2rem, 4vw, 4.2rem) clamp(1.6rem, 3vw, 3.5rem); border-right: 1px solid var(--hairline); background: var(--panel-bright); }
   .proof-ledger header h2 { margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(2.4rem, 3.3vw, 3.6rem); font-weight: 470; line-height: 0.94; letter-spacing: -0.055em; }
   .proof-ledger header p { margin: 0.8rem 0 0; color: var(--muted); font-size: 0.88rem; }
   .proof-deck { display: grid; }
@@ -315,7 +315,7 @@ const proofTimeline = `${PROOF_HOLD_VH}|${PROOF_SWEEP_VH}|${proofProjects.length
     .witness-scan { display: none; }
   }
 
-  .services-v7 { --edge: clamp(2rem, 4.6vw, 5.5rem); position: relative; padding: clamp(6.5rem, 13vh, 10rem) var(--edge); border-top: 1px solid var(--hairline); background: var(--paper); }
+  .services-v7 { --edge: clamp(2rem, 4.6vw, 5.5rem); position: relative; padding: clamp(6.5rem, 13vh, 10rem) var(--edge); border-top: 1px solid var(--hairline); background: var(--panel); }
   .services-heading { display: grid; grid-template-columns: minmax(0, 8fr) minmax(16rem, 4fr); align-items: end; gap: 2rem; padding-bottom: clamp(4rem, 9vh, 7rem); }
   .services-heading h2 { position: relative; z-index: 6; margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(3.5rem, 6.8vw, 7rem); font-weight: 450; line-height: 0.84; letter-spacing: -0.074em; }
   .services-heading p { position: relative; z-index: 6; max-width: 23rem; margin: 0 0 0.35rem; color: var(--muted); font-size: 0.96rem; line-height: 1.5; }
@@ -330,7 +330,7 @@ const proofTimeline = `${PROOF_HOLD_VH}|${PROOF_SWEEP_VH}|${proofProjects.length
   .service-description { max-width: 34rem; margin: 0; color: #4d5557; font-size: 0.9rem; line-height: 1.5; }
   .service-arrow { justify-self: end; font-size: 1.25rem; }
 
-  .studio-v7 { position: relative; z-index: 6; padding: clamp(6rem, 12vh, 9rem) clamp(2rem, 4.6vw, 5.5rem); background: var(--paper); }
+  .studio-v7 { position: relative; z-index: 6; padding: clamp(6rem, 12vh, 9rem) clamp(2rem, 4.6vw, 5.5rem); background: var(--panel); }
   .studio-v7 > header { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); }
   .studio-v7 h2 { grid-column: 1 / 8; max-width: 14ch; margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(2.8rem, 4.8vw, 5rem); font-weight: 460; line-height: 0.92; letter-spacing: -0.062em; }
   .credit-roll { display: grid; margin-top: clamp(4rem, 9vh, 7rem); grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--hairline); }
@@ -338,17 +338,17 @@ const proofTimeline = `${PROOF_HOLD_VH}|${PROOF_SWEEP_VH}|${proofProjects.length
   .credit + .credit { border-left: 1px solid var(--hairline); }
   .credit-name { width: fit-content; color: var(--ink); font-family: var(--font-heading), sans-serif; font-size: clamp(1.1rem, 1.55vw, 1.45rem); font-weight: 600; letter-spacing: -0.035em; text-decoration: none; }
   /* Two of these names open a profile and three do not; they used to look identical.
-     The link now carries the cyan rule and arrow every other link on this page uses. */
-  a.credit-name { display: inline-flex; align-items: baseline; gap: 0.35rem; padding-bottom: 0.15rem; border-bottom: 1px solid var(--cyan); transition: border-color 180ms ease, color 180ms ease; }
+     The link now carries the signal rule and arrow every other link on this page uses. */
+  a.credit-name { display: inline-flex; align-items: baseline; gap: 0.35rem; padding-bottom: 0.15rem; border-bottom: 1px solid var(--signal); transition: border-color 180ms ease, color 180ms ease; }
   a.credit-name span { font-size: 0.62em; }
-  a.credit-name:hover { border-color: var(--ink); color: #145e63; }
+  a.credit-name:hover { border-color: var(--ink); color: var(--brand-signal); }
   .credit-role { max-width: 15rem; color: var(--muted); font-size: 0.72rem; line-height: 1.4; }
   /* The systems each operator shipped, in the colours those products carry in the
      ledger above, so the roll is evidence rather than an assertion. */
   .credit-systems { display: flex; flex-wrap: wrap; gap: 0.3rem 0.8rem; margin: 0.5rem 0 0; padding: 0; list-style: none; }
   .credit-systems li { color: var(--accent); font-family: var(--font-heading), sans-serif; font-size: 0.73rem; font-weight: 600; letter-spacing: -0.012em; }
 
-  .cta-v7 { position: relative; display: grid; min-height: 68dvh; grid-template-columns: 4fr 8fr; align-items: center; padding: clamp(5rem, 10vh, 8rem) clamp(2rem, 4.6vw, 5.5rem); border-top: 1px solid var(--hairline); background: var(--paper); }
+  .cta-v7 { position: relative; display: grid; min-height: 68dvh; grid-template-columns: 4fr 8fr; align-items: center; padding: clamp(5rem, 10vh, 8rem) clamp(2rem, 4.6vw, 5.5rem); border-top: 1px solid var(--hairline); background: var(--panel); }
   .cta-seal-space { min-height: 16rem; }
   .cta-copy { position: relative; z-index: 6; padding-left: clamp(1.5rem, 4vw, 4rem); border-left: 1px solid var(--hairline); }
   .cta-copy h2 { max-width: 12ch; margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(3rem, 5.5vw, 5.6rem); font-weight: 460; line-height: 0.88; letter-spacing: -0.068em; }
@@ -377,7 +377,7 @@ const proofTimeline = `${PROOF_HOLD_VH}|${PROOF_SWEEP_VH}|${proofProjects.length
     .proof-index li[data-active="true"] { color: var(--ink); }
     .proof-index-num { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.08em; }
     .proof-index-name { font-family: var(--font-heading), sans-serif; font-size: clamp(0.68rem, 1.5vh, 0.78rem); font-weight: 600; letter-spacing: -0.01em; }
-    .proof-index-rule { display: block; height: 1px; background: var(--accent, var(--cyan)); transform: scaleX(0); transform-origin: left center; transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1); }
+    .proof-index-rule { display: block; height: 1px; background: var(--accent, var(--signal)); transform: scaleX(0); transform-origin: left center; transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1); }
     .proof-index li[data-active="true"] .proof-name-cap { color: var(--accent, inherit); }
     .proof-index li[data-active="true"] .proof-index-rule { transform: scaleX(1); }
     .portfolio-link { margin-top: 0; }
@@ -417,10 +417,10 @@ const proofTimeline = `${PROOF_HOLD_VH}|${PROOF_SWEEP_VH}|${proofProjects.length
     .proof-story { min-height: 0; }
     .proof-stage { position: relative; top: auto; height: auto; grid-template-columns: 1fr; overflow: visible; }
     .proof-ledger { display: contents; }
-    .proof-ledger > header { grid-row: 1; padding: 4.75rem 1.15rem 2.75rem; background: var(--paper-bright); }
+    .proof-ledger > header { grid-row: 1; padding: 4.75rem 1.15rem 2.75rem; background: var(--panel-bright); }
     .proof-image { grid-row: 2; padding: 1.15rem; }
     .proof-image figcaption { margin-top: 0.65rem; }
-    .proof-deck { grid-row: 3; margin: 0; padding: 3.5rem 1.15rem 2.5rem; background: var(--paper-bright); }
+    .proof-deck { grid-row: 3; margin: 0; padding: 3.5rem 1.15rem 2.5rem; background: var(--panel-bright); }
     .proof-deck > .proof-copy:first-child { padding-top: 0; }
     .portfolio-link { grid-row: 4; margin: 1.75rem 1.15rem 4.75rem; }
     .services-v7, .studio-v7 { padding: 5.5rem 1.15rem; }

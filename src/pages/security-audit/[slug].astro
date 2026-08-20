@@ -73,7 +73,7 @@ const reports = data.reports.length > 0
     : [];
 ---
 
-<Layout title={`${data.title} | Zzyzx Labs`} description={pageDescription} image={data.cover ?? null}>
+<Layout title={`${data.title} | Zzyzx Labs`} description={pageDescription} image={data.cover ?? null} surface="audit">
   <main class="writeup" style={`--lane: var(--lane-${lane});`}>
     <div class="writeup__frame">
       <nav class="writeup__crumbs" aria-label="Breadcrumb">
@@ -83,11 +83,12 @@ const reports = data.reports.length > 0
       </nav>
 
       <header class="writeup__head">
-        <p class="audit-label">{data.ecosystem}</p>
         <h1 class="writeup__title">{data.title}</h1>
         <p class="writeup__standfirst">{data.summary}</p>
         <div class="writeup__byline">
           <span>{data.project}</span>
+          <span aria-hidden="true">/</span>
+          <span>{data.ecosystem}</span>
           <span aria-hidden="true">/</span>
           <span>{kindLabels[data.kind]}</span>
           <span aria-hidden="true">/</span>
@@ -122,7 +123,6 @@ const reports = data.reports.length > 0
       {reports.length > 0 && (
         <section class="writeup__reports" aria-labelledby="published-deliverables-title">
           <div class="writeup__reports-head">
-            <p class="audit-label">Published deliverables</p>
             <h2 id="published-deliverables-title">
               Complete evidence, severity rationale, and remediation record.
             </h2>
@@ -180,7 +180,7 @@ const reports = data.reports.length > 0
 
       {sources.length > 0 && (
         <section class="writeup__links" aria-label="Sources">
-          <p class="audit-label">Sources</p>
+          <h2 class="writeup__section-title">Sources</h2>
           <ul>
             {sources.map((link) => (
               <li>
@@ -212,7 +212,7 @@ const reports = data.reports.length > 0
   .writeup {
     position: relative;
     padding: 6rem 1.25rem 0;
-    background: var(--audit-bg);
+    background: var(--audit-ground);
     color: var(--audit-ink);
   }
 
@@ -222,10 +222,10 @@ const reports = data.reports.length > 0
     content: "";
     position: absolute;
     inset: 0 0 auto;
-    height: 38rem;
+    height: 32rem;
     background:
-      radial-gradient(110% 80% at 6% 0%, color-mix(in srgb, var(--lane) 13%, transparent), transparent 60%),
-      linear-gradient(180deg, var(--audit-bg-raised), transparent);
+      linear-gradient(180deg, color-mix(in srgb, var(--lane) 9%, transparent), transparent 55%),
+      linear-gradient(180deg, var(--audit-ground-2), transparent);
     pointer-events: none;
   }
 
@@ -240,21 +240,21 @@ const reports = data.reports.length > 0
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.6rem;
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    gap: 0.5rem;
+    font-size: 0.8rem;
     color: var(--audit-ink-4);
   }
 
   .writeup__crumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.75rem;
     color: var(--audit-ink-3);
     text-decoration: none;
   }
 
   .writeup__crumbs a:hover {
-    color: var(--audit-cyan-ink);
+    color: var(--audit-signal);
   }
 
   .writeup__head {
@@ -264,23 +264,24 @@ const reports = data.reports.length > 0
   }
 
   .writeup__title {
-    max-width: 20ch;
+    max-width: 24ch;
     margin: 1.25rem 0 0;
-    font-family: var(--font-heading);
-    font-size: clamp(2.5rem, 5.4vw, 4rem);
-    font-weight: 500;
-    line-height: 1.02;
-    letter-spacing: -0.038em;
+    font-family: var(--font-reading);
+    font-size: clamp(2.25rem, 4.6vw, 3.5rem);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.022em;
     color: var(--audit-ink);
     text-wrap: balance;
   }
 
   .writeup__standfirst {
-    max-width: 42rem;
+    max-width: 38rem;
     margin: 1.75rem 0 0;
-    font-size: 1.125rem;
-    line-height: 1.7;
-    color: var(--audit-ink-3);
+    font-family: var(--font-reading);
+    font-size: 1.1rem;
+    line-height: 1.68;
+    color: var(--audit-ink-2);
   }
 
   .writeup__byline {
@@ -294,15 +295,14 @@ const reports = data.reports.length > 0
   }
 
   .writeup__byline span[aria-hidden] {
-    color: var(--audit-ink-5);
+    color: var(--audit-ink-4);
   }
 
   .writeup__draft {
-    border: 1px dashed color-mix(in srgb, var(--sev-medium) 40%, transparent);
+    border: 1px dashed color-mix(in srgb, var(--sev-medium) 55%, transparent);
     padding: 0.1rem 0.45rem;
-    font-size: 0.66rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    font-size: 0.74rem;
+    font-weight: 600;
     color: var(--sev-medium);
   }
 
@@ -310,7 +310,7 @@ const reports = data.reports.length > 0
   .writeup__dossier {
     margin-top: 3rem;
     border: 1px solid var(--audit-line);
-    background: var(--audit-bg-panel);
+    background: var(--audit-ground-3);
   }
 
   .writeup__dossier dl {
@@ -339,15 +339,13 @@ const reports = data.reports.length > 0
   }
 
   .writeup__row dt {
-    font-size: 0.66rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--audit-cyan);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--audit-ink);
   }
 
   .writeup__row dd {
-    margin: 0.85rem 0 0;
+    margin: 0.5rem 0 0;
     font-size: 0.95rem;
     line-height: 1.6;
     color: var(--audit-ink-2);
@@ -355,14 +353,20 @@ const reports = data.reports.length > 0
   }
 
   .writeup__row dd.is-mono {
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-family: var(--font-mono);
     font-size: 0.84rem;
     color: var(--audit-ink-3);
   }
 
   .writeup__row dd a {
-    color: var(--audit-cyan-ink);
+    border-bottom: 1px solid var(--audit-line-strong);
+    color: var(--audit-ink);
     text-decoration: none;
+  }
+
+  .writeup__row dd a:hover {
+    border-bottom-color: var(--audit-signal);
+    color: var(--audit-signal);
   }
 
   .writeup__row dd ul {
@@ -377,10 +381,11 @@ const reports = data.reports.length > 0
 
   .writeup__reports {
     margin-top: 2rem;
-    border: 1px solid color-mix(in srgb, var(--audit-cyan) 30%, transparent);
+    border: 1px solid color-mix(in srgb, var(--audit-signal) 30%, transparent);
+    padding: 1.75rem;
     background:
-      linear-gradient(180deg, color-mix(in srgb, var(--audit-cyan) 8%, transparent), transparent),
-      var(--audit-bg-raised);
+      linear-gradient(180deg, color-mix(in srgb, var(--audit-signal) 8%, transparent), transparent),
+      var(--audit-ground-2);
   }
 
   .writeup__reports-head {
@@ -419,10 +424,11 @@ const reports = data.reports.length > 0
 
   .writeup__report-number {
     margin: 0;
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.14em;
-    color: var(--audit-cyan);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: var(--audit-ink-4);
+    font-variant-numeric: tabular-nums;
   }
 
   .writeup__report-card h3 {
@@ -445,12 +451,12 @@ const reports = data.reports.length > 0
   }
 
   .writeup__hash span {
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--audit-ink-3);
   }
 
   .writeup__hash code {
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-family: var(--font-mono);
     color: var(--audit-ink-3);
     overflow-wrap: anywhere;
   }
@@ -515,7 +521,7 @@ const reports = data.reports.length > 0
     inset: 1px -1rem 0;
     background:
       linear-gradient(90deg, color-mix(in srgb, var(--row-tone) 10%, transparent), transparent 55%),
-      var(--audit-bg-raised);
+      var(--audit-ground-2);
     opacity: 0;
     transition: opacity 200ms cubic-bezier(0.22, 1, 0.36, 1);
     pointer-events: none;
@@ -544,7 +550,7 @@ const reports = data.reports.length > 0
     font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
     font-size: 0.72rem;
     letter-spacing: 0.08em;
-    color: var(--audit-cyan);
+    color: var(--audit-signal);
   }
 
   .writeup__index-title {
@@ -555,11 +561,11 @@ const reports = data.reports.length > 0
   }
 
   .writeup__index a:hover .writeup__index-title {
-    color: var(--audit-cyan-ink);
+    color: var(--audit-signal);
   }
 
   .writeup__index a:focus-visible {
-    outline: 2px solid var(--audit-cyan);
+    outline: 2px solid var(--audit-signal);
     outline-offset: 4px;
   }
 
@@ -595,15 +601,23 @@ const reports = data.reports.length > 0
 
   .writeup__link-group {
     min-width: 7rem;
-    font-size: 0.66rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    font-size: 0.8rem;
     color: var(--audit-ink-4);
   }
 
   .writeup__links a {
-    color: var(--audit-cyan-ink);
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.75rem;
+    border-bottom: 1px solid var(--audit-line-strong);
+    color: var(--audit-ink);
+    font-weight: 600;
     text-decoration: none;
+  }
+
+  .writeup__links a:hover {
+    border-bottom-color: var(--audit-signal);
+    color: var(--audit-signal);
   }
 
   .writeup__foot {
@@ -657,40 +671,41 @@ const reports = data.reports.length > 0
   }
 
   .audit-button-primary {
-    border: 1px solid var(--audit-cyan);
-    background: var(--audit-cyan);
-    color: #071012;
+    border: 1px solid var(--audit-signal);
+    background: var(--audit-signal);
+    color: var(--audit-on-signal);
   }
 
   .audit-button-primary:hover {
-    border-color: var(--audit-cyan-bright);
-    background: var(--audit-cyan-bright);
+    border-color: var(--audit-ink);
+    background: var(--audit-ink);
     transform: translateY(-1px);
   }
 
   .audit-button-secondary {
     border: 1px solid var(--audit-line-strong);
-    color: var(--audit-ink-2);
+    color: var(--audit-ink);
   }
 
   .audit-button-secondary:hover {
-    border-color: color-mix(in srgb, var(--audit-cyan) 65%, transparent);
-    background: var(--audit-bg-hover);
-    color: var(--audit-cyan-bright);
+    border-color: var(--audit-ink);
+    background: var(--audit-ground-2);
+    color: var(--audit-ink);
   }
 
   .audit-button-primary:focus-visible,
   .audit-button-secondary:focus-visible {
-    outline: 2px solid var(--audit-cyan);
+    outline: 2px solid var(--audit-ink);
     outline-offset: 4px;
   }
 
-  .audit-label {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--lane, var(--audit-cyan));
+  .writeup__section-title {
+    margin: 0 0 1.25rem;
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--audit-ink);
   }
 
   @media (max-width: 720px) {

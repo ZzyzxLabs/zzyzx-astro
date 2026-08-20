@@ -1,15 +1,17 @@
 ---
+import BrandMark from "./BrandMark.astro";
+
 const year = new Date().getFullYear();
 const pathname = Astro.url.pathname;
 const isCurrentPath = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 ---
 
-<footer class="relative z-10 border-t border-white/[0.09] bg-[#08090a] px-5 py-10 text-[#8b9399] sm:px-7 lg:px-10">
+<footer class="relative z-10 border-t border-[var(--shell-line)] bg-[var(--shell-bg)] px-5 py-10 text-[var(--shell-ink-3)] sm:px-7 lg:px-10">
   <div class="mx-auto max-w-[88rem]">
     <div class="flex flex-col gap-9 sm:flex-row sm:items-center sm:justify-between">
       <a href="/" class="brand-link inline-flex w-fit items-center gap-3" aria-label="Zzyzx Labs home">
-        <img src="/zzyzx_white.png" alt="" width="32" height="32" class="h-7 w-7 opacity-80" />
-        <span class="font-heading text-base font-medium tracking-[-0.02em] text-[#e8eae7]">Zzyzx Labs</span>
+        <BrandMark class="h-7 w-7 text-[var(--shell-ink)] opacity-80" />
+        <span class="font-heading text-base font-medium tracking-[-0.02em] text-[var(--shell-ink)]">Zzyzx Labs</span>
       </a>
 
       <nav aria-label="Footer links" class="flex flex-wrap gap-x-7 gap-y-3 text-sm">
@@ -23,7 +25,7 @@ const isCurrentPath = (href: string) => pathname === href || pathname.startsWith
       </nav>
     </div>
 
-    <div class="mt-10 flex flex-col gap-3 border-t border-white/[0.08] pt-6 text-xs text-[#818b91] sm:flex-row sm:items-center sm:justify-between">
+    <div class="mt-10 flex flex-col gap-3 border-t border-[var(--shell-line)] pt-6 text-xs text-[var(--shell-ink-3)] sm:flex-row sm:items-center sm:justify-between">
       <p>© {year} Zzyzx Labs</p>
       <p>Market strategy, product engineering, and security for Web3 × AI.</p>
     </div>
@@ -37,16 +39,23 @@ const isCurrentPath = (href: string) => pathname === href || pathname.startsWith
     transition: color 200ms ease;
   }
 
+  /* WCAG 2.2 SC 2.5.8: these were 20px tall and tightly stacked. */
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.75rem;
+  }
+
   nav a:hover {
-    color: #9de2e6;
+    color: var(--shell-accent-ink);
   }
 
   nav a[aria-current="page"] {
-    color: #9de2e6;
+    color: var(--shell-accent-ink);
   }
 
   a:focus-visible {
-    outline: 2px solid #74d7dd;
+    outline: 2px solid var(--shell-accent);
     outline-offset: 4px;
   }
 </style>

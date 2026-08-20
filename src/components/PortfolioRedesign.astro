@@ -357,7 +357,7 @@
 
 <style>
   .portfolio-shell {
-    background: #08090a;
+    background: var(--shell-bg);
     color: #f1f3f0;
   }
 
@@ -388,11 +388,10 @@
   }
 
   .portfolio-label {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #74d7dd;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    color: var(--shell-ink);
   }
 
   .portfolio-hero h1 {
@@ -438,9 +437,9 @@
   }
 
   .portfolio-button-primary {
-    border-color: #74d7dd;
-    background: #74d7dd;
-    color: #071012;
+    border-color: var(--shell-accent);
+    background: var(--shell-accent);
+    color: var(--shell-on-accent);
   }
 
   .portfolio-button-secondary {
@@ -455,17 +454,17 @@
   }
 
   .portfolio-button-primary:hover {
-    border-color: #a3e6e9;
-    background: #a3e6e9;
+    border-color: var(--shell-accent-ink);
+    background: var(--shell-accent-ink);
   }
 
   .portfolio-button-secondary:hover {
     border-color: rgba(116, 215, 221, 0.68);
-    color: #a3e6e9;
+    color: var(--shell-accent-ink);
   }
 
   .portfolio-anchor {
-    background: #0b0d0f;
+    background: var(--shell-surface);
     padding: 7rem 1.25rem;
   }
 
@@ -478,7 +477,7 @@
     margin: clamp(3.5rem, 7vw, 6rem) 0 0;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.11);
-    background: #08090a;
+    background: var(--shell-bg);
   }
 
   .portfolio-nereus__media img {
@@ -521,8 +520,10 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
+  /* Was #697279 at 3.97:1 against the page ground, below the 4.5:1 floor for
+   * 12.5px text. The shell's muted ink clears it. */
   .portfolio-meta dt {
-    color: #697279;
+    color: var(--shell-ink-3);
     font-size: 0.78rem;
   }
 
@@ -540,7 +541,7 @@
     margin-top: 2rem;
     border-bottom: 1px solid rgba(116, 215, 221, 0.45);
     padding-bottom: 0.2rem;
-    color: #9de2e6;
+    color: var(--shell-accent-ink);
     font-size: 0.88rem;
     font-weight: 600;
     text-decoration: none;
@@ -548,8 +549,8 @@
   }
 
   .portfolio-text-link:hover {
-    border-color: #c1f0f2;
-    color: #c1f0f2;
+    border-color: var(--shell-accent-ink);
+    color: var(--shell-accent-ink);
   }
 
   .portfolio-tags {
@@ -599,7 +600,7 @@
   .portfolio-story-trigger:hover {
     border-color: rgba(116, 215, 221, 0.62);
     background: rgba(116, 215, 221, 0.07);
-    color: #bcebee;
+    color: var(--shell-accent-ink);
   }
 
   .portfolio-seawallet {
@@ -616,7 +617,7 @@
     margin: 0;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.11);
-    background: #0b0d0f;
+    background: var(--shell-surface);
   }
 
   .portfolio-seawallet__media img {
@@ -652,7 +653,7 @@
 
   .portfolio-seapay {
     border-block: 1px solid rgba(255, 255, 255, 0.1);
-    background: #0b0d0f;
+    background: var(--shell-surface);
     padding: 6rem 1.25rem;
   }
 
@@ -761,7 +762,7 @@
     border: 0;
     padding: 0;
     background: transparent;
-    color: #08090a;
+    color: var(--shell-bg);
     overflow: hidden;
   }
 
@@ -776,7 +777,7 @@
     height: 100dvh;
     margin-left: auto;
     background: #c9cdca;
-    color: #0a0c0d;
+    color: var(--shell-surface);
     overflow-y: auto;
     overscroll-behavior: contain;
   }
@@ -805,11 +806,11 @@
     min-width: 3.25rem;
     min-height: 2.75rem;
     border: 0;
-    border-bottom: 1px solid #0a0c0d;
+    border-bottom: 1px solid var(--shell-surface);
     border-radius: 0;
     background: transparent;
     padding: 0.5rem 0;
-    color: #0a0c0d;
+    color: var(--shell-surface);
     font: inherit;
     font-size: 0.78rem;
     font-weight: 650;
@@ -890,9 +891,9 @@
     align-items: center;
     gap: 0.75rem;
     margin-top: 3.5rem;
-    border-bottom: 1px solid #0a0c0d;
+    border-bottom: 1px solid var(--shell-surface);
     padding-bottom: 0.25rem;
-    color: #0a0c0d;
+    color: var(--shell-surface);
     font-size: 0.88rem;
     font-weight: 700;
     text-decoration: none;
@@ -906,13 +907,13 @@
   .portfolio-button-secondary:focus-visible,
   .portfolio-text-link:focus-visible,
   .portfolio-story-trigger:focus-visible {
-    outline: 2px solid #74d7dd;
+    outline: 2px solid var(--shell-accent);
     outline-offset: 4px;
   }
 
   .portfolio-dialog__close:focus-visible,
   .portfolio-dialog__link:focus-visible {
-    outline: 2px solid #164f54;
+    outline: 2px solid var(--shell-accent);
     outline-offset: 4px;
   }
 

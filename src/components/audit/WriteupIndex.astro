@@ -8,7 +8,7 @@ interface Props {
   heading: string;
   intro: string;
   empty: string;
-  /** Picks the lane colour: incidents run ember, our own reports run cyan. */
+  /** Picks the lane colour: incidents take the risk signal, our own reports take ink. */
   tone: "incident" | "report";
   records: AuditRecord[];
 }
@@ -26,7 +26,6 @@ const { label, heading, intro, empty, tone, records } = Astro.props;
 
     <header class="index-head">
       <div>
-        <p class="audit-label">{label}</p>
         <h1 class="index-title">{heading}</h1>
       </div>
       <div class="index-head__aside">
@@ -36,15 +35,15 @@ const { label, heading, intro, empty, tone, records } = Astro.props;
     </header>
 
     {records.length > 0 ? (
-      <div class="index-grid">
-        {records.map((record) => <WriteupRow record={record} />)}
+      <div class="index-grid" data-animate-group>
+        {records.map((record) => <WriteupRow record={record} headingLevel={2} />)}
       </div>
     ) : (
       <p class="index-empty">{empty}</p>
     )}
 
     <footer class="index-foot">
-      <a class="index-back" href="/security-audit"><span aria-hidden="true">&lt;&lt;</span> Back to Security Audit</a>
+      <a class="index-back" href="/security-audit">Back to Security Audit</a>
       <a class="index-cta" href="mailto:contact@zzyzx.com?subject=Security%20Audit%20Inquiry">Request an audit</a>
     </footer>
   </div>
@@ -54,7 +53,7 @@ const { label, heading, intro, empty, tone, records } = Astro.props;
   .index-shell {
     position: relative;
     padding: 6rem 1.25rem 0;
-    background: var(--audit-bg);
+    background: var(--audit-ground);
     color: var(--audit-ink);
   }
 
@@ -65,10 +64,10 @@ const { label, heading, intro, empty, tone, records } = Astro.props;
     content: "";
     position: absolute;
     inset: 0 0 auto;
-    height: 34rem;
+    height: 30rem;
     background:
-      radial-gradient(110% 90% at 8% 0%, color-mix(in srgb, var(--lane) 12%, transparent), transparent 60%),
-      linear-gradient(180deg, var(--audit-bg-raised), transparent);
+      linear-gradient(180deg, color-mix(in srgb, var(--lane) 8%, transparent), transparent 55%),
+      linear-gradient(180deg, var(--audit-ground-2), transparent);
     pointer-events: none;
   }
 
@@ -83,21 +82,21 @@ const { label, heading, intro, empty, tone, records } = Astro.props;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.6rem;
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    gap: 0.5rem;
+    font-size: 0.8rem;
     color: var(--audit-ink-4);
   }
 
   .index-crumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.75rem;
     color: var(--audit-ink-3);
     text-decoration: none;
   }
 
   .index-crumbs a:hover {
-    color: var(--audit-cyan-ink);
+    color: var(--audit-signal);
   }
 
   .index-head {
@@ -111,7 +110,7 @@ const { label, heading, intro, empty, tone, records } = Astro.props;
 
   .index-title {
     max-width: 20ch;
-    margin: 1rem 0 0;
+    margin: 0;
     font-family: var(--font-heading);
     font-size: clamp(2.1rem, 3.6vw, 3.1rem);
     font-weight: 500;
@@ -137,10 +136,9 @@ const { label, heading, intro, empty, tone, records } = Astro.props;
 
   .index-count {
     margin: 0;
-    font-size: 0.72rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    font-size: 0.78rem;
     color: var(--audit-ink-4);
+    font-variant-numeric: tabular-nums;
   }
 
   .index-grid {
@@ -172,16 +170,19 @@ const { label, heading, intro, empty, tone, records } = Astro.props;
   .index-back {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
+    min-height: 1.75rem;
+    border-bottom: 1px solid var(--audit-line-strong);
+    padding-bottom: 0.2rem;
+    font-size: 0.85rem;
     font-weight: 600;
-    color: var(--audit-cyan-ink);
+    color: var(--audit-ink);
     text-decoration: none;
+    transition: border-color 200ms ease, color 200ms ease;
   }
 
-  .index-back span {
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
-    color: var(--audit-cyan);
+  .index-back:hover {
+    border-bottom-color: var(--audit-signal);
+    color: var(--audit-signal);
   }
 
   .index-cta {
@@ -190,8 +191,8 @@ const { label, heading, intro, empty, tone, records } = Astro.props;
     justify-content: center;
     border-radius: 2px;
     padding: 0.8rem 1.35rem;
-    background: var(--audit-cyan);
-    color: #071012;
+    background: var(--audit-signal);
+    color: var(--audit-on-signal);
     font-size: 0.85rem;
     font-weight: 600;
     text-decoration: none;
@@ -199,21 +200,13 @@ const { label, heading, intro, empty, tone, records } = Astro.props;
   }
 
   .index-cta:hover {
-    background: var(--audit-cyan-bright);
+    background: var(--audit-ink);
   }
 
   .index-back:focus-visible,
   .index-cta:focus-visible {
-    outline: 2px solid var(--audit-cyan);
+    outline: 2px solid var(--audit-ink);
     outline-offset: 4px;
-  }
-
-  .audit-label {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--lane, var(--audit-cyan));
   }
 
   @media (min-width: 900px) {

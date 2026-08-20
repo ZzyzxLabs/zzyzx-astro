@@ -2,40 +2,45 @@
 import "../styles/global.css";
 import SiteFooter from "../components/SiteFooter.astro";
 import Navbar from "../components/Navbar.astro";
-import "@fontsource/inter/400.css";
-import "@fontsource/inter/500.css";
-import "@fontsource/inter/600.css";
-import "@fontsource/space-grotesk/400.css";
-import "@fontsource/space-grotesk/500.css";
-import "@fontsource/space-grotesk/600.css";
+import "@fontsource-variable/archivo";
+import "@fontsource-variable/literata";
 
 interface Props {
 	title?: string;
 	description?: string;
 	image?: string | null;
+	/** The security writeups are a printed document surface; the chrome follows. */
+	surface?: "shell" | "audit";
+	/** Routes nothing links to should not be indexed while they are unfinished. */
+	noindex?: boolean;
 }
 
 const {
 	title = "Zzyzx Labs | One-Stop Web3 x AI Solutions",
 	description = "GTM strategy, product engineering, AI-assisted security audits, and formal verification for Web3 and AI teams.",
 	image = "/zzyzx-system-hero-v2.webp",
+	surface = "shell",
+	noindex = false,
 } = Astro.props;
 
+const themeColor = surface === "audit" ? "#f3f5f7" : "#08090a";
 const canonicalUrl = new URL(Astro.url.pathname, "https://zzyzxlabs.com").href;
 const socialImage = image ? new URL(image, "https://zzyzxlabs.com").href : null;
 ---
 
-<html lang="en">
+<html lang="en" data-surface={surface}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/x-icon" href="/zzyzx_white.ico" />
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="alternate icon" href="/zzyzx_white.ico" />
 		<meta name="generator" content={Astro.generator} />
 
 		<!-- SEO -->
 		<title>{title}</title>
 		<meta name="description" content={description} />
-		<meta name="theme-color" content="#08090a" />
+		{noindex && <meta name="robots" content="noindex, nofollow" />}
+		<meta name="theme-color" content={themeColor} />
 		<link rel="canonical" href={canonicalUrl} />
 
 		<!-- Open Graph -->
@@ -76,9 +81,9 @@ const socialImage = image ? new URL(image, "https://zzyzxlabs.com").href : null;
 		top: 0.75rem;
 		left: 0.75rem;
 		padding: 0.7rem 0.9rem;
-		border: 1px solid #74d7dd;
-		background: #08090a;
-		color: #eef0ed;
+		border: 1px solid var(--shell-accent);
+		background: var(--shell-bg);
+		color: var(--shell-ink);
 		font-size: 0.875rem;
 		text-decoration: none;
 		transform: translateY(-180%);
@@ -86,7 +91,7 @@ const socialImage = image ? new URL(image, "https://zzyzxlabs.com").href : null;
 
 	.skip-link:focus {
 		transform: translateY(0);
-		outline: 2px solid #74d7dd;
+		outline: 2px solid var(--shell-accent);
 		outline-offset: 3px;
 	}
 </style>

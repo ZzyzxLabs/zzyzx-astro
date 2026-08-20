@@ -410,8 +410,8 @@ const members: Member[] = [
     description:
       "Web Front End, Web3, Open Source and Cyber Security.",
     image: "/member/lun.png",
-    color: "from-purple-500 to-pink-600",
-    infoAccent: "from-purple-500/35 to-pink-600/20",
+    color: "from-[var(--shell-accent)] to-pink-600",
+    infoAccent: "from-[var(--shell-accent)]/35 to-pink-600/20",
     profileSlug: "Lun",
     info: (
       <div className='space-y-4'>

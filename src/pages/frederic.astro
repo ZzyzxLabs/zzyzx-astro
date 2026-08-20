@@ -1,21 +1,24 @@
 ---
+import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
+import fredericPortrait from "../assets/member/frederic-nft.jpg";
 ---
 
 <Layout 
   title="Frederic Hsieh | Co-Founder @ Zzyzx Labs" 
   description="Web3 full-stack developer and CS & Math student. 6x hackathon winner with $26,300+ in prizes. Specializing in payment systems, smart contracts, and cross-chain infrastructure."
+  noindex
 >
   <div class="min-h-screen bg-black text-white">
     <div class="relative overflow-hidden">
-      <div class="pointer-events-none absolute -top-24 right-[-20%] h-72 w-72 rounded-full bg-orange-500/15 blur-3xl" />
-      <div class="pointer-events-none absolute -bottom-24 left-[-10%] h-80 w-80 rounded-full bg-sky-500/10 blur-3xl" />
+      <div class="pointer-events-none absolute -top-24 right-[-20%] h-72 w-72 rounded-full bg-[var(--shell-accent)]/15 blur-3xl" />
+      <div class="pointer-events-none absolute -bottom-24 left-[-10%] h-80 w-80 rounded-full bg-[var(--shell-accent)]/10 blur-3xl" />
 
       <div class="max-w-6xl mx-auto px-6 py-12 md:py-20 relative">
         <!-- Back button -->
         <a
           href="/"
-          class="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm uppercase tracking-widest mb-10 transition-colors animate-fade-in"
+          class="inline-flex min-h-7 items-center gap-2 text-white/70 hover:text-white text-sm font-medium mb-10 transition-colors animate-fade-in"
         >
           ← Back to Team
         </a>
@@ -26,8 +29,11 @@ import Layout from "../layouts/Layout.astro";
             <div class="grid gap-6 md:grid-cols-[240px_minmax(0,1fr)] md:items-center">
               <div class="relative aspect-[3/4] rounded-2xl overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-br from-red-500 to-orange-600 opacity-50" />
-                <img
-                  src="/member/frederic-nft.jpg"
+                <Image
+                  src={fredericPortrait}
+                  widths={[320, 480, 640]}
+                  sizes="(max-width: 640px) 90vw, 480px"
+                  loading="eager"
                   alt="Fu Chun Frederic Hsieh"
                   class="absolute inset-0 w-full h-full object-cover"
                 />
@@ -140,9 +146,9 @@ import Layout from "../layouts/Layout.astro";
                       <div>
                         <strong class="text-white/90">Past projects:</strong>
                         <ul class="mt-2 space-y-2 ml-4">
-                          <li><a href="https://SeaWallet.ai" target="_blank" class="text-orange-400 hover:text-orange-300 transition-colors underline">SeaWallet.ai</a>: Smart contract account platform enabling customizable inheritance and asset distribution</li>
-                          <li><a href="https://SeaPay.ai" target="_blank" class="text-orange-400 hover:text-orange-300 transition-colors underline">AI travel booking payment</a>: Payment gateway for hotels integrating x402 & A2A payment standards</li>
-                          <li><a href="https://trynereus.xyz" target="_blank" class="text-orange-400 hover:text-orange-300 transition-colors underline">Nereus</a>: Prediction market leveraging AI agents in TEE for decentralized outcome resolution</li>
+                          <li><a href="https://SeaWallet.ai" target="_blank" class="text-[var(--shell-accent-ink)] hover:text-[var(--shell-ink)] transition-colors underline">SeaWallet.ai</a>: Smart contract account platform enabling customizable inheritance and asset distribution</li>
+                          <li><a href="https://SeaPay.ai" target="_blank" class="text-[var(--shell-accent-ink)] hover:text-[var(--shell-ink)] transition-colors underline">AI travel booking payment</a>: Payment gateway for hotels integrating x402 & A2A payment standards</li>
+                          <li><a href="https://trynereus.xyz" target="_blank" class="text-[var(--shell-accent-ink)] hover:text-[var(--shell-ink)] transition-colors underline">Nereus</a>: Prediction market leveraging AI agents in TEE for decentralized outcome resolution</li>
                         </ul>
                       </div>
                     </li>
@@ -162,15 +168,15 @@ import Layout from "../layouts/Layout.astro";
                   </div>
                   <ul class="space-y-2 text-white/70 text-sm">
                     <li class="flex gap-2">
-                      <span class="text-orange-500 mt-1">•</span>
+                      <span class="text-[var(--shell-accent)] mt-1">•</span>
                       <span>Led technical workshops. Featured speaker at Solana Across Campuses</span>
                     </li>
                     <li class="flex gap-2">
-                      <span class="text-orange-500 mt-1">•</span>
-                      <span>Hosted a hackathon <a href="https://build-fest.vercel.app" target="_blank" class="text-orange-400 hover:text-orange-300 transition-colors underline">Badger Build Fest</a> and raised $10,000 for the event</span>
+                      <span class="text-[var(--shell-accent)] mt-1">•</span>
+                      <span>Hosted a hackathon <a href="https://build-fest.vercel.app" target="_blank" class="text-[var(--shell-accent-ink)] hover:text-[var(--shell-ink)] transition-colors underline">Badger Build Fest</a> and raised $10,000 for the event</span>
                     </li>
                     <li class="flex gap-2">
-                      <span class="text-orange-500 mt-1">•</span>
+                      <span class="text-[var(--shell-accent)] mt-1">•</span>
                       <span>Secured sponsorship and travel funding enabling club members to compete at CalHacks</span>
                     </li>
                   </ul>
@@ -189,11 +195,11 @@ import Layout from "../layouts/Layout.astro";
                   </div>
                   <ul class="space-y-2 text-white/70 text-sm">
                     <li class="flex gap-2">
-                      <span class="text-orange-500 mt-1">•</span>
+                      <span class="text-[var(--shell-accent)] mt-1">•</span>
                       <span>Developed an AI agent that automates copy-trading strategy selection, analyzing 1,000+ trading signals to optimize portfolio performance</span>
                     </li>
                     <li class="flex gap-2">
-                      <span class="text-orange-500 mt-1">•</span>
+                      <span class="text-[var(--shell-accent)] mt-1">•</span>
                       <span>Designed a decentralized asset syndication platform empowering users to launch their own funds</span>
                     </li>
                   </ul>
@@ -208,12 +214,12 @@ import Layout from "../layouts/Layout.astro";
                   <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-2 mb-3">
                     <div>
                       <h3 class="text-lg font-semibold text-white">BermuDAO</h3>
-                      <a href="https://www.youtube.com/@Bermu_DAO" target="_blank" class="text-orange-400 hover:text-orange-300 text-sm transition-colors">YouTube Channel →</a>
+                      <a href="https://www.youtube.com/@Bermu_DAO" target="_blank" class="text-[var(--shell-accent-ink)] hover:text-[var(--shell-ink)] text-sm transition-colors">YouTube Channel →</a>
                     </div>
                     <div class="text-white/60 text-sm">2025 – Present</div>
                   </div>
                   <ul class="space-y-2 text-white/70 text-sm">
-                      <span class="text-orange-500 mt-1">•</span>
+                      <span class="text-[var(--shell-accent)] mt-1">•</span>
                       <span>Founded a blockchain study group with 250+ members</span>
                   </ul>
                 </div>
@@ -225,7 +231,7 @@ import Layout from "../layouts/Layout.astro";
                   </div>
                   <ul class="space-y-2 text-white/70 text-sm">
                     <li class="flex gap-2">
-                      <span class="text-orange-500 mt-1">•</span>
+                      <span class="text-[var(--shell-accent)] mt-1">•</span>
                       <span>Conducted market research on D.C. area opportunities and designed targeted marketing campaigns</span>
                     </li>
                   </ul>
@@ -238,7 +244,7 @@ import Layout from "../layouts/Layout.astro";
                   </div>
                   <ul class="space-y-2 text-white/70 text-sm">
                     <li class="flex gap-2">
-                      <span class="text-orange-500 mt-1">•</span>
+                      <span class="text-[var(--shell-accent)] mt-1">•</span>
                       <span>Represented 500+ international and L&S students in biweekly meetings with the dean, advocating for policy improvements</span>
                     </li>
                   </ul>

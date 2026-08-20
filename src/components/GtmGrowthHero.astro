@@ -33,8 +33,8 @@
     position: relative;
     min-height: 100dvh;
     overflow: hidden;
-    background: #08090a;
-    color: #f1f3f0;
+    background: var(--shell-bg);
+    color: var(--shell-ink);
   }
 
   .gtm-hero__stage {
@@ -78,11 +78,10 @@
   }
 
   .gtm-hero__label {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #74d7dd;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    color: var(--shell-ink);
   }
 
   .gtm-hero h1 {
@@ -93,7 +92,7 @@
     font-weight: 500;
     line-height: 0.97;
     letter-spacing: -0.058em;
-    color: #f1f3f0;
+    color: var(--shell-ink);
   }
 
   .gtm-hero__intro {
@@ -101,7 +100,7 @@
     margin-top: 1.75rem;
     font-size: 1.0625rem;
     line-height: 1.75;
-    color: #a2a9ae;
+    color: var(--shell-ink-2);
   }
 
   .gtm-hero__actions {
@@ -128,15 +127,15 @@
   }
 
   .gtm-hero__primary {
-    border-color: #74d7dd;
-    background: #74d7dd;
-    color: #071012;
+    border-color: var(--shell-accent);
+    background: var(--shell-accent);
+    color: var(--shell-on-accent);
   }
 
   .gtm-hero__secondary {
     border-color: rgba(242, 243, 239, 0.24);
     background: rgba(8, 9, 10, 0.36);
-    color: #e0e3e0;
+    color: var(--shell-ink);
   }
 
   .gtm-hero__primary:hover,
@@ -145,18 +144,18 @@
   }
 
   .gtm-hero__primary:hover {
-    border-color: #a3e6e9;
-    background: #a3e6e9;
+    border-color: var(--shell-accent-ink);
+    background: var(--shell-accent-ink);
   }
 
   .gtm-hero__secondary:hover {
     border-color: rgba(116, 215, 221, 0.68);
-    color: #a3e6e9;
+    color: var(--shell-accent-ink);
   }
 
   .gtm-hero__primary:focus-visible,
   .gtm-hero__secondary:focus-visible {
-    outline: 2px solid #74d7dd;
+    outline: 2px solid var(--shell-accent);
     outline-offset: 4px;
   }
 

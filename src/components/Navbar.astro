@@ -1,4 +1,5 @@
 ---
+import BrandMark from "./BrandMark.astro";
 import { serviceNavItems } from "../data/services";
 
 const pathname = Astro.url.pathname;
@@ -7,11 +8,11 @@ const isServiceActive = serviceNavItems.some((service) => isCurrentPath(service.
 const isPortfolioActive = isCurrentPath("/portfolio");
 ---
 
-<nav id="main-navbar" class="fixed inset-x-0 top-0 z-[100] border-b border-white/[0.09] bg-[#08090a]/[0.94]">
+<nav id="main-navbar" class="fixed inset-x-0 top-0 z-[100] border-b border-[var(--shell-line)] bg-[var(--shell-bg-alpha)] backdrop-blur-[2px]">
   <div class="mx-auto flex h-[4.25rem] max-w-[88rem] items-center justify-between px-5 sm:px-7 lg:px-10">
     <a href="/" class="brand-link group inline-flex items-center gap-3" aria-label="Zzyzx Labs home">
-      <img src="/zzyzx_white.png" alt="" width="32" height="32" class="h-7 w-7 opacity-90 transition-opacity duration-200 group-hover:opacity-100" />
-      <span class="font-heading text-[1.05rem] font-medium tracking-[-0.025em] text-[#eef0ed]">Zzyzx Labs</span>
+      <BrandMark class="h-7 w-7 text-[var(--shell-ink)] opacity-90 transition-opacity duration-200 group-hover:opacity-100" />
+      <span class="font-heading text-[1.05rem] font-medium tracking-[-0.025em] text-[var(--shell-ink)]">Zzyzx Labs</span>
     </a>
 
     <div class="hidden items-center gap-7 lg:flex">
@@ -71,7 +72,7 @@ const isPortfolioActive = isCurrentPath("/portfolio");
     </button>
   </div>
 
-  <div id="mobile-menu" class="hidden border-t border-white/[0.09] bg-[#08090a] lg:hidden">
+  <div id="mobile-menu" class="hidden border-t border-[var(--shell-line)] bg-[var(--shell-bg)] lg:hidden">
     <div class="mobile-menu-inner mx-auto flex max-w-[88rem] flex-col px-5 sm:px-7">
       <button
         id="mobile-services-toggle"
@@ -344,7 +345,7 @@ const isPortfolioActive = isCurrentPath("/portfolio");
     font-size: 0.79rem;
     font-weight: 500;
     letter-spacing: 0.025em;
-    color: #9aa1a7;
+    color: var(--shell-ink-3);
     cursor: pointer;
     transition: color 200ms ease;
   }
@@ -354,7 +355,7 @@ const isPortfolioActive = isCurrentPath("/portfolio");
     position: absolute;
     inset: auto 0 0;
     height: 1px;
-    background: #74d7dd;
+    background: var(--shell-accent);
     transform: scaleX(0);
     transform-origin: right;
     transition: transform 240ms ease;
@@ -362,7 +363,7 @@ const isPortfolioActive = isCurrentPath("/portfolio");
 
   .nav-link:hover,
   .nav-link-active {
-    color: #eef0ed;
+    color: var(--shell-ink);
   }
 
   .nav-link:hover::after,
@@ -414,7 +415,7 @@ const isPortfolioActive = isCurrentPath("/portfolio");
 
   .services-dropdown-panel li {
     min-width: 0;
-    border-left: 1px solid rgba(255, 255, 255, 0.09);
+    border-left: 1px solid var(--shell-line);
   }
 
   .services-dropdown-panel li:first-child {
@@ -450,24 +451,24 @@ const isPortfolioActive = isCurrentPath("/portfolio");
     font-weight: 400;
     line-height: 1;
     letter-spacing: -0.04em;
-    color: #e9ece9;
+    color: var(--shell-ink);
     transition: color 220ms ease;
   }
 
   .service-option-active .service-option-name {
-    color: #9de2e6;
+    color: var(--shell-accent-ink);
   }
 
   .service-option:hover .service-option-name,
   .service-option:focus-visible .service-option-name {
-    color: #f3f5f2;
+    color: var(--shell-ink);
   }
 
   .service-option-description {
     max-width: 31ch;
     font-size: 0.78rem;
     line-height: 1.55;
-    color: #7f888e;
+    color: var(--shell-ink-3);
   }
 
   .nav-cta {
@@ -480,7 +481,7 @@ const isPortfolioActive = isCurrentPath("/portfolio");
     font-size: 0.81rem;
     font-weight: 600;
     letter-spacing: 0.01em;
-    color: #e5e9e6;
+    color: var(--shell-ink);
     transition: color 220ms ease;
   }
 
@@ -489,25 +490,27 @@ const isPortfolioActive = isCurrentPath("/portfolio");
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 1.5rem;
+    width: 100%;
     height: 1px;
-    background: #74d7dd;
-    transition: width 260ms cubic-bezier(0.16, 1, 0.3, 1);
+    background: var(--shell-accent);
+    transform: scaleX(0.28);
+    transform-origin: left center;
+    transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .nav-cta:hover {
-    color: #f3f5f2;
+    color: var(--shell-ink);
   }
 
   .nav-cta:hover::after,
   .nav-cta:focus-visible::after {
-    width: 100%;
+    transform: scaleX(1);
   }
 
   .mobile-nav-link {
     width: 100%;
     border: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--shell-line);
     background: transparent;
     padding-block: 1.15rem;
     font-family: var(--font-heading);
@@ -516,7 +519,7 @@ const isPortfolioActive = isCurrentPath("/portfolio");
     line-height: 1;
     letter-spacing: -0.04em;
     text-align: left;
-    color: #d9dcda;
+    color: var(--shell-ink-2);
   }
 
   .mobile-services-toggle {
@@ -528,14 +531,14 @@ const isPortfolioActive = isCurrentPath("/portfolio");
 
   .mobile-nav-link:hover,
   .mobile-nav-link-active {
-    color: #9de2e6;
+    color: var(--shell-accent-ink);
   }
 
   .mobile-services-list {
     margin: 0;
     padding: 0;
     list-style: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--shell-line);
     background: transparent;
   }
 
@@ -556,23 +559,23 @@ const isPortfolioActive = isCurrentPath("/portfolio");
     font-weight: 400;
     line-height: 0.98;
     letter-spacing: -0.045em;
-    color: #e6e9e6;
+    color: var(--shell-ink);
   }
 
   .mobile-service-option span:last-child {
     max-width: 35ch;
     font-size: 0.8rem;
     line-height: 1.55;
-    color: #7f888e;
+    color: var(--shell-ink-3);
   }
 
   .mobile-service-option-active span:first-child {
-    color: #9de2e6;
+    color: var(--shell-accent-ink);
   }
 
   .nav-toggle {
     border-radius: 2px;
-    color: #d9dcda;
+    color: var(--shell-ink-2);
   }
 
   #mobile-menu {
@@ -635,7 +638,7 @@ const isPortfolioActive = isCurrentPath("/portfolio");
   .nav-toggle:focus-visible,
   .service-option:focus-visible,
   .mobile-service-option:focus-visible {
-    outline: 2px solid #74d7dd;
+    outline: 2px solid var(--shell-accent);
     outline-offset: 4px;
   }
 

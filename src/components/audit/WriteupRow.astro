@@ -1,32 +1,39 @@
 ---
-import SeverityBadge from "./SeverityBadge.astro";
 import { SEVERITIES } from "../../content.config";
+import { severityLabels } from "../../lib/findings";
 import { formatAuditDate, type AuditRecord } from "../../data/audits";
 
 interface Props {
   record: AuditRecord;
+  /** 4 under an archive lane heading, 2 directly under an index page's h1. */
+  headingLevel?: 2 | 3 | 4;
 }
 
-const { record } = Astro.props;
+const { record, headingLevel = 4 } = Astro.props;
+const Heading = `h${headingLevel}` as "h2" | "h3" | "h4";
 const { data } = record.entry;
 const scored = SEVERITIES.filter((severity) => record.counts[severity] > 0);
 /** SEVERITIES is ordered worst-first, so the first hit is the row's headline risk. */
 const topSeverity = scored[0];
 ---
 
-<article class="writeup-row" data-animate="fade-up" data-top-severity={topSeverity}>
+<article class="writeup-row" data-animate-item="fade-up" data-top-severity={topSeverity}>
   <a class="writeup-row__link" href={record.href}>
     <div class="writeup-row__top">
       <span class="writeup-row__project">{data.project}</span>
       <span class="writeup-row__date">{formatAuditDate(data.publishedAt)}</span>
     </div>
-    <h4 class="writeup-row__title">{data.title}</h4>
+    <Heading class="writeup-row__title">{data.title}</Heading>
   </a>
   <div class="writeup-row__foot">
     <span class="writeup-row__ecosystem">{data.ecosystem}</span>
     {scored.length > 0 && (
       <span class="writeup-row__counts">
-        {scored.map((severity) => <SeverityBadge severity={severity} count={record.counts[severity]} />)}
+        {scored.map((severity, index) => (
+          <span class="writeup-row__count" data-severity={severity} data-lead={index === 0 ? "true" : undefined}>
+            <b>{record.counts[severity]}</b> {severityLabels[severity].toLowerCase()}
+          </span>
+        ))}
       </span>
     )}
     {data.draft && <span class="writeup-row__draft">Draft</span>}
@@ -37,7 +44,7 @@ const topSeverity = scored[0];
   /* The rule above each row carries its worst finding, so the archive reads as a
    * severity spectrum before any title is parsed. --lane is set by the column. */
   .writeup-row {
-    --row-tone: var(--lane, var(--audit-cyan));
+    --row-tone: var(--lane, var(--audit-signal));
     position: relative;
     border-top: 1px solid var(--audit-line-soft);
     padding: 1.35rem 0 1.5rem;
@@ -59,8 +66,8 @@ const topSeverity = scored[0];
     position: absolute;
     inset: 1px -1.1rem 0;
     background:
-      linear-gradient(90deg, color-mix(in srgb, var(--row-tone) 11%, transparent), transparent 60%),
-      var(--audit-bg-raised);
+      linear-gradient(90deg, color-mix(in srgb, var(--row-tone) 9%, transparent), transparent 60%),
+      var(--audit-ground-2);
     opacity: 0;
     transition: opacity 220ms cubic-bezier(0.22, 1, 0.36, 1);
     pointer-events: none;
@@ -88,7 +95,7 @@ const topSeverity = scored[0];
     align-items: baseline;
     justify-content: space-between;
     gap: 0.75rem;
-    font-size: 0.76rem;
+    font-size: 0.78rem;
     color: var(--audit-ink-4);
   }
 
@@ -97,24 +104,24 @@ const topSeverity = scored[0];
   }
 
   .writeup-row__title {
-    margin: 0.7rem 0 0;
+    margin: 0.55rem 0 0;
     max-width: 38ch;
-    font-family: var(--font-heading);
-    font-size: 1.2rem;
-    font-weight: 500;
-    line-height: 1.35;
-    letter-spacing: -0.025em;
+    font-family: var(--font-reading);
+    font-size: 1.22rem;
+    font-weight: 600;
+    line-height: 1.32;
+    letter-spacing: -0.012em;
     color: var(--audit-ink);
     text-wrap: balance;
     transition: color 200ms ease;
   }
 
   .writeup-row__link:hover .writeup-row__title {
-    color: var(--audit-cyan-ink);
+    color: var(--audit-signal);
   }
 
   .writeup-row__link:focus-visible {
-    outline: 2px solid var(--audit-cyan);
+    outline: 2px solid var(--audit-signal);
     outline-offset: 4px;
   }
 
@@ -127,25 +134,68 @@ const topSeverity = scored[0];
   }
 
   .writeup-row__ecosystem {
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    font-size: 0.76rem;
     color: var(--audit-ink-4);
   }
 
+  /* A tally, not a badge rack. Boxing every severity made each row equally loud,
+   * so the row that topped out at medium looked the same as the one carrying a
+   * high. Only the worst severity gets the swatch; the rest is a plain count. */
   .writeup-row__counts {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
+    align-items: baseline;
+    gap: 0.2rem 0.85rem;
+    font-size: 0.74rem;
+    color: var(--audit-ink-4);
   }
 
+  .writeup-row__count {
+    --count-tone: var(--audit-ink-4);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+  }
+
+  .writeup-row__count b {
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: var(--audit-ink-3);
+  }
+
+  .writeup-row__count[data-lead] {
+    position: relative;
+    padding-left: 0.75rem;
+    color: var(--count-tone);
+  }
+
+  .writeup-row__count[data-lead] b {
+    font-weight: 600;
+    color: var(--count-tone);
+  }
+
+  .writeup-row__count[data-lead]::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.45em;
+    width: 0.34rem;
+    height: 0.34rem;
+    border-radius: 1px;
+    background: var(--count-tone);
+  }
+
+  .writeup-row__count[data-severity="critical"] { --count-tone: var(--sev-critical); }
+  .writeup-row__count[data-severity="high"] { --count-tone: var(--sev-high); }
+  .writeup-row__count[data-severity="medium"] { --count-tone: var(--sev-medium); }
+  .writeup-row__count[data-severity="low"] { --count-tone: var(--sev-low); }
+  .writeup-row__count[data-severity="informational"] { --count-tone: var(--sev-info); }
+
   .writeup-row__draft {
-    border: 1px dashed color-mix(in srgb, var(--sev-medium) 40%, transparent);
+    border: 1px dashed color-mix(in srgb, var(--sev-medium) 55%, transparent);
     padding: 0.1rem 0.4rem;
-    font-size: 0.66rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    font-size: 0.72rem;
+    font-weight: 600;
     color: var(--sev-medium);
   }
 

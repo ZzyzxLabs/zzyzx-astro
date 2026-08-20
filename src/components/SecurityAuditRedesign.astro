@@ -99,7 +99,7 @@ const auditProcess = [
   <section class="audit-cover" aria-labelledby="audit-hero-title">
     <div class="audit-cover__frame">
       <header class="audit-cover__mast">
-        <p class="audit-label">Security Audit</p>
+        <p class="audit-mast">Security Audit</p>
       </header>
 
       <div class="audit-cover__message">
@@ -129,19 +129,23 @@ const auditProcess = [
   <section id="review-method" class="audit-band scroll-mt-20 px-5 py-24 sm:px-7 md:py-32 lg:px-10">
     <div class="mx-auto max-w-[88rem]">
       <header class="max-w-3xl" data-animate="fade-up">
-        <p class="audit-label">Review surface</p>
-        <h2 class="audit-title mt-5">We follow every path where value or authority can move.</h2>
+        <h2 class="audit-title">We follow every path where value or authority can move.</h2>
         <p class="audit-intro mt-6">A secure language removes entire bug classes. It does not replace adversarial review of custom business logic.</p>
       </header>
 
-      <div class="mt-16 grid border-b border-[var(--audit-line)] md:grid-cols-2" data-animate="fade-up">
+      {/* Six areas, not six steps. They were numbered 01-06 as if ordered, which
+          spent the numbering device on a set and left the real sequence below
+          saying nothing. The numbers live in the process section now. */}
+      <div class="mt-16 grid border-b border-[var(--audit-line)] md:grid-cols-2" data-animate-group>
         {reviewAreas.map((area, index) => (
-          <article class:list={[
-            "border-t border-[var(--audit-line)] py-8 md:min-h-56 md:py-10",
-            index % 2 === 0 ? "md:border-r md:pr-10" : "md:pl-10",
-          ]}>
-            <p class="text-[0.68rem] font-medium tracking-[0.16em] text-[var(--audit-ink-4)]">0{index + 1}</p>
-            <h3 class="mt-7 font-heading text-2xl font-medium tracking-[-0.03em] text-[var(--audit-ink)]">{area.title}</h3>
+          <article
+            class:list={[
+              "border-t border-[var(--audit-line)] py-8 md:py-10",
+              index % 2 === 0 ? "md:border-r md:pr-10" : "md:pl-10",
+            ]}
+            data-animate-item="fade-up"
+          >
+            <h3 class="font-heading text-2xl font-medium tracking-[-0.03em] text-[var(--audit-ink)]">{area.title}</h3>
             <p class="mt-4 max-w-lg leading-7 text-[var(--audit-ink-3)]">{area.description}</p>
           </article>
         ))}
@@ -153,8 +157,7 @@ const auditProcess = [
     <div class="mx-auto max-w-[88rem]">
       <header class="archive-head" data-animate="fade-up">
         <div>
-          <p class="audit-label">Public writeups</p>
-          <h2 class="archive-title mt-4">Findings, written out in full.</h2>
+          <h2 class="archive-title">Findings, written out in full.</h2>
         </div>
         <p class="archive-standfirst">
           Every writeup carries the same record: what was in scope, how the assumption broke, and what the fix was.
@@ -166,7 +169,7 @@ const auditProcess = [
           <div id={group.id} class="archive-column scroll-mt-24" style={`--lane: var(--lane-${group.tone});`}>
             <div class="archive-column__head" data-animate="fade-up">
               <div class="flex flex-wrap items-baseline justify-between gap-3">
-                <p class="audit-label">{group.label}</p>
+                <h3 class="archive-column__title">{group.label}</h3>
                 <p class="text-xs text-[var(--audit-ink-4)]">
                   {group.records.length} {group.records.length === 1 ? "writeup" : "writeups"}
                 </p>
@@ -175,7 +178,7 @@ const auditProcess = [
             </div>
 
             {group.records.length > 0 ? (
-              <div class="archive-column__list">
+              <div class="archive-column__list" data-animate-group>
                 {group.records.slice(0, ARCHIVE_PREVIEW).map((record) => <WriteupRow record={record} />)}
               </div>
             ) : (
@@ -184,9 +187,7 @@ const auditProcess = [
 
             <div class="archive-column__foot">
               {group.records.length > 0 && (
-                <a class="archive-see-all" href={group.href}>
-                  <span aria-hidden="true">&gt;&gt;</span> See all {group.label.toLowerCase()}
-                </a>
+                <a class="archive-see-all" href={group.href}>See all {group.label.toLowerCase()}</a>
               )}
             </div>
           </div>
@@ -198,14 +199,16 @@ const auditProcess = [
   <section class="audit-band px-5 py-24 sm:px-7 md:py-32 lg:px-10">
     <div class="mx-auto grid max-w-[88rem] gap-14 lg:grid-cols-12 lg:gap-16">
       <div class="lg:col-span-5" data-animate="fade-up">
-        <p class="audit-label">The process</p>
-        <h2 class="audit-title mt-5">A review built for remediation.</h2>
+        <h2 class="audit-title">A review built for remediation.</h2>
         <p class="audit-intro mt-6">The goal is not a long finding list. It is a precise record of risk and a clear path to safer code.</p>
       </div>
-      <ol class="border-b border-[var(--audit-line)] lg:col-span-7" data-animate="fade-up">
+      <ol class="border-b border-[var(--audit-line)] lg:col-span-7" data-animate-group>
         {auditProcess.map((item, index) => (
-          <li class="grid gap-5 border-t border-[var(--audit-line)] py-7 sm:grid-cols-[3.5rem_1fr] sm:py-8">
-            <span class="text-xs tracking-[0.16em] text-[var(--audit-ink-4)]">0{index + 1}</span>
+          <li
+            class="grid gap-5 border-t border-[var(--audit-line)] py-7 sm:grid-cols-[3.5rem_1fr] sm:py-8"
+            data-animate-item="fade-up"
+          >
+            <span class="process-step">0{index + 1}</span>
             <div>
               <h3 class="font-heading text-xl font-medium tracking-[-0.025em] text-[var(--audit-ink)]">{item.title}</h3>
               <p class="mt-3 max-w-xl leading-7 text-[var(--audit-ink-3)]">{item.description}</p>
@@ -218,8 +221,7 @@ const auditProcess = [
 
   <section class="audit-close px-5 py-24 sm:px-7 md:py-32 lg:px-10">
     <div class="mx-auto max-w-[88rem]" data-animate="fade-up">
-      <p class="audit-label">Scope an engagement</p>
-      <div class="mt-6 grid gap-10 lg:grid-cols-12 lg:items-end">
+      <div class="grid gap-10 lg:grid-cols-12 lg:items-end">
         <div class="lg:col-span-9">
           <h2 class="max-w-[18ch] font-heading text-[clamp(2.5rem,4.8vw,4.2rem)] font-medium leading-[1.04] tracking-[-0.05em] text-[var(--audit-ink)]">
             Put an adversarial reviewer on the critical path.
@@ -234,7 +236,7 @@ const auditProcess = [
 
 <style>
   .audit-shell {
-    background: var(--audit-bg);
+    background: var(--audit-ground);
     color: var(--audit-ink);
   }
 
@@ -244,35 +246,27 @@ const auditProcess = [
    * bands were #0b0d0f on #08090a: a 1.5% lightness step nobody can see. */
   .audit-band {
     border-block: 1px solid var(--audit-line-strong);
-    background: var(--audit-bg-raised);
+    background: var(--audit-ground-2);
   }
 
   .audit-close {
     position: relative;
-    border-top: 1px solid var(--audit-line-strong);
-    background:
-      radial-gradient(78% 120% at 88% 8%, color-mix(in srgb, var(--audit-cyan) 11%, transparent), transparent 62%),
-      var(--audit-bg);
+    border-top: 2px solid var(--audit-ink);
+    background: var(--audit-ground);
   }
 
+  /* An atmospheric radial glow was the only thing separating the cover from
+   * the ground. On a printed surface the frame rules do that job. */
   .audit-cover {
     position: relative;
     padding: 4.25rem 1rem 0;
-    background: var(--audit-bg);
-  }
-
-  .audit-cover::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(66% 52% at 16% 34%, color-mix(in srgb, var(--audit-cyan) 10%, transparent), transparent 70%);
-    pointer-events: none;
+    background: var(--audit-ground);
   }
 
   .audit-cover__frame {
     position: relative;
     display: grid;
-    min-height: calc(100dvh - 4.25rem);
+    min-height: min(calc(100dvh - 4.25rem), 46rem);
     max-width: 88rem;
     margin-inline: auto;
     border-inline: 1px solid var(--audit-line);
@@ -282,16 +276,31 @@ const auditProcess = [
 
   .audit-cover__mast {
     grid-column: 1 / -1;
-    padding: 1rem clamp(1.25rem, 3vw, 2.5rem);
-    border-bottom: 1px solid var(--audit-line);
+    padding: 0.85rem clamp(1.25rem, 3vw, 2.5rem);
+    border-bottom: 1px solid var(--audit-line-strong);
+  }
+
+  /* The one named line on the page. Not an eyebrow repeated over every
+   * section: a masthead, which is what a document actually has. */
+  .audit-mast {
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    color: var(--audit-ink);
+  }
+
+  .audit-mast span {
+    margin: 0 0.15rem;
+    color: var(--audit-ink-4);
+    font-weight: 400;
   }
 
   .audit-cover__message {
     display: flex;
     flex-direction: column;
-    grid-column: 1 / 9;
-    justify-content: center;
-    padding: clamp(3rem, 6vw, 6rem) clamp(1.5rem, 5vw, 5rem);
+    grid-column: 1 / 8;
+    justify-content: flex-end;
+    padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 5rem) clamp(3rem, 5vw, 4.5rem);
   }
 
   .audit-cover__message h1 {
@@ -324,26 +333,29 @@ const auditProcess = [
    * above the ground rather than one imperceptible step. */
   .audit-cover__ledger {
     position: relative;
-    grid-column: 9 / -1;
+    grid-column: 8 / -1;
     border-left: 1px solid var(--audit-line-strong);
-    background:
-      linear-gradient(200deg, color-mix(in srgb, var(--audit-cyan) 7%, transparent), transparent 58%),
-      var(--audit-bg-panel);
+    background: var(--audit-ground-2);
   }
 
+  /* Entries were bottom-aligned inside three equal 1fr rows, which opened a
+   * large void above each one and collapsed into four-line ragged wraps at
+   * tablet width. A term/detail pair packed to the centre reads as a record. */
   .audit-cover__ledger dl {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     height: 100%;
     margin: 0;
-    grid-template-rows: repeat(3, 1fr);
   }
 
   .audit-cover__entry {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: clamp(1.5rem, 3vw, 2.5rem);
+    display: grid;
+    flex: 1;
+    align-content: center;
+    gap: 0.45rem 1rem;
+    padding: clamp(1.5rem, 2.6vw, 2.1rem) clamp(1.5rem, 3vw, 2.5rem);
     border-bottom: 1px solid var(--audit-line);
+    grid-template-columns: 5rem minmax(0, 1fr);
   }
 
   .audit-cover__entry:last-child {
@@ -351,28 +363,18 @@ const auditProcess = [
   }
 
   .audit-cover__entry dt {
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--audit-cyan);
+    padding-top: 0.15rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--audit-ink);
   }
 
   .audit-cover__entry dd {
-    max-width: 22rem;
-    margin: 1rem 0 0;
-    font-family: var(--font-heading);
-    font-size: 1.15rem;
-    line-height: 1.5;
-    color: var(--audit-ink-2);
-  }
-
-  .audit-label {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--lane, var(--audit-cyan));
+    max-width: 24rem;
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: var(--audit-ink-3);
   }
 
   .audit-title {
@@ -399,6 +401,22 @@ const auditProcess = [
     gap: 1.5rem 4rem;
     padding-bottom: 3rem;
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .archive-column__title {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--audit-ink);
+  }
+
+  .process-step {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: var(--audit-ink-4);
+    font-variant-numeric: tabular-nums;
   }
 
   .archive-title {
@@ -438,8 +456,8 @@ const auditProcess = [
     content: "";
     position: absolute;
     inset: 0 0 auto;
-    height: 13rem;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--lane) 9%, transparent), transparent);
+    height: 11rem;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--lane) 7%, transparent), transparent);
     pointer-events: none;
   }
 
@@ -475,29 +493,30 @@ const auditProcess = [
     padding-top: 1.5rem;
   }
 
+  /* The lane colour carries the link; it does not need an ASCII arrow to say
+   * "this is clickable". The rule under it is the only affordance required. */
+  /* WCAG 2.2 SC 2.5.8: this measured 23px tall. */
   .archive-see-all {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
+    min-height: 1.75rem;
+    padding-bottom: 0.2rem;
+    border-bottom: 1px solid var(--audit-line-strong);
+    font-size: 0.85rem;
     font-weight: 600;
-    letter-spacing: 0.02em;
-    color: var(--audit-cyan-ink);
+    letter-spacing: -0.005em;
+    color: var(--audit-ink);
     text-decoration: none;
-    transition: gap 200ms ease;
-  }
-
-  .archive-see-all span {
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
-    color: var(--lane, var(--audit-cyan));
+    transition: border-color 200ms ease, color 200ms ease;
   }
 
   .archive-see-all:hover {
-    gap: 0.85rem;
+    border-bottom-color: var(--audit-signal);
+    color: var(--audit-signal);
   }
 
   .archive-see-all:focus-visible {
-    outline: 2px solid var(--audit-cyan);
+    outline: 2px solid var(--audit-ink);
     outline-offset: 4px;
   }
 
@@ -552,36 +571,44 @@ const auditProcess = [
   }
 
   .audit-button-primary {
-    border: 1px solid var(--audit-cyan);
-    background: var(--audit-cyan);
-    color: #071012;
+    border: 1px solid var(--audit-signal);
+    background: var(--audit-signal);
+    color: var(--audit-on-signal);
   }
 
   .audit-button-primary:hover {
-    border-color: var(--audit-cyan-bright);
-    background: var(--audit-cyan-bright);
+    border-color: var(--audit-ink);
+    background: var(--audit-ink);
     transform: translateY(-1px);
   }
 
   .audit-button-secondary {
     border: 1px solid var(--audit-line-strong);
-    color: var(--audit-ink-2);
+    color: var(--audit-ink);
   }
 
   .audit-button-secondary:hover {
-    border-color: color-mix(in srgb, var(--audit-cyan) 65%, transparent);
-    background: var(--audit-bg-hover);
-    color: var(--audit-cyan-bright);
+    border-color: var(--audit-ink);
+    background: var(--audit-ground-2);
+    color: var(--audit-ink);
     transform: translateY(-1px);
   }
 
   .audit-text-link {
-    border-bottom: 1px solid color-mix(in srgb, var(--audit-cyan) 45%, transparent);
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.75rem;
+    border-bottom: 1px solid var(--audit-line-strong);
     padding-bottom: 0.2rem;
     font-size: 0.88rem;
     font-weight: 600;
-    color: var(--audit-cyan-ink);
+    color: var(--audit-ink);
     text-decoration: none;
+  }
+
+  .audit-text-link:hover {
+    border-bottom-color: var(--audit-signal);
+    color: var(--audit-signal);
   }
 
   .audit-text-link.muted {
@@ -592,7 +619,7 @@ const auditProcess = [
   .audit-button-primary:focus-visible,
   .audit-button-secondary:focus-visible,
   .audit-text-link:focus-visible {
-    outline: 2px solid var(--audit-cyan);
+    outline: 2px solid var(--audit-ink);
     outline-offset: 4px;
   }
 
@@ -628,14 +655,14 @@ const auditProcess = [
     }
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 1023px) {
     .audit-cover__frame {
       display: block;
       min-height: auto;
     }
 
     .audit-cover__message {
-      min-height: calc(100dvh - 8rem);
+      min-height: min(calc(100dvh - 8rem), 27rem);
       padding: 3rem 1.25rem 3.5rem;
     }
 

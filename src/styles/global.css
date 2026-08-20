@@ -1,17 +1,117 @@
 @import "tailwindcss";
 
+/* ============================================================================
+ * Colour lives here. One file, two surfaces.
+ *
+ *   shell   -> the marketing chrome (navbar, footer, home, portfolio): dark
+ *   audit   -> the security document surface: light, ink on off-white
+ *
+ * The shell tokens flip when <html data-surface="audit"> is set, so the navbar
+ * and footer follow the page they wrap instead of hard-coding a hex each.
+ * Before this there were two disconnected systems and the brand accent was
+ * written out in four places; changing it meant four edits and a missed one.
+ * ========================================================================= */
+
 :root {
   color-scheme: dark;
-  --color-primary: 116 215 221;
+
+  /* --- Brand ---------------------------------------------------------- */
+  /* One signal colour across both surfaces. It reads as "critical" on the
+   * audit surface and as the studio's accent everywhere else; those are the
+   * same idea for a firm whose product is finding what breaks. */
+  --brand-signal: oklch(50% 0.2 29);
+  --brand-signal-lift: oklch(66% 0.185 32); /* the dark-surface variant */
+
+  /* --- Marketing shell (dark) ----------------------------------------- */
+  --shell-bg: #08090a;
+  --shell-bg-alpha: rgb(8 9 10 / 0.94);
+  --shell-surface: #111315;
+  --shell-ink: #eef0ed;
+  --shell-ink-2: #b9c0c4;
+  --shell-ink-3: #8b9399;
+  --shell-line: rgb(255 255 255 / 0.09);
+  --shell-accent: var(--brand-signal-lift);
+  --shell-accent-ink: oklch(74% 0.15 32);
+  --shell-on-accent: #140603;
+
+  /* --- Legacy Tailwind bridge ----------------------------------------- */
+  /* Existing marketing pages consume these as `text-primary`, `bg-bg-surface`
+   * and so on. Kept as rgb triplets because Tailwind's alpha syntax needs it. */
+  --color-primary: 255 122 96;
   --color-secondary: 133 143 151;
-  --color-accent: 116 215 221;
+  --color-accent: 255 122 96;
   --color-bg-base: 8 9 10;
   --color-bg-surface: 17 19 21;
   --color-text-base: 242 243 239;
   --color-text-muted: 143 151 158;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-heading: 'Space Grotesk', system-ui, sans-serif;
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
+
+  /* --- Type ------------------------------------------------------------ */
+  /* Archivo carries structure (the studio speaking); Literata carries the
+   * evidence (writeup titles and prose). A real sans/serif contrast axis,
+   * and the split means something rather than decorating. */
+  --font-body: "Archivo Variable", "Archivo", system-ui, sans-serif;
+  --font-heading: "Archivo Variable", "Archivo", system-ui, sans-serif;
+  --font-display: "Archivo Variable", "Archivo", system-ui, sans-serif;
+  --font-reading: "Literata Variable", "Literata", Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+}
+
+/* ---------- The security document surface ---------------------------- *
+ * Near-black with a cyan accent was the category default and the loudest
+ * AI tell available. A security report is a document, not a dashboard, so
+ * this surface is printed: ink on off-white, structure from rules and
+ * ground steps, and the single saturated colour reserved for risk.
+ *
+ *   ground steps -> structure   (where am I)
+ *   ink + rule   -> interaction (what can I click)
+ *   severity ramp -> risk       (how bad is it)
+ *
+ * Every ink and severity token clears 4.5:1 on all three ground steps.
+ * ------------------------------------------------------------------------ */
+:root {
+  --audit-ground: oklch(96.8% 0.004 255);
+  --audit-ground-2: oklch(93.4% 0.006 255);
+  --audit-ground-3: oklch(89.8% 0.008 255);
+
+  --audit-ink: oklch(19% 0.014 255);
+  --audit-ink-2: oklch(32% 0.012 255);
+  --audit-ink-3: oklch(43% 0.011 255);
+  --audit-ink-4: oklch(47% 0.011 255);
+
+  --audit-line-soft: oklch(19% 0.014 255 / 0.14);
+  --audit-line: oklch(19% 0.014 255 / 0.28);
+  --audit-line-strong: oklch(19% 0.014 255 / 0.62);
+
+  --audit-signal: var(--brand-signal);
+  --audit-on-signal: oklch(98% 0.005 60);
+
+  --sev-critical: oklch(50% 0.2 29);
+  --sev-high: oklch(49% 0.115 58);
+  --sev-medium: oklch(47% 0.095 85);
+  --sev-low: oklch(46% 0.115 245);
+  --sev-info: oklch(47% 0.012 255);
+  --sev-fixed: oklch(45% 0.105 152);
+
+  /* Incidents are someone else's failure; reports are work we signed off on.
+   * The incident lane takes the risk colour, the report lane takes ink. Two
+   * promises, one hue between them, no rainbow. */
+  --lane-incident: var(--sev-critical);
+  --lane-report: var(--audit-ink);
+}
+
+/* The shell follows the page it wraps. */
+[data-surface="audit"] {
+  color-scheme: light;
+  --shell-bg: var(--audit-ground);
+  --shell-bg-alpha: oklch(96.8% 0.004 255 / 0.93);
+  --shell-surface: var(--audit-ground-2);
+  --shell-ink: var(--audit-ink);
+  --shell-ink-2: var(--audit-ink-2);
+  --shell-ink-3: var(--audit-ink-3);
+  --shell-line: var(--audit-line);
+  --shell-accent: var(--audit-signal);
+  --shell-accent-ink: var(--audit-signal);
+  --shell-on-accent: var(--audit-on-signal);
 }
 
 @theme {
@@ -28,23 +128,31 @@
   --font-body: var(--font-body);
   --font-heading: var(--font-heading);
   --font-display: var(--font-display);
+  --font-reading: var(--font-reading);
 
   --animate-typewriter: typing 3.8s steps(43) forwards, blink-caret 0.75s step-end infinite;
 }
 
 html {
-  background: #08090a;
+  background: var(--shell-bg);
   scroll-behavior: smooth;
 }
 
 body {
   min-width: 320px;
   font-family: var(--font-body);
-  background-color: rgb(var(--color-bg-base));
-  color: rgb(var(--color-text-base));
+  background-color: var(--shell-bg);
+  color: var(--shell-ink);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* Thinned glyphs on a light ground read as washed out; let the OS render
+ * dark-on-light the way it was hinted to. */
+[data-surface="audit"] body {
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -64,21 +172,8 @@ section[id] {
     scrollbar-width: none;
 }
 
-.text-glow {
-  text-shadow: 0 0 10px rgba(var(--color-primary), 0.5),
-               0 0 20px rgba(var(--color-primary), 0.3),
-               0 0 40px rgba(var(--color-primary), 0.1);
-}
-
 section {
   position: relative;
-}
-
-.glass {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
 }
 
 a {
@@ -86,17 +181,31 @@ a {
 }
 
 ::selection {
-  background: rgba(var(--color-primary), 0.28);
-  color: #f2f3ef;
+  background: color-mix(in srgb, var(--shell-accent) 30%, transparent);
+  color: var(--shell-ink);
 }
 
 ::-moz-selection {
-  background: rgba(var(--color-primary), 0.28);
-  color: #f2f3ef;
+  background: color-mix(in srgb, var(--shell-accent) 30%, transparent);
+  color: var(--shell-ink);
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+}
+
+/* Reveal classes are applied at runtime, so anything below the fold is still
+ * hidden when the print renderer paints. A printed audit page must not come
+ * out with blank sections. */
+@media print {
+  [data-animate],
+  [data-animate-item] {
+    opacity: 1 !important;
+    translate: none !important;
+    scale: none !important;
+    transform: none !important;
+    transition: none !important;
   }
 }

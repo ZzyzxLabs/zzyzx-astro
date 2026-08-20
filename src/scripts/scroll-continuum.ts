@@ -60,7 +60,37 @@ function restoreElements(snapshots: Map<HTMLElement, ElementSnapshot>) {
 }
 
 async function createSealRenderer(canvas: HTMLCanvasElement): Promise<SealRenderer> {
-  const THREE = await import("three");
+  // Named bindings, not `import("three")` as a namespace. A namespace import is
+  // opaque to Rollup, so the whole 672kB build shipped for the twelve symbols
+  // below. Destructuring gives the bundler something it can shake.
+  const {
+    ACESFilmicToneMapping,
+    AmbientLight,
+    BoxGeometry,
+    DirectionalLight,
+    Group,
+    Mesh,
+    MeshBasicMaterial,
+    MeshPhysicalMaterial,
+    OrthographicCamera,
+    SRGBColorSpace,
+    Scene,
+    WebGLRenderer,
+  } = await import("three");
+  const THREE = {
+    ACESFilmicToneMapping,
+    AmbientLight,
+    BoxGeometry,
+    DirectionalLight,
+    Group,
+    Mesh,
+    MeshBasicMaterial,
+    MeshPhysicalMaterial,
+    OrthographicCamera,
+    SRGBColorSpace,
+    Scene,
+    WebGLRenderer,
+  };
   const renderer = new THREE.WebGLRenderer({
     canvas,
     alpha: true,

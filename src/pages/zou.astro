@@ -1,10 +1,13 @@
 ---
+import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
+import zouPortrait from "../assets/member/zou.png";
 ---
 
 <Layout
     title="Zou | CSO @ Zzyzx Labs"
     description="Chief Strategy Officer at Zzyzx Labs. Leads team direction and strategy, aligning product vision with market opportunities. Specializing in product management, smart contracts, research, and business development."
+    noindex
 >
     <div class="min-h-screen bg-black text-white">
         <div class="relative overflow-hidden">
@@ -13,7 +16,7 @@ import Layout from "../layouts/Layout.astro";
             >
             </div>
             <div
-                class="pointer-events-none absolute -bottom-24 left-[-10%] h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl"
+                class="pointer-events-none absolute -bottom-24 left-[-10%] h-80 w-80 rounded-full bg-[var(--shell-accent)]/10 blur-3xl"
             >
             </div>
 
@@ -21,7 +24,7 @@ import Layout from "../layouts/Layout.astro";
                 <!-- Back button -->
                 <a
                     href="/"
-                    class="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm uppercase tracking-widest mb-10 transition-colors animate-fade-in"
+                    class="inline-flex min-h-7 items-center gap-2 text-white/70 hover:text-white text-sm font-medium mb-10 transition-colors animate-fade-in"
                 >
                     ← Back to Team
                 </a>
@@ -38,11 +41,14 @@ import Layout from "../layouts/Layout.astro";
                                 class="relative aspect-[3/4] rounded-2xl overflow-hidden"
                             >
                                 <div
-                                    class="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-600 opacity-50"
+                                    class="absolute inset-0 bg-gradient-to-br from-[var(--shell-accent)] to-[var(--shell-accent-ink)] opacity-50"
                                 >
                                 </div>
-                                <img
-                                    src="/member/zou.png"
+                                <Image
+                                    src={zouPortrait}
+                                    widths={[320, 480, 640]}
+                                    sizes="(max-width: 640px) 90vw, 480px"
+                                    loading="eager"
                                     alt="Zou"
                                     class="absolute inset-0 w-full h-full object-cover"
                                 />
@@ -118,7 +124,7 @@ import Layout from "../layouts/Layout.astro";
                                 href="https://github.com/ZzyzxLabs"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="text-cyan-400 hover:text-cyan-300 transition-colors underline"
+                                class="text-[var(--shell-accent-ink)] hover:text-[var(--shell-ink)] transition-colors underline"
                                 >Zzyzx Labs</a
                             >, where I lead team direction and strategy,
                             aligning product vision with market opportunities. I
@@ -185,7 +191,7 @@ import Layout from "../layouts/Layout.astro";
                                 <ul class="space-y-2 text-white/70 text-sm">
                                     <li class="flex gap-2">
                                         <span
-                                            class="text-cyan-500 mt-1 shrink-0"
+                                            class="text-[var(--shell-accent)] mt-1 shrink-0"
                                             >•</span
                                         >
                                         <span
@@ -196,7 +202,7 @@ import Layout from "../layouts/Layout.astro";
                                     </li>
                                     <li class="flex gap-2">
                                         <span
-                                            class="text-cyan-500 mt-1 shrink-0"
+                                            class="text-[var(--shell-accent)] mt-1 shrink-0"
                                             >•</span
                                         >
                                         <span
@@ -207,7 +213,7 @@ import Layout from "../layouts/Layout.astro";
                                     </li>
                                     <li class="flex gap-2">
                                         <span
-                                            class="text-cyan-500 mt-1 shrink-0"
+                                            class="text-[var(--shell-accent)] mt-1 shrink-0"
                                             >•</span
                                         >
                                         <div>
@@ -219,7 +225,7 @@ import Layout from "../layouts/Layout.astro";
                                                     <a
                                                         href="https://SeaWallet.ai"
                                                         target="_blank"
-                                                        class="text-cyan-400 hover:text-cyan-300 transition-colors underline"
+                                                        class="text-[var(--shell-accent-ink)] hover:text-[var(--shell-ink)] transition-colors underline"
                                                         >SeaWallet.ai</a
                                                     >: Smart contract account
                                                     platform enabling
@@ -230,7 +236,7 @@ import Layout from "../layouts/Layout.astro";
                                                     <a
                                                         href="https://trynereus.xyz"
                                                         target="_blank"
-                                                        class="text-cyan-400 hover:text-cyan-300 transition-colors underline"
+                                                        class="text-[var(--shell-accent-ink)] hover:text-[var(--shell-ink)] transition-colors underline"
                                                         >Nereus</a
                                                     >: Prediction market
                                                     leveraging AI agents in TEE
