@@ -32,8 +32,9 @@ const socialImage = image ? new URL(image, "https://zzyzxlabs.com").href : null;
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-		<link rel="alternate icon" href="/zzyzx_white.ico" />
+		<!-- public/favicon.svg is Astro's starter logo, not this brand's mark. -->
+		<link rel="icon" href="/zzyzx.ico" sizes="any" />
+		<link rel="apple-touch-icon" href="/zzyzx-touch-icon.png" />
 		<meta name="generator" content={Astro.generator} />
 
 		<!-- SEO -->
