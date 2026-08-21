@@ -318,12 +318,13 @@ const proofTimeline = `${PROOF_HOLD_VH}|${PROOF_SWEEP_VH}|${proofProjects.length
 
   /* Static fallback: the deck reads as a feature plus a compact ledger list, one image, no sweep. */
   @media (max-width: 1023px), (max-height: 639px) {
-    .proof-deck > .proof-copy:first-child { margin-top: auto; padding-top: clamp(2rem, 7vh, 5rem); }
-    .proof-deck > .proof-copy:nth-child(2) { margin-top: clamp(2rem, 5vh, 3.5rem); border-top: 1px solid var(--hairline); }
-    .proof-deck > .proof-copy + .proof-copy { padding: 1rem 0; border-bottom: 1px solid var(--hairline); }
-    .proof-deck > .proof-copy + .proof-copy h3 { font-family: var(--font-heading), sans-serif; font-size: 1rem; font-weight: 600; line-height: 1.3; letter-spacing: normal; }
-    .proof-deck > .proof-copy + .proof-copy > p:nth-of-type(2) { font-size: 0.72rem; }
-    .proof-deck > .proof-copy + .proof-copy .ink-link { margin-top: 0.65rem; font-size: 0.72rem; }
+    /* Without the pinned stage there is no hero frame, so the six products are
+       six equal entries rather than one headline act and five list rows. */
+    .proof-deck > .proof-copy { margin-top: 0; padding: clamp(1.75rem, 5vw, 2.5rem) 0; border-top: 1px solid var(--hairline); }
+    .proof-deck > .proof-copy:first-child { padding-top: clamp(1.5rem, 4vw, 2rem); border-top: 0; }
+    .proof-deck > .proof-copy h3 { font-family: var(--font-display), sans-serif; font-size: clamp(1.75rem, 8vw, 2.4rem); font-weight: 450; line-height: 1.02; letter-spacing: -0.04em; }
+    .proof-deck > .proof-copy > p:nth-of-type(2) { font-size: 0.95rem; }
+    .proof-deck > .proof-copy .ink-link { margin-top: 1.1rem; font-size: 0.82rem; }
     .proof-index { display: none; }
     /* The stage can only ever show frame 1 without the pinned sweep, and its
        caption goes stale. Each copy carries its own shot below instead. */
