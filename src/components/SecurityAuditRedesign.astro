@@ -12,7 +12,6 @@ const archive = [
     id: "incident-analysis",
     tone: "incident",
     label: "Incident analysis",
-    intro: "Public exploits rebuilt from on-chain evidence, in the finding format we use for client work.",
     empty: "Incident writeups are being prepared.",
     href: "/security-audit/incidents",
     records: incidentAnalyses,
@@ -21,7 +20,6 @@ const archive = [
     id: "audit-reports",
     tone: "report",
     label: "Audit reports",
-    intro: "Engagements published once the client approves disclosure. Private work stays confidential.",
     empty: "Reports appear here after a client approves public disclosure.",
     href: "/security-audit/reports",
     records: auditReports,
@@ -156,12 +154,7 @@ const auditProcess = [
   <section id="audit-work" class="scroll-mt-20 px-5 py-24 sm:px-7 md:py-28 lg:px-10">
     <div class="mx-auto max-w-[88rem]">
       <header class="archive-head" data-animate="fade-up">
-        <div>
-          <h2 class="archive-title">Findings, written out in full.</h2>
-        </div>
-        <p class="archive-standfirst">
-          Every writeup carries the same record: what was in scope, how the assumption broke, and what the fix was.
-        </p>
+        <h2 class="archive-title">Findings, written out in full.</h2>
       </header>
 
       <div class="archive-grid">
@@ -174,7 +167,6 @@ const auditProcess = [
                   {group.records.length} {group.records.length === 1 ? "writeup" : "writeups"}
                 </p>
               </div>
-              <p class="archive-column__intro">{group.intro}</p>
             </div>
 
             {group.records.length > 0 ? (
@@ -200,7 +192,6 @@ const auditProcess = [
     <div class="mx-auto grid max-w-[88rem] gap-14 lg:grid-cols-12 lg:gap-16">
       <div class="lg:col-span-5" data-animate="fade-up">
         <h2 class="audit-title">A review built for remediation.</h2>
-        <p class="audit-intro mt-6">The goal is not a long finding list. It is a precise record of risk and a clear path to safer code.</p>
       </div>
       <ol class="border-b border-[var(--audit-line)] lg:col-span-7" data-animate-group>
         {auditProcess.map((item, index) => (
@@ -430,13 +421,6 @@ const auditProcess = [
     text-wrap: balance;
   }
 
-  .archive-standfirst {
-    max-width: 34rem;
-    font-size: 0.98rem;
-    line-height: 1.75;
-    color: var(--audit-ink-3);
-  }
-
   .archive-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -463,14 +447,6 @@ const auditProcess = [
 
   .archive-column > * {
     position: relative;
-  }
-
-  .archive-column__intro {
-    max-width: 32rem;
-    margin-top: 0.9rem;
-    font-size: 0.9rem;
-    line-height: 1.7;
-    color: var(--audit-ink-3);
   }
 
   .archive-column__list {

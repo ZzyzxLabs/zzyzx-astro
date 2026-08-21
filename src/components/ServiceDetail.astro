@@ -24,7 +24,6 @@ interface Props {
   processTitle: string;
   process: ProcessItem[];
   evidenceTitle: string;
-  evidenceIntro: string;
   evidence: EvidenceItem[];
   ctaTitle: string;
   ctaLabel: string;
@@ -39,7 +38,6 @@ const {
   processTitle,
   process,
   evidenceTitle,
-  evidenceIntro,
   evidence,
   ctaTitle,
   ctaLabel,
@@ -98,7 +96,6 @@ const emailHref = `mailto:contact@zzyzx.com?subject=${encodeURIComponent(emailSu
     <div class="mx-auto max-w-[88rem]">
       <header class="max-w-3xl" data-animate="fade-up">
         <h2 class="service-title">{evidenceTitle}</h2>
-        <p class="service-intro mt-6">{evidenceIntro}</p>
       </header>
 
       <div class="mt-14 grid border-y border-[var(--shell-line)] lg:grid-cols-12" data-animate="fade-up">
@@ -150,13 +147,6 @@ const emailHref = `mailto:contact@zzyzx.com?subject=${encodeURIComponent(emailSu
     line-height: 1.04;
     letter-spacing: -0.048em;
     color: var(--shell-ink);
-  }
-
-  .service-intro {
-    max-width: 40rem;
-    font-size: 1.0625rem;
-    line-height: 1.75;
-    color: var(--shell-ink-3);
   }
 
   .service-button-primary,

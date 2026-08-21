@@ -6,14 +6,13 @@ import "../../styles/audit-writeup.css";
 interface Props {
   label: string;
   heading: string;
-  intro: string;
   empty: string;
   /** Picks the lane colour: incidents take the risk signal, our own reports take ink. */
   tone: "incident" | "report";
   records: AuditRecord[];
 }
 
-const { label, heading, intro, empty, tone, records } = Astro.props;
+const { label, heading, empty, tone, records } = Astro.props;
 ---
 
 <main class="index-shell" style={`--lane: var(--lane-${tone});`}>
@@ -28,10 +27,7 @@ const { label, heading, intro, empty, tone, records } = Astro.props;
       <div>
         <h1 class="index-title">{heading}</h1>
       </div>
-      <div class="index-head__aside">
-        <p class="index-intro">{intro}</p>
-        <p class="index-count">{records.length} {records.length === 1 ? "writeup" : "writeups"}</p>
-      </div>
+      <p class="index-count">{records.length} {records.length === 1 ? "writeup" : "writeups"}</p>
     </header>
 
     {records.length > 0 ? (
@@ -100,12 +96,13 @@ const { label, heading, intro, empty, tone, records } = Astro.props;
   }
 
   .index-head {
-    display: grid;
-    align-items: end;
-    gap: 1.5rem 4rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem 4rem;
     margin-top: 2.5rem;
     padding-bottom: 3rem;
-    grid-template-columns: minmax(0, 1fr);
   }
 
   .index-title {
@@ -120,19 +117,6 @@ const { label, heading, intro, empty, tone, records } = Astro.props;
     text-wrap: balance;
   }
 
-  .index-head__aside {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .index-intro {
-    max-width: 34rem;
-    margin: 0;
-    font-size: 0.98rem;
-    line-height: 1.75;
-    color: var(--audit-ink-3);
-  }
 
   .index-count {
     margin: 0;
@@ -210,10 +194,6 @@ const { label, heading, intro, empty, tone, records } = Astro.props;
   }
 
   @media (min-width: 900px) {
-    .index-head {
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    }
-
     .index-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
